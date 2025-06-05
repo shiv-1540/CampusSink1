@@ -1,6 +1,9 @@
 # CampusSink1
 This is Web Platform Project designed to solve the isssue of student workload in the current colleges &amp; universsties by strealime &amp; transparent workload asssigned to student which will visible to all faculties so by visiualze actual workload &amp; then decide activities assigning to students. 
 
+UI UX 
+https://www.figma.com/proto/zwRmLt4yK5Nn86zT8qBXmt/Untitled?node-id=1-1669&p=f&t=Rxp3aHDRp8h1q8cl-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A1015
+
 ![image](https://github.com/user-attachments/assets/233d2e13-fea5-4248-8834-63e78c90a6bd)
 
 
