@@ -4,8 +4,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: rgba(33, 37, 41, 1); /* Bootstrap default text color */
+  background-color: #f8f9fa;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,19 +15,20 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  color: #0d6efd;
+  text-decoration: none;
 }
 
-body {
+a:hover {
+  color: #0a58ca;
+  text-decoration: underline;
+}
+
+body, html, #root {
+  height: 100%;
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
+  background-color: #f8f9fa;
 }
 
 h1 {
@@ -42,27 +43,45 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #0d6efd;
+  color: white;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: background-color 0.25s ease-in-out;
 }
 
-@media (prefers-color-scheme: light) {
+button:hover {
+  background-color: #0b5ed7;
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: #f8f9fa;
+    background-color: #212529;
   }
+
+  body, html, #root {
+    background-color: #212529;
+  }
+
+  a {
+    color: #66b2ff;
+  }
+
   a:hover {
-    color: #747bff;
+    color: #99ccff;
   }
+
   button {
-    background-color: #f9f9f9;
+    background-color: #0d6efd;
+  }
+
+  button:hover {
+    background-color: #0b5ed7;
   }
 }
