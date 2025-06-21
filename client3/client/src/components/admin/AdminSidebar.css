@@ -1,0 +1,104 @@
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #fff;
+  border-right: 1px solid #e6e6e6;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.sidebar-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  background-color: #0d6efd;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-header h3 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.role-text {
+  font-size: 0.75rem;
+  color: #6c757d;
+}
+
+.sidebar-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  color: #333;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-menu a:hover {
+  background-color: #f0f4ff;
+  color: #0d6efd;
+}
+
+.sidebar-menu a.active {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  text-align: center;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background: #ffe6e6;
+}
+.dashboard-layout {
+  display: flex;
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+.sidebar-menu .active {
+  background-color: #e7f1ff;
+  color: #0d6efd;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
