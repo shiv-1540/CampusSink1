@@ -19,7 +19,7 @@ const PORT = 5000;
 // Allow requests from frontend (localhost:5173)
 app.use(
   cors({
-    origin: "http://localhost:5173", // Your frontend URL
+    origin: "https://campus-sink.vercel.app", // Your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     // credentials: true, // If using cookies/sessions
   })
