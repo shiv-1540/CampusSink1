@@ -85,3 +85,8 @@ button:focus-visible {
     background-color: #0b5ed7;
   }
 }
+
+/* ✅ Force white background on all pages */
+body, html, #root {
+  background-color: #ffffff !important;
+}

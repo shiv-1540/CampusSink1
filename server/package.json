@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -11,4 +12,27 @@
   "dependencies": {
     "express": "^5.1.0"
   }
+=======
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.4.0",
+    "multer": "^2.0.1",
+    "mysql2": "^3.14.1",
+    "node-cache": "^5.1.2",
+    "nodemailer": "^7.0.3",
+    "nodemon": "^3.1.10"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "description": ""
+>>>>>>> 411ffcf5a1f15c8d93666a3c1d63353b254e204a
 }
