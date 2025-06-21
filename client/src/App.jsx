@@ -15,6 +15,9 @@ import StudentAssignmentsPage from "./components/Student/StudentAssignmentsPage.
 import StudentSeminarsPage from "./components/Student/StudentSeminarsPage";
 import ProjectReviews from './components/Student/ProjectReviews';
 import AddUsersPage from "./components/Admin/AddUsers.jsx";
+import AdminLayout from "./components/Admin/AdminLayout.jsx";
+import AdminSettingsPage from "./components/Admin/AdminSettingsPage.jsx";
+import AdminReportPage from "./components/Admin/AdminReportPage.jsx";
 
 const App = () => {
   return (
@@ -26,6 +29,8 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path='/admin/addusers' element={<AddUsersPage/>}/>
+        <Route path='/admin/settings' element={< AdminSettingsPage/>}/>
+        <Route path='/admin/reports' element={< AdminReportPage/>}/>
 
         <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
         <Route path="/teacher/add-assignment" element={<AddAssignment />} />

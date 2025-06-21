@@ -15,15 +15,32 @@ const reviewRoutes=require('./routes/reviewsRoutes');
 const app = express();
 const PORT = 5000;
 
+
+const allowedOrigins=['http://localhost:5173','https://campus-sink.vercel.app']
+
+const corsOptions={
+  origin:function (origin,callback){
+    if(allowedOrigins.length!==-1 || !origin){
+      callback(null,true);
+    } 
+    else{
+      callback(new Error('Not Allowed by CORS'))
+    }
+  },
+  credentials:true,
+}
 // Middleware
 // Allow requests from frontend (localhost:5173)
-app.use(
-  cors({
-    origin: "https://campus-sink.vercel.app", // Your frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    // credentials: true, // If using cookies/sessions
-  })
-);
+// app.use(
+//   cors({
+//     origin: "https://campus-sink.vercel.app", // Your frontend URL
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true, // If using cookies/sessions
+//   })
+// );
+
+app.use(cors(corsOptions));
+
 
 app.use(bodyParser.json());
 
