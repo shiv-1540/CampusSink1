@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from './Sidebar';
 import { FaUser, FaCheckCircle, FaClock, FaCalendarAlt } from 'react-icons/fa';
 import axios from 'axios';
 import './ProjectReviews.css';
+import StudSidebar from './StudSidebar';
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const ProjectReviews = () => {
@@ -28,8 +28,11 @@ const ProjectReviews = () => {
 
   return (
     <div className="dashboard">
-      <Sidebar />
-      <div className="main-content">
+       <div className="w-64 fixed top-0 left-0 h-full z-10">
+          <StudSidebar/>
+        </div>
+
+      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
         <h2>Project Reviews</h2>
         <p>Track your project evaluations and feedback</p>
 

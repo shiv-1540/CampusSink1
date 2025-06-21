@@ -12,9 +12,11 @@ const AddUsersPage = () => {
   return (
     <div className="flex min-h-screen gap-3 p-6">
      
-         <AdSidebar/>   
-    
-      <div className="flex h-10 gap-3">
+         <div className="w-64 fixed top-0 left-0 h-full z-10">
+          <AdSidebar/>
+        </div>
+
+      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
          <h2 className="text-2xl font-bold mb-6">Add Users</h2>
         <button
           onClick={() => setShowStudentModal(true)}

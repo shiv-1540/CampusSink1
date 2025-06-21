@@ -199,4 +199,33 @@ const deleteAssiById=async (req, res) => {
   }
 }
 
-module.exports={CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById};
+// ✅ Update only assignment deadline by ID
+const UpdateAssignmentDeadline = async (req, res) => {
+  const { deadline } = req.body;
+
+  if (!deadline) {
+    return res.status(400).json({ error: 'Deadline is required' });
+  }
+
+  const formattedDeadline = formatToMySQLDateTime(deadline);
+
+  try {
+    const [result] = await db.execute(
+      `UPDATE assignments SET deadline = ? WHERE id = ?`,
+      [formattedDeadline, req.params.id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Assignment not found' });
+    }
+
+    const [updated] = await db.execute('SELECT * FROM assignments WHERE id = ?', [req.params.id]);
+
+    res.json({ message: 'Deadline updated', data: updated[0] });
+  } catch (error) {
+    console.error('Update error:', error);
+    res.status(500).json({ error: 'Failed to update deadline' });
+  }
+};
+
+module.exports={CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline};

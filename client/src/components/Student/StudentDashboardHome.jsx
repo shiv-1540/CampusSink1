@@ -55,7 +55,8 @@ const StudentDashboardHome = () => {
 
     const fetchSeminars = async () => {
       try {
-        const res = await axios.get(`${server}/api/seminars?branch=${student.branch}&year=${student.year}`,
+        //?branch=${student.branch}&year=${student.year}
+        const res = await axios.get(`${server}/api/seminars`,
           {
             headers:{
               'Content-Type':'application/json',
@@ -63,6 +64,8 @@ const StudentDashboardHome = () => {
             }
           }
         );
+        console.log("Seminars: ",res);
+
         setSeminars(res.data);
       } catch (err) {
         console.error("Failed to fetch seminars", err);
@@ -95,11 +98,11 @@ const StudentDashboardHome = () => {
   tomorrow.setDate(today.getDate() + 1);
   tomorrow.setHours(0, 0, 0, 0);
 
-  const upcomingSeminars = seminars.filter((seminar) => {
-    const seminarDate = new Date(seminar.date);
-    seminarDate.setHours(0, 0, 0, 0);
-    return seminarDate.getTime() === today.getTime() || seminarDate.getTime() === tomorrow.getTime();
-  });
+  // const upcomingSeminars = seminars.filter((seminar) => {
+  //   const seminarDate = new Date(seminar.date);
+  //   seminarDate.setHours(0, 0, 0, 0);
+  //   return seminarDate.getTime() === today.getTime() || seminarDate.getTime() === tomorrow.getTime();
+  // });
 
   return (
     <>
@@ -170,8 +173,8 @@ const StudentDashboardHome = () => {
 
               <div className="bg-white p-4 rounded shadow-sm mb-4">
                 <h5>🧑‍🏫 Upcoming Seminars</h5>
-                {upcomingSeminars.length > 0 ? (
-                  upcomingSeminars.map((seminar) => (
+                {seminars.length > 0 ? (
+                  seminars.map((seminar) => (
                     <div key={seminar._id} className="mb-2">
                       <strong>{seminar.title}</strong><br />
                       <small className="text-muted">

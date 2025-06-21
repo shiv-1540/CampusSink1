@@ -1,58 +1,81 @@
+import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  FaHome,
-  FaBook,
-  FaChalkboardTeacher,
-  FaClipboardList,
+  FaTasks,
+  FaFileAlt,
+  FaClock,
+  FaBookOpen,
   FaSignOutAlt,
-  FaCalendarAlt,
-  FaBell,
-} from "react-icons/fa";
-import { useNavigate,Link } from "react-router-dom";
+} from 'react-icons/fa';
 
 const StudSidebar = () => {
-   const navigate=useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user')) || {};
 
   const handleLogout = () => {
-      // Clear any session/auth storage if used
-      localStorage.clear();  // optional if you use localStorage
-      navigate('/'); // Redirect to sign-in page
+    localStorage.clear();
+    navigate('/');
   };
+
+  const menuItems = [
+    { path: '/student/dashboard', label: 'Home', icon: <FaTasks /> },
+    { path: '/student/assignments', label: 'My Assignments', icon: <FaFileAlt /> },
+    { path: '/student/reviews', label: 'MY Projects', icon: <FaBookOpen /> },
+    { path: '/student/seminars', label: 'Seminars', icon: <FaBookOpen /> },
+  ];
+
   return (
-      <div className="bg-white border-end vh-100 d-flex flex-column justify-content-between position-fixed" style={{ width: "240px" }}>
-        <div>
-        <div className="p-4 text-center border-bottom">
-            <h5 className="mb-0 fw-bold text-primary">CampusSink</h5>
-            <small className="text-muted">Academic Portal</small>
-        </div>
-        <div className="text-center mt-3 mb-4">
-            <img src="https://randomuser.me/api/portraits/men/75.jpg" className="rounded-circle mb-2" width="60" alt="profile" />
-            <h6 className="mb-0">Alex Kumar</h6>
-            <small className="text-muted">Student</small>
+    <aside className="fixed top-0 left-0 h-screen w-64 bg-white shadow-md flex flex-col justify-between border-r z-50">
+      {/* Top Section */}
+      <div>
+        {/* Branding */}
+        <div className="px-6 py-4 border-b">
+          <h2 className="text-xl font-bold text-blue-700 text-center">📘 CampusSink</h2>
         </div>
 
-        <ul className="nav flex-column px-3">
-            <li className="nav-item mb-2">
-            <Link className="nav-link text-dark" to="/student/dashboard"><FaHome className="me-2" /> Home</Link>
-            </li>
-            <li className="nav-item mb-2">
-            <Link className="nav-link text-dark" to="/student/assignments"><FaBook className="me-2" /> My Assignments</Link>
-            </li>
-            <li className="nav-item mb-2">
-            <Link className="nav-link text-dark" to="/student/seminars"><FaChalkboardTeacher className="me-2" /> Seminars</Link>
-            </li>
-            <li className="nav-item mb-2">
-            <Link className="nav-link text-dark" to="/student/reviews"><FaClipboardList className="me-2" /> Project Reviews</Link>
-            </li>
-        </ul>
+        {/* Profile */}
+        <div className="flex flex-col items-center text-center p-3 border-b">
+          <img
+            src="https://randomuser.me/api/portraits/women/44.jpg"
+            alt="Teacher"
+            className="rounded-full w-20 h-20 border-2 border-blue-500"
+          />
+          <p className="mt-3 font-semibold text-gray-800">{user.name}</p>
+          <p className="text-sm text-gray-500">{user.role}</p>
         </div>
 
-        <div className="text-center p-3 border-top">
-           <button className="btn btn-outline-danger btn-sm w-100" onClick={handleLogout} ><FaSignOutAlt className="me-1" /> Logout</button>
-        </div>
+        {/* Navigation */}
+        <nav className="mt-4 space-y-1 px-3">
+          {menuItems.map((item, idx) => (
+            <Link
+              key={idx}
+              to={item.path}
+              className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 ${
+                location.pathname === item.path
+                  ? 'bg-blue-600 text-white font-semibold'
+                  : 'text-gray-700 hover:bg-blue-100'
+              }`}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
+      </div>
 
-  </div>
+      {/* Logout Button */}
+      <div className="p-4 border-t">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg transition"
+        >
+          <FaSignOutAlt />
+          Logout
+        </button>
+      </div>
+    </aside>
   );
-
 };
 
 export default StudSidebar;

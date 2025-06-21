@@ -18,6 +18,7 @@ const TeacherDashboard = () => {
   const [upcomingDeadlines, setUpcomingDeadlines] = useState([]);
   const [recentSubmissions, setRecentSubmissions] = useState([]);
   const [allAssignments, setAllAssignments] = useState([]);
+  const [allSeminars,setAllSeminars]=useState([]);
   const [showDateEvents, setShowDateEvents] = useState(false);
   const [dateEvents, setDateEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -52,6 +53,31 @@ useEffect(() => {
   .catch(error => {
     console.error("Error fetching assignments:", error);
   });
+}, []);
+
+useEffect(() => {
+  const fetchSeminars = async () => {
+    const token = localStorage.getItem('token');
+    console.log("token: ", token);
+
+    try {
+      const res = await axios.get(`${server}/api/seminars`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        setAllSeminars(res.data);
+        console.log("Seminars:", res.data);  // ✅ Print seminars here
+      }
+    } catch (err) {
+      console.error("Error fetching seminars:", err);
+    }
+  };
+
+  fetchSeminars();  // Call the async function
 }, []);
 
   
@@ -134,55 +160,104 @@ useEffect(() => {
         </Row>
 
         {/* Upcoming Deadlines & Calendar */}
-        <Row className="mb-4 g-3">
-          <Col md={8}>
-            <Card>
-              <Card.Body>
-                <h5 className="fw-bold">Upcoming Deadlines</h5>
-                <ListGroup variant="flush">
-                  {upcomingDeadlines.map(a => (
-                    <ListGroup.Item key={a.id}>
-                      <div className="d-flex justify-content-between">
-                        <div>
-                          <h6 className="mb-1">{a.title}</h6>
-                          <small className="text-muted">{a.branch} • Year {a.year}</small>
-                        </div>
-                        <div className="text-danger fw-semibold">
-                          Due: {new Date(a.deadline).toLocaleDateString()}
-                        </div>
+      <Row className="mb-4 g-3">
+        {/* Left: Deadlines + Seminars */}
+        <Col md={8}>
+          <Card className="shadow rounded-4">
+            <Card.Body>
+              <h5 className="fw-bold mb-3">📌 Upcoming Deadlines</h5>
+              <ListGroup variant="flush" className="mb-4">
+                {upcomingDeadlines.map((a) => (
+                  <ListGroup.Item key={a.id} className="bg-light border-0 rounded mb-2">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 className="mb-1 text-dark">{a.title}</h6>
+                        <small className="text-muted">
+                          {a.branch} • Year {a.year}
+                        </small>
                       </div>
-                    </ListGroup.Item>
-                  ))}
-                  {upcomingDeadlines.length === 0 && (
-                    <ListGroup.Item className="text-muted text-center">No upcoming assignments</ListGroup.Item>
-                  )}
-                </ListGroup>
-              </Card.Body>
-            </Card>
-          </Col>
+                      <div className="text-danger fw-semibold">
+                        Due: {new Date(a.deadline).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </ListGroup.Item>
+                ))}
 
-          <Col md={4}>
-            <Card>
-              <Card.Body>
-                <h5>
-                  <FaCalendarAlt className="me-2" />
-                  {date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}
-                </h5>
-                <Calendar 
-                  value={date} 
-                  onChange={setDate}
-                  onClickDay={handleDateClick}
-                  tileContent={tileContent}
-                  tileClassName={({ date, view }) => {
-                    if (view === 'month' && dateHasDeadline(date)) {
-                      return 'has-event';
-                    }
-                  }}
-                />
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+                {upcomingDeadlines.length === 0 && (
+                  <ListGroup.Item className="text-muted text-center bg-white">
+                    No upcoming assignments
+                  </ListGroup.Item>
+                )}
+              </ListGroup>
+
+              <h5 className="fw-bold mb-3">🎤 Upcoming Seminars</h5>
+              <div className="space-y-3">
+                {allSeminars.length === 0 && (
+                  <div className="text-muted text-center">No upcoming seminars</div>
+                )}
+                {allSeminars.map((seminar) => (
+                  <div
+                    key={seminar.id}
+                    className="bg-white rounded-xl shadow-sm p-3 hover:shadow-md transition-shadow border"
+                  >
+                    <div className="d-flex justify-content-between align-items-start mb-1">
+                      <div>
+                        <h6 className="fw-semibold text-primary mb-1">{seminar.title}</h6>
+                        <small className="text-muted">{seminar.description}</small>
+                      </div>
+                      <span className="badge bg-primary text-white">
+                        {seminar.mode.toUpperCase()}
+                      </span>
+                    </div>
+
+                    <div className="d-flex flex-wrap gap-3 text-sm text-dark">
+                      <p className="mb-0"><strong>Speaker:</strong> {seminar.speaker}</p>
+                      <p className="mb-0"><strong>Year:</strong> {seminar.year} ({seminar.branch})</p>
+                      <p className="mb-0"><strong>Date:</strong> {new Date(seminar.datetime).toLocaleString()}</p>
+                      <p className="mb-0"><strong>Venue:</strong> {seminar.venue}</p>
+                    </div>
+
+                    {seminar.link && (
+                      <a
+                        href={seminar.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary text-sm mt-2 d-block"
+                      >
+                        🔗 Join Link
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Right: Calendar */}
+        <Col md={4}>
+          <Card className="shadow rounded-4">
+            <Card.Body>
+              <h5 className="d-flex align-items-center fw-bold mb-3">
+                <FaCalendarAlt className="me-2" />
+                {date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}
+              </h5>
+
+              <Calendar
+                value={date}
+                onChange={setDate}
+                onClickDay={handleDateClick}
+                tileContent={tileContent}
+                tileClassName={({ date, view }) => {
+                  if (view === 'month' && dateHasDeadline(date)) {
+                    return 'bg-danger text-white rounded-circle'; // highlight days with deadlines
+                  }
+                }}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
         {/* Recent Submissions */}
         <Card>

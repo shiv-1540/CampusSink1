@@ -52,33 +52,43 @@ const ManageDeadlines = () => {
   };
 
   // Handle update deadline
-  const handleUpdateDeadline = async () => {
-    if (!newDeadline || !selectedAssignment) return;
+const handleUpdateDeadline = async () => {
+  if (!newDeadline || !selectedAssignment) return;
+  console.log("Selected assignment:",selectedAssignment);
+  const token = localStorage.getItem('token');
 
-    try {
-      const res = await axios.put(
-        `${server}/api/assignments/${selectedAssignment.id}`,
-        {
-          ...selectedAssignment,
-          deadline: newDeadline
-        }
-      );
+  try {
+    const res = await axios.put(
+      `${server}/api/assignments/${selectedAssignment.id}/deadline`,
+      {
+        ...selectedAssignment,
+        deadline: newDeadline,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(res.data);
+    setMessage('Deadline updated successfully');
 
-      setMessage('Deadline updated successfully');
-      // Update in UI
-      setAssignments((prev) =>
-        prev.map((a) =>
-          a.id === selectedAssignment.id ? res.data.data : a
-        )
-      );
-      setSelectedAssignment(null);
-      setSearchTitle('');
-      setNewDeadline('');
-    } catch (err) {
-      console.error('Update failed', err);
-      setMessage('Failed to update deadline');
-    }
-  };
+    setAssignments((prev) =>
+      prev.map((a) =>
+        a.id === selectedAssignment.id ? res.data.data : a
+      )
+    );
+
+    setSelectedAssignment(null);
+    setSearchTitle('');
+    setNewDeadline('');
+  } catch (err) {
+    console.error('Update failed', err);
+    setMessage('Failed to update deadline');
+  }
+};
+
 
   return (
     <div className="d-flex">
@@ -109,7 +119,7 @@ const ManageDeadlines = () => {
             </Button>
           </Col>
         </Row>
-
+     
         {selectedAssignment && (
           <>
             <h6>Edit Deadline for: <strong>{selectedAssignment.title}</strong></h6>
@@ -137,14 +147,16 @@ const ManageDeadlines = () => {
                 <th>#</th>
                 <th>Assignment Title</th>
                 <th>Deadline</th>
+                <th>Description</th>
               </tr>
             </thead>
             <tbody>
               {assignments.map((a, i) => (
                 <tr key={a.id}>
                   <td>{i + 1}</td>
-                  <td>{a.title}</td>
+                  <td>{a.title}</td> 
                   <td>{new Date(a.deadline).toLocaleString()}</td>
+                  <td>{a.description}</td>
                 </tr>
               ))}
             </tbody>

@@ -25,9 +25,11 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <AdSidebar />
+       <div className="w-64 fixed top-0 left-0 h-full z-10">
+          <AdSidebar/>
+        </div>
 
-      <div className="flex-1 p-8">
+      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">Welcome to Admin Dashboard</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

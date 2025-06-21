@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Sidebar from "./Sidebar";
 import { FaBookOpen } from "react-icons/fa";
+import StudSidebar from "./StudSidebar";
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const StudentSeminarsPage = () => {
@@ -31,7 +31,7 @@ const StudentSeminarsPage = () => {
             seminar.branch === student.branch &&
             seminar.year === student.year
         );
-
+        console.log("Seminars: "+filtered);
         setSeminars(filtered);
       } catch (err) {
         console.error("Error fetching seminars:", err);
@@ -67,8 +67,11 @@ const StudentSeminarsPage = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar />
-      <div className="flex-grow-1 p-4" style={{ backgroundColor: "#f0f4ff", minHeight: "100vh" }}>
+       <div className="w-64 fixed top-0 left-0 h-full z-10">
+          <StudSidebar />
+        </div>
+
+      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
         <h3 className="fw-bold mb-1">My Seminars</h3>
         <p className="text-muted mb-4">Upcoming and past seminars for your branch and year</p>
 

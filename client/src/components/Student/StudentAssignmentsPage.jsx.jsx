@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import { FaClock, FaDownload } from "react-icons/fa";
 import { Button, Tabs, Tab, ProgressBar } from "react-bootstrap";
 import axios from "axios";
+import StudSidebar from "./StudSidebar";
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const StudentAssignmentsPage = () => {
@@ -127,8 +128,11 @@ const StudentAssignmentsPage = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar />
-      <div className="flex-grow-1 p-4" style={{ backgroundColor: "#f0f4ff", minHeight: "100vh" }}>
+       <div className="w-64 fixed top-0 left-0 h-full z-10">
+          <StudSidebar/>
+        </div>
+
+      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
         <h3 className="fw-bold mb-1">My Assignments</h3>
         <p className="text-muted mb-4">Track your assignments and submissions</p>
 
