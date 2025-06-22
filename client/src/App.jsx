@@ -18,6 +18,8 @@ import AddUsersPage from "./components/Admin/AddUsers.jsx";
 import AdminLayout from "./components/Admin/AdminLayout.jsx";
 import AdminSettingsPage from "./components/Admin/AdminSettingsPage.jsx";
 import AdminReportPage from "./components/Admin/AdminReportPage.jsx";
+import SignupPage from "./SignupPage.jsx";
+import AcademicCalendar from "./components/Teacher/AcademicCalendar.jsx";
 
 const App = () => {
   return (
@@ -26,6 +28,7 @@ const App = () => {
         <Route path="/" element={<Navigate to="/login" />} />
         
         {/* 🔹 Main routes */}
+         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path='/admin/addusers' element={<AddUsersPage/>}/>
@@ -38,6 +41,7 @@ const App = () => {
         <Route path="/teacher/manage-deadlines" element={<ManageDeadlines />} />
         <Route path="/teacher/project-reviews" element={<ProjectReviewPage />} />
         <Route path="/teacher/seminars" element={<SeminarPage />} />
+        <Route path="/teacher/calendar" element={<AcademicCalendar />} />
 
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/student/dashboard" element={<StudentDashboardHome />} />

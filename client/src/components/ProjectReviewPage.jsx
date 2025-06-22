@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import Sidebar from './Sidebar'; // your existing sidebar
+// import Sidebar from './Sidebar'; // your existing sidebar
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Eye, Pencil, CalendarDays } from 'lucide-react';
+import TeachSidebar from './Teacher/TeacherSidebar';
 
 const ProjectReviewPage = () => {
   const [activeTab, setActiveTab] = useState('scheduled');
@@ -25,7 +26,7 @@ const ProjectReviewPage = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar />
+      <TeachSidebar/>
 
       <div className="container-fluid p-4">
         <h2 className="fw-bold mb-3">Project Reviews</h2>

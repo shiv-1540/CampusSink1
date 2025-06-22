@@ -9,7 +9,7 @@ import {
   Card,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "./Sidebar"; // ensure you have this component or create it based on your sidebar code
+import TeachSidebar from "./Teacher/TeacherSidebar";
 
 const AddAssignment = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const AddAssignment = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar />
+        <TeachSidebar/>
       <Container className="my-4">
         <h3 className="mb-4">Create New Assignment</h3>
 

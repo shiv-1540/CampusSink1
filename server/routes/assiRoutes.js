@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const {CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline} =require('../controllers/assiController');
+const {CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline, getWorkloadCnt} =require('../controllers/assiController');
 const { jwtAuthMiddleware } = require('../middlewares/auth');
 
 // ✅ Create new assignment
@@ -24,5 +24,6 @@ router.delete('/:id',jwtAuthMiddleware, deleteAssiById);
 
 router.put('/:id/deadline', jwtAuthMiddleware, UpdateAssignmentDeadline);
 
+router.post('/load',jwtAuthMiddleware,getWorkloadCnt);
 
 module.exports = router;

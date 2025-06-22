@@ -41,8 +41,9 @@ const StudSidebar = () => {
             alt="Teacher"
             className="rounded-full w-20 h-20 border-2 border-blue-500"
           />
-          <p className="mt-3 font-semibold text-gray-800">{user.name}</p>
-          <p className="text-sm text-gray-500">{user.role}</p>
+          <p className="py-1 font-semibold text-gray-800">{user.name}</p>
+          <li className='font-semibold text-sm list-none'>{user.email}</li>
+          <li className="py-1 font-semibold text-sm text-gray-500 list-none">{user.role}</li>
         </div>
 
         {/* Navigation */}

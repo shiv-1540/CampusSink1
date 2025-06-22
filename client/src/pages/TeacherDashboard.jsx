@@ -6,7 +6,8 @@ import 'react-calendar/dist/Calendar.css';
 import { FaTasks, FaFileAlt, FaClock, FaExclamationCircle, FaCalendarAlt, FaCheckCircle, FaBookOpen } from 'react-icons/fa';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Sidebar from '../components/Teacher/Sidebar';
+import TeachSidebar from '../components/Teacher/TeacherSidebar';
+
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const TeacherDashboard = () => {
@@ -132,7 +133,7 @@ useEffect(() => {
     <div className="flex min-h-screen">
      
         <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <Sidebar />
+          <TeachSidebar/>
         </div>
 
       <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">

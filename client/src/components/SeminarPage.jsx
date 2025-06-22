@@ -1,8 +1,9 @@
 // SEMINAR FRONTEND PAGE (React)
 import React, { useEffect, useState } from 'react';
-import Sidebar from './Teacher/Sidebar';
+
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
+import TeachSidebar from './Teacher/TeacherSidebar';
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const SeminarPage = () => {
@@ -138,7 +139,7 @@ const handleDelete = async (id) => {
   return (
     <div className="d-flex">
          <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <Sidebar />
+          <TeachSidebar/>
         </div>
 
       <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">

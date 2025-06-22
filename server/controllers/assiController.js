@@ -228,4 +228,55 @@ const UpdateAssignmentDeadline = async (req, res) => {
   }
 };
 
-module.exports={CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline};
+const getWorkloadCnt = async (req, res) => {
+
+  const { branch, year, filterType = 'all' } = req.body;
+
+  // Define condition string and parameters
+  let dateCondition = '1=1'; // default = no filter
+  if (filterType === 'today') {
+    dateCondition = `DATE(datetime) = CURDATE()`;
+  } else if (filterType === 'week') {
+    dateCondition = `YEARWEEK(datetime, 1) = YEARWEEK(CURDATE(), 1)`;
+  } else if (filterType === 'month') {
+    dateCondition = `MONTH(datetime) = MONTH(CURDATE()) AND YEAR(datetime) = YEAR(CURDATE())`;
+  } else {
+    dateCondition = `datetime > NOW()`; // default: upcoming
+  }
+
+  try {
+    // Assignments (assuming deadline column)
+    const [assignmentRows] = await db.execute(
+      `SELECT COUNT(*) AS count FROM assignments WHERE deadline > NOW()`
+    );
+    const assignmentCount = assignmentRows[0]?.count || 0;
+    if (assignmentCount === 0) {
+      return res.status(404).json({ message: "Assignments not found >> 00" });
+    }
+
+    console.log("Hii assi cnt :",assignmentCount);
+    // Seminars (with date filter + optional branch/year logic)
+    const [seminarRows] = await db.execute(
+      `SELECT COUNT(*) AS count FROM seminars 
+       WHERE ${dateCondition}
+       ${branch ? 'AND branch = ?' : ''} 
+       ${year ? 'AND year = ?' : ''}`,
+      [branch, year].filter(Boolean)
+    );
+    const seminarCount = seminarRows[0]?.count || 0;
+  console.log("Hii semi cnt :",seminarCount);
+    return res.status(200).json({
+      assignmentCount,
+      seminarCount,
+      filterType
+    });
+
+  } catch (err) {
+    return res.status(500).json({ error: `Failed to fetch counts → ${err.message}` });
+  }
+};
+
+
+
+
+module.exports={CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline,getWorkloadCnt};

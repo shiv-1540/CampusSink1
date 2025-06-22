@@ -8,8 +8,8 @@ import {
   Card,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "./Sidebar";
 import axios from "axios";
+import TeachSidebar from "./TeacherSidebar";
 const server= import.meta.env.VITE_BACKEND_URL;
 
 
@@ -81,7 +81,7 @@ const AddAssignment = () => {
   return (
     <div className="d-flex" style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
          <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <Sidebar />
+          <TeachSidebar/>
         </div>
 
       <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">

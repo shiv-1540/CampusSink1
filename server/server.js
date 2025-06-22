@@ -10,7 +10,7 @@ const adminRoutes=require('./routes/adminRoutes');
 const assiRoutes=require('./routes/assiRoutes');
 const semiRoutes=require('./routes/semiRoutes');
 const reviewRoutes=require('./routes/reviewsRoutes');
-
+const academicCalendarRoutes = require("./routes/academicCalendar");
 
 const app = express();
 const PORT = 5000;
@@ -49,6 +49,7 @@ app.use(bodyParser.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // 🔹 Routes
+app.use("/api/academic-calendar", academicCalendarRoutes);
 app.use("/api/auth",authRoutes);
 app.use("/api/assignments",assiRoutes);
 app.use("/api/seminars",semiRoutes);

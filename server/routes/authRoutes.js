@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { addUser ,login, forgotPassword, verifyOtp, resetPassword} = require('../controllers/authControllers');
 const {jwtAuthMiddleware}=require('../middlewares/auth');
+const { getWorkloadCnt } = require('../controllers/assiController');
 
 
 // Only allow admins to add users
@@ -16,11 +17,12 @@ router.post('/add', jwtAuthMiddleware, (req, res, next) => {
 
 // router.post('/add',addUser);
 
-
+router.post('/signup',addUser)
 router.post('/login',login);
 router.post('/forgot-password',forgotPassword);
 router.post('/verify-otp',verifyOtp);
 router.post('/reset-password',resetPassword);
 
+router.get('/load',getWorkloadCnt);
 
 module.exports = router;

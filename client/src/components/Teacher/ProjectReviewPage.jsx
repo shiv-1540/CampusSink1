@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from './Sidebar';
+
 import axios from 'axios';
 import { CalendarDays, Eye, Pencil } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import TeachSidebar from './TeacherSidebar';
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const ProjectReviewPage = () => {
@@ -141,7 +142,7 @@ const ProjectReviewPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
          <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <Sidebar />
+           <TeachSidebar/>
         </div>
 
       

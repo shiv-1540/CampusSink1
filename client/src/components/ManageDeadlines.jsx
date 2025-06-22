@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import Sidebar from './Sidebar';
+
 import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
+import TeachSidebar from './Teacher/TeacherSidebar';
 
 const ManageDeadlines = () => {
   const [assignments, setAssignments] = useState([]);
@@ -17,8 +18,9 @@ const ManageDeadlines = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar />
-      <div className="flex-grow-1 p-4">
+        <TeachSidebar/>
+
+      <div className="ml-64 ">
         <h5 className="fw-semibold mb-4">
           <span className="me-2" style={{ color: '#399EFF' }}>■</span>
           Manage Assignment Deadlines
