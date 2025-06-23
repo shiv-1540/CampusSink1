@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaUser, FaCheckCircle, FaClock, FaCalendarAlt } from 'react-icons/fa';
 import axios from 'axios';
-import './ProjectReviews.css';
+// import './ProjectReviews.css';
 import StudSidebar from './StudSidebar';
 const server= import.meta.env.VITE_BACKEND_URL;
 
@@ -14,8 +14,16 @@ const ProjectReviews = () => {
   }, []);
 
   const fetchReviews = async () => {
+    const token=localStorage.getItem('token');
     try {
-      const res = await axios.get(`${server}/api/reviews`);
+      const res = await axios.get(`${server}/api/reviews`,
+        {
+           headers:{
+               'Content-Type':'application/json',
+               'Authorization':`Bearer ${token}`
+           }
+        }
+      );
       const all = res.data;
       const scheduled = all.filter(r => !r.completed);
       const completed = all.filter(r => r.completed);
@@ -27,84 +35,120 @@ const ProjectReviews = () => {
   };
 
   return (
-    <div className="dashboard">
-       <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <StudSidebar/>
-        </div>
+    <div className="flex">
+  {/* Sidebar */}
+  <div className="w-64 fixed top-0 left-0 h-full z-10 bg-white shadow-md border-r">
+    <StudSidebar />
+  </div>
 
-      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
-        <h2>Project Reviews</h2>
-        <p>Track your project evaluations and feedback</p>
+  {/* Main Content */}
+  <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
+    <h2 className="text-2xl font-bold text-gray-800 mb-1">📋 Project Reviews</h2>
+    <p className="text-sm text-gray-600 mb-6">Track your project evaluations and feedback</p>
 
-        <div className="cards-row">
-          <div className="card">
-            <h4>Total Reviews</h4>
-            <span>{scheduledReviews.length + completedReviews.length}</span>
-          </div>
-          <div className="card">
-            <h4>Scheduled</h4>
-            <FaClock />
-            <span>{scheduledReviews.length}</span>
-          </div>
-          <div className="card">
-            <h4>Completed</h4>
-            <FaCheckCircle />
-            <span>{completedReviews.length}</span>
-          </div>
-        </div>
+    {/* Summary Cards */}
+    <div className="flex flex-wrap gap-6 mb-8">
+      <div className="bg-yellow-100 text-yellow-900 border-l-4 border-yellow-500 p-4 rounded-lg shadow w-64">
+        <h5 className="font-semibold text-lg">Total Reviews</h5>
+        <span className="text-2xl font-bold">{scheduledReviews.length + completedReviews.length}</span>
+      </div>
 
-        <h3>Scheduled Reviews</h3>
-        {scheduledReviews.length === 0 ? (
-          <p>No scheduled reviews</p>
-        ) : (
-          scheduledReviews.map((review, index) => (
-            <div className="scheduled" key={index}>
-              <div className="icon-box user-icon-box">
-                <FaUser className="default-user-icon" />
-              </div>
-              <div>
-                <strong>{review.title}</strong><br />
-                <small><FaCalendarAlt /> {review.date}</small>
-                <p>Prepare your project presentation and be ready to discuss your implementation approach.</p>
-                <ul>
-                  <li>Prepare project demonstration</li>
-                  <li>Review your code and documentation</li>
-                  <li>Be ready to explain your design decisions</li>
-                  <li>Prepare for technical questions</li>
-                </ul>
-                <p><strong>Year:</strong> {review.year || '-'} | <strong>Branch:</strong> {review.branch || '-'}</p>
-              </div>
-              <span className="scheduled-badge">Scheduled</span>
-            </div>
-          ))
-        )}
+      <div className="bg-blue-100 text-blue-900 border-l-4 border-blue-500 p-4 rounded-lg shadow w-64">
+        <h5 className="font-semibold text-lg flex items-center gap-2">
+          <FaClock /> Scheduled
+        </h5>
+        <span className="text-2xl font-bold">{scheduledReviews.length}</span>
+      </div>
 
-        <h3>Completed Reviews</h3>
-        {completedReviews.length === 0 ? (
-          <p>No completed reviews</p>
-        ) : (
-          completedReviews.map((review, index) => (
-            <div className="completed" key={index}>
-              <div className="icon-box check-icon-box">
-                <FaCheckCircle />
-              </div>
-              <div>
-                <strong>{review.title}</strong><br />
-                <small>Reviewed on {review.date}</small>
-                <div className="feedback-box">
-                  <p><strong>Feedback:</strong></p>
-                  <p>Excellent implementation with clean code structure. Good understanding of the requirements and effective problem-solving approach. Consider optimizing the algorithm for better performance.</p>
-                </div>
-              </div>
-              <div className="grade-box">
-                <span className="green">{review.grade || 'N/A'}</span>
-                <p>★★★★☆</p>
-              </div>
-            </div>
-          ))
-        )}
+      <div className="bg-green-100 text-green-900 border-l-4 border-green-500 p-4 rounded-lg shadow w-64">
+        <h5 className="font-semibold text-lg flex items-center gap-2">
+          <FaCheckCircle /> Completed
+        </h5>
+        <span className="text-2xl font-bold">{completedReviews.length}</span>
       </div>
     </div>
+
+    {/* Scheduled Reviews */}
+    <h4 className="text-xl font-bold text-gray-700 mb-4">Scheduled Reviews</h4>
+    {scheduledReviews.length === 0 ? (
+      <p className="text-gray-500">No scheduled reviews</p>
+    ) : (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {scheduledReviews.map((review, index) => (
+          <div key={index} className="bg-white p-5 rounded-lg shadow border-t-4 border-blue-400">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-blue-200 text-blue-800 p-2 rounded-full">
+                <FaUser size={20} />
+              </div>
+              <h5 className="font-semibold text-lg">{review.title}</h5>
+            </div>
+
+            <p className="text-gray-600 text-sm mb-2 flex items-center gap-2">
+              <FaCalendarAlt className="text-blue-400" /> {review.date}
+            </p>
+
+            <p className="text-gray-700 mb-2 text-sm">
+              Prepare your project presentation and be ready to discuss your implementation approach.
+            </p>
+
+            <ul className="list-disc list-inside text-sm text-gray-600 space-y-1 mb-3">
+              <li>Prepare project demonstration</li>
+              <li>Review code & documentation</li>
+              <li>Explain design decisions</li>
+              <li>Prepare for technical questions</li>
+            </ul>
+
+            <p className="text-sm text-gray-700">
+              <strong>Year:</strong> {review.year || '-'} <br />
+              <strong>Branch:</strong> {review.branch || '-'}
+            </p>
+
+            <span className="inline-block mt-3 px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+              Scheduled
+            </span>
+          </div>
+        ))}
+      </div>
+    )}
+
+    {/* Completed Reviews */}
+    <h4 className="text-xl font-bold text-gray-700 mt-10 mb-4">Completed Reviews</h4>
+    {completedReviews.length === 0 ? (
+      <p className="text-gray-500">No completed reviews</p>
+    ) : (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {completedReviews.map((review, index) => (
+          <div key={index} className="bg-white p-5 rounded-lg shadow border-t-4 border-green-400">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="bg-green-200 text-green-800 p-2 rounded-full">
+                <FaCheckCircle size={20} />
+              </div>
+              <h5 className="font-semibold text-lg">{review.title}</h5>
+            </div>
+
+            <p className="text-gray-600 text-sm mb-2">Reviewed on {review.date}</p>
+
+            <div className="bg-green-50 border border-green-200 p-3 rounded mb-2">
+              <p className="text-sm text-gray-800"><strong>Feedback:</strong></p>
+              <p className="text-sm text-gray-600">
+                Excellent implementation with clean code structure. Good understanding of the requirements and effective
+                problem-solving approach. Consider optimizing the algorithm for better performance.
+              </p>
+            </div>
+
+            <div className="flex justify-between items-center text-sm mt-3">
+              <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-xs">
+                Grade: {review.grade || 'N/A'}
+              </span>
+              <span className="text-yellow-500">★★★★☆</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
   );
 };
 

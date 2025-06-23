@@ -14,6 +14,8 @@ const StudentSeminarsPage = () => {
     year: "TY"
   };
 
+  
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
