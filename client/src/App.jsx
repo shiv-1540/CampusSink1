@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter,Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import TeacherDashboard from "./pages/TeacherDashboard.jsx"; 
@@ -9,6 +9,9 @@ import ManageDeadlines from "./components/Teacher/ManageDeadlines.jsx";
 import ProjectReviewPage from "./components/Teacher/ProjectReviewPage.jsx";
 import SeminarPage from "./components/SeminarPage";
 import ForgotPasswordPage from "./ForgotPasswordPage";
+
+import { ToastContainer,toast } from "react-toastify";
+
 
 import StudentDashboardHome from "./components/Student/StudentDashboardHome.jsx";
 import StudentAssignmentsPage from "./components/Student/StudentAssignmentsPage.jsx"; 
@@ -23,7 +26,11 @@ import AcademicCalendar from "./components/Teacher/AcademicCalendar.jsx";
 
 const App = () => {
   return (
+    <>
+     <ToastContainer/>
+      
       <Routes>
+       
         {/* ✅ Redirect root path to /signup */}
         <Route path="/" element={<Navigate to="/login" />} />
         
@@ -50,6 +57,7 @@ const App = () => {
         <Route path="/student/reviews" element={<ProjectReviews />} />
         
       </Routes>
+      </>
     
   );
 };

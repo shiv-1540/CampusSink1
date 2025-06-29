@@ -11,7 +11,9 @@ import {
 const StudSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  
   const user = JSON.parse(localStorage.getItem('user')) || {};
+  const studinfo=JSON.parse(localStorage.getItem('studinfo'));
 
   const handleLogout = () => {
     localStorage.clear();
@@ -43,7 +45,9 @@ const StudSidebar = () => {
           />
           <p className="py-1 font-semibold text-gray-800">{user.name}</p>
           <li className='font-semibold text-sm list-none'>{user.email}</li>
-          <li className="py-1 font-semibold text-sm text-gray-500 list-none">{user.role}</li>
+          <li className="py-1 font-semibold text-sm text-gray-500 list-none">{studinfo.year} <strong>||</strong>{user.role}</li>
+          <li className='py-1 font-semibold text-sm text-gray-500 list-none'></li>
+          <li className='py-1 font-semibold text-sm text-gray-500 list-none'>{studinfo.prn}</li>
         </div>
 
         {/* Navigation */}

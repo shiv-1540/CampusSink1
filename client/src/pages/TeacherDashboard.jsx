@@ -24,13 +24,13 @@ const TeacherDashboard = () => {
   const [dateEvents, setDateEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
 
-
+  
 useEffect(() => {
   const token = localStorage.getItem('token');
   console.log("token: ", token);
 
   // Fetch assignment stats
-  axios.get(`${server}/api/assignments`, {
+  axios.get(`${server}/api/assignments/get1`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`

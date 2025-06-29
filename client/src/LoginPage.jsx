@@ -19,6 +19,37 @@ const LoginPage = () => {
   const [step, setStep] = useState(1); // 1: email, 2: OTP, 3: new password
   const navigate = useNavigate();
 
+
+   const fetchStudentInfo = async () => {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user')); // Get user object
+      const email = user?.email;
+
+      if (!email || !token) {
+        setError("Missing token or email");
+        return;
+      }
+
+      try {
+        const res = await axios.post(`${server}/api/auth/getstudinfo`, 
+          { email }, // Pass email in body
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        // Save student info to localStorage
+        localStorage.setItem('studinfo', JSON.stringify(res.data));
+        console.log("✅ Student info fetched & stored:", res.data);
+      } catch (err) {
+        console.error("Error fetching student info --> ", err.message);
+        setError(err.message);
+      }
+    };
+
    
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -41,9 +72,11 @@ const LoginPage = () => {
         case "teacher":
           navigate("/teacher/dashboard");
           break;
-        case "student":
+        case "student":{
+          await fetchStudentInfo();
           navigate("/student/dashboard");
           break;
+        }
         default:
           navigate("/");
       }

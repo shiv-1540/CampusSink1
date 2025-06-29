@@ -9,12 +9,9 @@ const StudentSeminarsPage = () => {
   const [loading, setLoading] = useState(true);
 
   // Replace with dynamic student data (e.g., from context or localStorage)
-  const student = {
-    branch: "CSE",
-    year: "TY"
-  };
+ 
 
-  
+  const studinfo=JSON.parse(localStorage.getItem('studinfo'));
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -30,8 +27,8 @@ const StudentSeminarsPage = () => {
 
         const filtered = res.data.filter(
           (seminar) =>
-            seminar.branch === student.branch &&
-            seminar.year === student.year
+            seminar.branch === studinfo.department&&
+            seminar.year === studinfo.year
         );
         console.log("Seminars: "+filtered);
         setSeminars(filtered);
@@ -68,94 +65,103 @@ const StudentSeminarsPage = () => {
   };
 
   return (
-    <div className="d-flex">
-       <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <StudSidebar />
-        </div>
-
-      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
-        <h3 className="fw-bold mb-1">My Seminars</h3>
-        <p className="text-muted mb-4">Upcoming and past seminars for your branch and year</p>
-
-        {/* Upcoming Seminars */}
-        <section>
-          <h5 className="fw-semibold">Upcoming Seminars</h5>
-          {loading ? (
-            <div>Loading...</div>
-          ) : upcomingSeminars.length === 0 ? (
-            <div className="bg-white shadow-sm p-4 mb-4 text-center text-muted rounded">
-              <FaBookOpen size={32} className="mb-2" />
-              <h6>No upcoming seminars</h6>
-              <p>Check back later for new seminar announcements.</p>
-            </div>
-          ) : (
-            upcomingSeminars.map((seminar) => (
-              <div key={seminar.id} className="bg-white shadow-sm p-3 mb-3 rounded">
-                <h6 className="fw-bold">{seminar.title}</h6>
-                <small className="text-muted">
-                  {formatDate(seminar.datetime)} • {seminar.venue} • {seminar.speaker}
-                </small>
-                <p className="mt-2 mb-0">{seminar.description}</p>
-                {seminar.mode === "online" && seminar.link && (
-                  <div className="mt-1">
-                    <a
-                      href={seminar.link.startsWith("http") ? seminar.link : `https://${seminar.link}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary"
-                    >
-                      Join Online
-                    </a>
-                  </div>
-                )}
-              </div>
-            ))
-          )}
-        </section>
-
-        {/* Past Seminars */}
-        <section className="mt-5">
-          <h5 className="fw-semibold">Past Seminars</h5>
-          {loading ? (
-            <div>Loading...</div>
-          ) : pastSeminars.length === 0 ? (
-            <div className="bg-white shadow-sm p-4 text-center text-muted rounded">
-              <FaBookOpen size={32} className="mb-2" />
-              <h6>No past seminars</h6>
-            </div>
-          ) : (
-            pastSeminars.map((seminar) => (
-              <div
-                key={seminar.id}
-                className="bg-white shadow-sm p-3 mb-3 rounded d-flex justify-content-between align-items-center"
-              >
-                <div>
-                  <h6 className="fw-bold">{seminar.title}</h6>
-                  <small className="text-muted">
-                    {formatDate(seminar.datetime)} • {seminar.venue} • {seminar.speaker}
-                  </small>
-                  <p className="mb-1 mt-2">{seminar.description}</p>
-                </div>
-                <div className="text-end">
-                  <span className="badge bg-success mb-2">Attended</span>
-                  <br />
-                  {seminar.link && (
-                    <a
-                      href={seminar.link.startsWith("http") ? seminar.link : `https://${seminar.link}`}
-                      className="text-primary fw-semibold"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Link
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </section>
-      </div>
+   <div className="flex">
+    {/* Sidebar */}
+    <div className="w-64 fixed top-0 left-0 h-full bg-white shadow-lg z-10">
+      <StudSidebar />
     </div>
+
+  {/* Main Content */}
+  <div className="flex-grow ml-64 p-2 px-4 bg-gradient-to-br from-gray-100 to-blue-50 min-h-screen">
+    <h1 className="text-3xl font-bold text-gray-800 mb-2">🎓 My Seminars</h1>
+    <p className="text-gray-600 mb-6 ml-11">Upcoming and past seminars curated for your department and academic year.</p>
+
+    {/* Upcoming Seminars */}
+    <section>
+
+      <h2 className="text-xl font-bold text-blue-700 mb-4">📅 Upcoming Seminars</h2>
+      <div className="flex gap-6 ">
+
+     
+      {loading ? (
+        <div className="text-gray-500">Loading...</div>
+      ) : upcomingSeminars.length === 0 ? (
+        <div className="bg-white border border-black-2 border-solid py-3 px-4 mx-2 rounded-xl shadow text-center text-dark-500">
+          <FaBookOpen size={36} className="mx-auto mb-3 text-gray-700" />
+          <h4 className="text-lg font-semibold">No upcoming seminars</h4>
+          <p>Check back later for announcements.</p>
+        </div>
+      ) : (
+        upcomingSeminars.map((seminar) => (
+          <div key={seminar.id} className="w-1/2 bg-white py-4 px-7 rounded-xl shadow mb-2">
+            <h3 className="text-lg font-bold text-gray-800">{seminar.title}</h3>
+            <p className="text-sm text-gray-500 mb-1">
+              🕒 {formatDate(seminar.datetime)} • 🏛️ {seminar.venue} • 🎤 {seminar.speaker}
+            </p>
+            <p className="text-gray-700 mt-2">{seminar.description}</p>
+            {seminar.mode === "online" && seminar.link && (
+              <a
+                href={seminar.link.startsWith("http") ? seminar.link : `https://${seminar.link}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-3 text-blue-600 hover:underline font-medium"
+              >
+                🔗 Join Online
+              </a>
+            )}
+          </div>
+
+        ))
+       
+      )}
+        </div>
+    </section>
+
+    {/* Past Seminars */}
+    <section className="mt-10">
+      <h2 className="text-xl font-bold text-green-700 mb-4">🗓️ Past Seminars</h2>
+      {loading ? (
+        <div className="text-gray-500">Loading...</div>
+      ) : pastSeminars.length === 0 ? (
+        <div className="bg-white p-6 rounded-xl shadow text-center text-gray-500">
+          <FaBookOpen size={36} className="mx-auto mb-3 text-green-400" />
+          <h4 className="text-lg font-semibold">No past seminars</h4>
+        </div>
+      ) : (
+        pastSeminars.map((seminar) => (
+          <div
+            key={seminar.id}
+            className="bg-white p-5 rounded-xl shadow mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center"
+          >
+            <div>
+              <h3 className="text-lg font-bold text-gray-800">{seminar.title}</h3>
+              <p className="text-sm text-gray-500">
+                🕒 {formatDate(seminar.datetime)} • 🏛️ {seminar.venue} • 🎤 {seminar.speaker}
+              </p>
+              <p className="text-gray-700 mt-2">{seminar.description}</p>
+            </div>
+            <div className="mt-4 sm:mt-0 sm:text-right">
+              <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mb-2">
+                ✅ Attended
+              </span>
+              {seminar.link && (
+                <a
+                  href={seminar.link.startsWith("http") ? seminar.link : `https://${seminar.link}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-blue-600 hover:underline font-medium"
+                >
+                  🔗 View Link
+                </a>
+              )}
+            </div>
+          </div>
+        ))
+      )}
+    </section>
+  </div>
+</div>
+
   );
 };
 

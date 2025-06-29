@@ -9,10 +9,14 @@ import StudSidebar from "./StudSidebar";
 import { FaCalendarAlt,FaBell } from "react-icons/fa";
 import WorkloadSummary from "./WorkLoadSummary";
 import { useNavigate } from "react-router-dom";
+import { LocateIcon } from "lucide-react";
 
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const StudentDashboardHome = () => {
+  const [error,setError]=useState("");
+
+  
   const [date, setDate] = useState(new Date());
   const [assignments, setAssignments] = useState([]);
   const [dueMap, setDueMap] = useState({});
@@ -31,15 +35,18 @@ const StudentDashboardHome = () => {
     branch: "CSE",
     year: "TE",
   };
- 
+  const studinfo=JSON.parse(localStorage.getItem('studinfo'));
+  console.log("studinfo from login :",studinfo);
+
+
   useEffect(() => {
     const token=localStorage.getItem('token');
-      
+   
     const fetchAssignments = async () => {
       
       try {
         const res = await axios.get(
-             `${server}/api/assignments?branch=${student.branch}&year=${student.year}`,
+             `${server}/api/assignments?dept_id=${studinfo.dept_id}&year=${studinfo.year}&prn=${studinfo.prn}`,
              {
               headers:{
                 'Content-Type':'application/json',
@@ -48,7 +55,7 @@ const StudentDashboardHome = () => {
              }
             
           );
-        const data = res.data;
+        const data = res.data.unsubmitted;
         setAssignments(data);
 
         const map = {};
@@ -153,22 +160,19 @@ const StudentDashboardHome = () => {
 
     <div className="flex-grow-1 p-4 bg-light" style={{ marginLeft: "240px", minHeight: "100vh" }}>
 
-      {/* Header Welcome Card */}
-      <div className="bg-primary text-white p-4 rounded mb-4 d-flex justify-content-between align-items-center">
-        <div>
-          <h3>Welcome back,  {user.name}👋</h3>
-          <p className="mb-0">Computer Science • Year 3</p>
-        </div>
-        <div className="text-end">
-          <small>Completion Rate</small>
-          <h4 className="mb-0">71%</h4>
-          <div className="progress mt-1" style={{ height: "6px", width: "120px" }}>
-            <div className="progress-bar bg-white" style={{ width: "71%" }}></div>
-          </div>
-        </div>
+        <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white p-6 rounded-xl shadow-md mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+      <div>
+        <h3 className="text-2xl sm:text-3xl font-bold mb-1">Welcome back, {user.name} 👋</h3>
+        <p className="text-sm sm:text-base text-blue-100">Here’s a quick overview of your academic space</p>
       </div>
 
-     
+      <div className="mt-4 sm:mt-0 bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg text-sm font-semibold tracking-wide shadow-sm">
+        {studinfo.year} • {studinfo.department}
+      </div>
+    </div>
+
+
+     {/* {error && <p>{error}</p>} */}
 
       {/* Main Content Layout */}
       <div className="row g-4">

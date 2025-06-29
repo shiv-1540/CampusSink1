@@ -98,11 +98,11 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gray-100">
       <AdSidebar />
 
-      <div className="ml-64 p-8">
+      <div className="ml-64 p-4">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">Welcome to Admin Dashboard</h2>
 
         {/* Statistics Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-4">
           <StatCard title="👨‍🎓 Students" count={stats.students} color="blue" />
           <StatCard title="👩‍🏫 Teachers" count={stats.teachers} color="green" />
           <StatCard title="🏢 Departments" count={stats.departments} color="purple" />
@@ -231,15 +231,22 @@ const AdminDashboard = () => {
   );
 };
 
-const StatCard = ({ title, count, color }) => {
+const StatCard = ({ title, count, color = 'blue' }) => {
   const bg = `bg-${color}-100`;
   const text = `text-${color}-800`;
+  const ring = `ring-${color}-300`;
+
   return (
-    <div className={`p-4 rounded-xl shadow-md ${bg}`}>
-      <h4 className={`text-sm font-medium mb-1 ${text}`}>{title}</h4>
-      <p className={`text-2xl font-bold ${text}`}>{count}</p>
+    <div
+      className={`p-3 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1 ${bg} ring-1 ${ring}`}
+    >
+      <div className="flex items-center justify-between">
+        <h4 className={`text-lg font-semibold ${text}`}>{title}</h4>
+      </div>
+      <p className={`text-3xl font-extrabold mt-2 ${text}`}>{count}</p>
     </div>
   );
 };
+
 
 export default AdminDashboard;

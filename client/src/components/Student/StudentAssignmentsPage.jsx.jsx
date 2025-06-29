@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "./Sidebar";
+import { toast } from "react-toastify";
 import { FaClock, FaDownload } from "react-icons/fa";
 import { Button, Tabs, Tab, ProgressBar } from "react-bootstrap";
 import axios from "axios";
@@ -10,52 +10,100 @@ const StudentAssignmentsPage = () => {
   const [key, setKey] = useState("active");
   const [activeAssignments, setActiveAssignments] = useState([]);
   const [submittedAssignments, setSubmittedAssignments] = useState([]);
+   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Mock student details (replace with actual login state if needed)
-  const student = {
-    year: "TE",
-    branch: "CSE",
-    name: "John Doe",
-  };
+  // // Mock student details (replace with actual login state if needed)
+  // const student = {
+  //   year: "TE",
+  //   branch: "CSE",
+  //   name: "John Doe",
+  // };
+
+
+   const studinfo=JSON.parse(localStorage.getItem('studinfo'));
+   const token=localStorage.getItem('token');
+   console.log(studinfo.year," >>" ,studinfo.dept_id);
 
   useEffect(() => {
-
-    const token = localStorage.getItem('token');
     const fetchAssignments = async () => {
+      if (!studinfo?.year || !studinfo?.dept_id || !studinfo?.prn || !token) {
+        setError("Missing student information or token");
+        return;
+      }
+
       try {
-        const res = await axios.get(
-          `${server}/api/assignments?year=${student.year}&branch=${student.branch}`,
-          {
-            headers:{
-              'Content-Type':'application/json',
-              'Authorization':`Bearer ${token}`
-            }
-          }
-        );
-        const allAssignments = res.data;
+        const response = await axios.get(`${server}/api/assignments?year=${studinfo.year}&dept_id=${studinfo.dept_id}&prn=${studinfo.prn}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+       
+        });
 
-        const submitted = JSON.parse(localStorage.getItem("submittedAssignments")) || [];
-        const submittedIds = submitted.map((s) => s.id);
+        const { submitted, unsubmitted } = response.data;
 
-        setActiveAssignments(allAssignments.filter((a) => !submittedIds.includes(a.id)));
-        setSubmittedAssignments(submitted);
+        setSubmittedAssignments(submitted || []);
+        setActiveAssignments(unsubmitted || []);
       } catch (err) {
-        console.error("Error fetching assignments:", err);
+        console.error("❌ Error fetching assignments:", err);
+        setError("Failed to load assignments.");
+        toast.error("Something went wrong while loading assignments");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchAssignments();
   }, []);
 
-  const handleSubmit = (assignment) => {
-    const updatedSubmitted = [...submittedAssignments, assignment];
-    localStorage.setItem("submittedAssignments", JSON.stringify(updatedSubmitted));
-    setSubmittedAssignments(updatedSubmitted);
+       // Return loading or error UI (optional)
+  if (loading) return <div className="text-center py-4 text-blue-600">Loading assignments...</div>;
+  if (error) return <div className="text-red-600 text-center py-4">{error}</div>;
 
-    const updatedActive = activeAssignments.filter((a) => a.id !== assignment.id);
-    setActiveAssignments(updatedActive);
-    setKey("submitted");
-  };
+
+
+    const handleSubmit = async (assignment) => {
+        const token = localStorage.getItem('token');
+        const student = JSON.parse(localStorage.getItem('studinfo'));
+
+        if (!token || !student?.prn) {
+          toast.error('Unauthorized or missing student information');
+          return;
+        }
+
+        try {
+          // Send POST request to backend to mark assignment as submitted
+          await axios.post(
+            `http://localhost:5000/api/assignments/submitassi`,
+            {
+              assignment_id: assignment.id,
+              prn: student.prn,
+              submission_file:'11'
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          // Update UI after successful submission
+          const updatedSubmitted = [...submittedAssignments, assignment];
+          localStorage.setItem("submittedAssignments", JSON.stringify(updatedSubmitted));
+          setSubmittedAssignments(updatedSubmitted);
+
+          const updatedActive = activeAssignments.filter((a) => a.id !== assignment.id);
+          setActiveAssignments(updatedActive);
+
+          toast.success("✅ Assignment submitted successfully!");
+          setKey("submitted");
+        } catch (error) {
+          console.error("Submit error:", error);
+          toast.error(`❌ Failed to submit assignment >> ${error.message}`);
+        }
+     };
 
   // ✅ File Download Handler (FIXED)
   const handleDownload = (fileUrl, fileName) => {
@@ -68,63 +116,92 @@ const StudentAssignmentsPage = () => {
     document.body.removeChild(link);
   };
 
-  const renderAssignmentCard = (assignment, showSubmit = true) => (
-    <div key={assignment.id} className="card shadow-sm p-3 mb-3">
-      <div className="d-flex justify-content-between">
-        <div className="d-flex">
+ const renderAssignmentCard = (assignment, showSubmit = true) => {
+  const isDueToday =
+    new Date(assignment.deadline).toDateString() === new Date().toDateString();
+
+  return (
+    <div key={assignment.id} className="card shadow rounded-4 mb-4 border-0">
+      <div className="card-body">
+        <div className="d-flex gap-3">
+          {/* Icon Box */}
           <div
-            className="me-3 d-flex align-items-center justify-content-center"
+            className="d-flex align-items-center justify-content-center"
             style={{
-              width: 50,
-              height: 50,
+              width: 60,
+              height: 60,
               background: "linear-gradient(to right, #6a11cb, #2575fc)",
-              borderRadius: 12,
+              borderRadius: 16,
             }}
           >
-            <FaClock className="text-white fs-4" />
+            <FaClock className="text-white fs-3" />
           </div>
-          <div>
-            <h5 className="mb-1">
-              {assignment.title}{" "}
-              {new Date(assignment.deadline).toDateString() === new Date().toDateString() && (
-                <span className="badge bg-danger">Due today</span>
-              )}
-            </h5>
-            <small className="text-muted">{assignment.description}</small>
-            <p className="mt-2 mb-1">{assignment.description}</p>
-            <small className="text-muted">
-              Due: {new Date(assignment.deadline).toLocaleDateString()} • Posted by Teacher
-            </small>
+
+          {/* Assignment Info */}
+          <div className="flex-grow-1">
+            <div className="d-flex justify-content-between align-items-start">
+              <div>
+                <h5 className="fw-bold mb-1 text-primary">
+                  {assignment.title}
+                </h5>
+                {isDueToday && (
+                  <span className="badge bg-danger mb-2">Due Today</span>
+                )}
+              </div>
+              <small className="text-muted">
+                {new Date(assignment.deadline).toLocaleDateString()}
+              </small>
+            </div>
+
+            <p className="text-muted small mb-1">
+              Posted by <strong>Teacher</strong>
+            </p>
+            <p className="text-dark">{assignment.description}</p>
           </div>
         </div>
-        <div className="d-flex flex-column align-items-end">
+
+        {/* Actions */}
+        <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+          {/* Download */}
           {assignment.file_url && (
             <Button
-              variant="outline-secondary"
+              variant="outline-primary"
               size="sm"
-              className="mb-2"
-              onClick={() => handleDownload(assignment.file_url, assignment.title + ".pdf")}
+              onClick={() =>
+                handleDownload(assignment.file_url, assignment.title + ".pdf")
+              }
             >
-              <FaDownload className="me-1" /> Download
+              <FaDownload className="me-2" />
+              Download
             </Button>
           )}
+
+          {/* Submit */}
           {showSubmit ? (
-            <Button variant="primary" size="sm" onClick={() => handleSubmit(assignment)}>
+            <Button
+              variant="success"
+              size="sm"
+              onClick={() => handleSubmit(assignment)}
+            >
               Submit
             </Button>
           ) : (
-            <span className="badge bg-success">Submitted</span>
+            <span className="badge bg-success px-3 py-2 fs-6">Submitted</span>
           )}
         </div>
+
+        {/* Progress */}
+        {showSubmit && (
+          <div className="mt-4">
+            <strong className="d-block mb-2">Progress</strong>
+            <ProgressBar now={50} label="50% complete" />
+          </div>
+        )}
       </div>
-      {showSubmit && (
-        <div className="mt-3">
-          <strong>Progress</strong>
-          <ProgressBar now={50} label="50% complete" className="mt-2" />
-        </div>
-      )}
     </div>
   );
+};
+
 
   return (
     <div className="d-flex">
