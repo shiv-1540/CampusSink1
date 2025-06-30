@@ -7,6 +7,9 @@ import {
   FaBookOpen,
   FaSignOutAlt,
 } from 'react-icons/fa';
+import ProfilePicture from '../ProfilePicture';
+import logo from '../../assets/logo.jpg'
+
 
 const StudSidebar = () => {
   const location = useLocation();
@@ -25,6 +28,7 @@ const StudSidebar = () => {
     { path: '/student/assignments', label: 'My Assignments', icon: <FaFileAlt /> },
     { path: '/student/reviews', label: 'MY Projects', icon: <FaBookOpen /> },
     { path: '/student/seminars', label: 'Seminars', icon: <FaBookOpen /> },
+    { path:'/student/notifications',label:'Notifications' ,icon: <FaClock/>}
   ];
 
   return (
@@ -32,17 +36,21 @@ const StudSidebar = () => {
       {/* Top Section */}
       <div>
         {/* Branding */}
-        <div className="px-6 py-4 border-b">
-          <h2 className="text-xl font-bold text-blue-700 text-center">📘 CampusSink</h2>
+        <div className="px-6 py-2 border-b">
+          {/* <h2 className="text-xl font-bold text-blue-700 text-center">📘 CampusSink</h2> */}
+           <img src={logo} alt="Campusink" className='my-1 mt-1'/>
         </div>
 
         {/* Profile */}
         <div className="flex flex-col items-center text-center p-3 border-b">
-          <img
+          {/* <img
             src="https://randomuser.me/api/portraits/women/44.jpg"
             alt="Teacher"
             className="rounded-full w-20 h-20 border-2 border-blue-500"
-          />
+          /> */}
+          
+          <ProfilePicture name={studinfo.name} backgroundColor="#4A4A4A" size={60}/>
+          
           <p className="py-1 font-semibold text-gray-800">{user.name}</p>
           <li className='font-semibold text-sm list-none'>{user.email}</li>
           <li className="py-1 font-semibold text-sm text-gray-500 list-none">{studinfo.year} <strong>||</strong>{user.role}</li>

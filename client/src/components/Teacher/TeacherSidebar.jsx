@@ -7,6 +7,7 @@ import {
   FaBookOpen,
   FaSignOutAlt,
 } from 'react-icons/fa';
+import ProfilePicture from '../ProfilePicture';
 
 const TeachSidebar = () => {
   const location = useLocation();
@@ -39,11 +40,13 @@ const TeachSidebar = () => {
 
         {/* Profile */}
         <div className="flex flex-col items-center text-center p-2 border-b">
-          <img
+          {/* <img
             src="https://randomuser.me/api/portraits/women/44.jpg"
             alt="Teacher"
             className="rounded-full w-20 h-20 border-2 border-blue-500"
-          />
+          /> */}
+          <ProfilePicture name={user.name} backgroundColor="#4CAF50" size={60}/>
+       
           <p className="mt-2 font-semibold text-gray-800">{user.name}</p>
           <p className="text-sm text-gray-500">{user.role}</p>
         </div>

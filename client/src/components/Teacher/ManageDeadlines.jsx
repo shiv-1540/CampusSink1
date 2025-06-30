@@ -17,7 +17,7 @@ const ManageDeadlines = () => {
     const token=localStorage.getItem('token');
     const fetchAssignments = async () => {
       try {
-        const res = await axios.get(`${server}/api/assignments`,
+        const res = await axios.get(`${server}/api/assignments/get1`,
         {
           headers:{
             'Content-Type':'application/json',
@@ -72,7 +72,7 @@ const handleUpdateDeadline = async () => {
       }
     );
     console.log(res.data);
-    setMessage('Deadline updated successfully');
+    setMessage('Deadline updated successfully ✅');
 
     setAssignments((prev) =>
       prev.map((a) =>
@@ -97,12 +97,12 @@ const handleUpdateDeadline = async () => {
         </div>
 
       <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
-        <h5 className="fw-semibold mb-4">
-          <span className="me-2" style={{ color: '#399EFF' }}>■</span>
+        <h5 className="font-extrabold text-md m-3">
+          <span className="" style={{ color: '#399EFF' }}>■</span>
           Manage Assignment Deadlines
         </h5>
 
-        {message && <Alert variant="info">{message}</Alert>}
+        {message && <Alert variant="info" className='text-center font-bold'>{message}</Alert>}
 
         <Row className="align-items-center mb-3">
           <Col md={5}>

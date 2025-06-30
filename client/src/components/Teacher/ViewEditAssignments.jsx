@@ -9,6 +9,7 @@ const server= import.meta.env.VITE_BACKEND_URL;
 const ViewEditAssignments = () => {
   const [assignments, setAssignments] = useState([]);
   const [editing, setEditing] = useState(null);
+  const [error,setError]=useState();
   const [formData, setFormData] = useState({
     id: '',
     title: '',
@@ -23,7 +24,8 @@ const ViewEditAssignments = () => {
   const fetchAssignments = async () => {
     const token=localStorage.getItem('token');
     try {
-      const res = await fetch(`${server}/api/assignments`,
+      console.log("Hiii >> before fetching assignments");
+      const res = await fetch(`${server}/api/assignments/get1`,
         {
           headers:{
             'Content-Type':'application/json',
@@ -32,8 +34,15 @@ const ViewEditAssignments = () => {
         }
 
       );
-      const data = await res.json();
-      setAssignments(data);
+       if(res.ok){
+         const data = await res.json();
+         setAssignments(data);
+       }
+       else{
+        setError("Internal Server Error");
+       }
+
+      console.log("Hiii >> after fetching assignments: >",res);
     } catch (error) {
       console.error('Error fetching assignments:', error);
     }
@@ -123,6 +132,7 @@ const ViewEditAssignments = () => {
         <h3 className="fw-bold mb-3">View & Edit Assignments</h3>
 
         <Row>
+          {error && <p className='m-5 text-xl flex justify-start '> {error}</p>}
           {assignments.map((assignment) => (
             <Col md={4} key={assignment.id} className="mb-4">
               <Card>

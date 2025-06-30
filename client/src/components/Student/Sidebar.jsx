@@ -4,6 +4,7 @@ import { FaHome, FaBook, FaChalkboardTeacher, FaClipboardList, FaSignOutAlt } fr
 import { Link,useNavigate } from "react-router-dom";
 const server= import.meta.env.VITE_BACKEND_URL;
 
+import {logo} from '../../assets/logo.png'
 const Sidebar = () => {
   const navigate=useNavigate();
 
@@ -18,6 +19,7 @@ const Sidebar = () => {
       <div>
         <div className="p-4 text-center border-bottom">
           <h5 className="mb-0 fw-bold text-primary">CampusSink</h5>
+         
           <small className="text-muted">Academic Portal</small>
         </div>
         <div className="text-center mt-3 mb-4">
