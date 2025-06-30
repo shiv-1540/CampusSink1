@@ -7,7 +7,7 @@ import { Modal, Button } from "react-bootstrap";
 import "./StudentDashboard.css";
 import StudSidebar from "./StudSidebar";
 import { FaCalendarAlt,FaBell } from "react-icons/fa";
-import WorkloadSummary from "./WorkLoadSummary";
+import WorkloadSummary from "./WorkloadSummary";
 import { useNavigate } from "react-router-dom";
 import { LocateIcon } from "lucide-react";
 

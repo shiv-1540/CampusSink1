@@ -7,6 +7,7 @@ import { Modal, Button } from "react-bootstrap";
 import "./StudentDashboard.css";
 import StudSidebar from "./StudSidebar";
 import { FaCalendarAlt, FaBell } from "react-icons/fa";
+const server= import.meta.env.VITE_BACKEND_URL;
 
 const StudentDashboardHome = () => {
   const [date, setDate] = useState(new Date());
@@ -24,7 +25,7 @@ const StudentDashboardHome = () => {
     const fetchAssignments = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/assignments?branch=${student.branch}&year=${student.year}`,
+          `${server}/api/assignments?branch=${student.branch}&year=${student.year}`,
           { headers: { Authorization:` Bearer ${token}` } }
         );
         setAssignments(res.data);
@@ -40,7 +41,7 @@ const StudentDashboardHome = () => {
 
     const fetchAcademicEvents = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/academic-calendar");
+        const res = await axios.get(`${server}/api/academic-calendar`);
         setAcademicEvents(res.data.map(e => ({ ...e, type: "Academic" })));
       } catch (err) { console.error(err); }
     };
@@ -48,7 +49,7 @@ const StudentDashboardHome = () => {
     const fetchSeminars = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/seminars?branch=${student.branch}&year=${student.year}`,
+          `${server}/api/seminars?branch=${student.branch}&year=${student.year}`,
           { headers: { Authorization:` Bearer ${token}` } }
         );
         setSeminars(res.data);
