@@ -91,35 +91,82 @@ const CreateNewAssignment = async (req, res) => {
 };
 
 
-// ✅ Get all assignments with optional filters
-const GetAllAssignments=async (req, res) => {
+const GetAllAssignments = async (req, res) => {
+  const { year, dept_id, prn } = req.query;
+
   try {
+    let branch = null;
+
+    // 1. Get branch name from department ID
+    if (dept_id) {
+      const [deptRows] = await db.execute(
+        'SELECT name FROM department WHERE id = ?',
+        [dept_id]
+      );
+      if (deptRows.length === 0) {
+        return res.status(404).json({ error: 'Department not found' });
+      }
+      branch = deptRows[0].name;
+    }
+
+    // 2. Fetch all assignments matching year & branch
     let query = 'SELECT * FROM assignments';
     const filters = [];
     const values = [];
 
-    if (req.query.year) {
+    if (year) {
       filters.push('year = ?');
-      values.push(req.query.year);
+      values.push(year);
     }
-    if (req.query.branch) {
+    if (branch) {
       filters.push('branch = ?');
-      values.push(req.query.branch);
+      values.push(branch);
     }
-
     if (filters.length > 0) {
       query += ' WHERE ' + filters.join(' AND ');
     }
-
     query += ' ORDER BY created_at DESC';
 
-    const [rows] = await db.execute(query, values);
-    res.json(rows);
+    const [assignments] = await db.execute(query, values);
+
+    // 3. Get all assignment IDs the student has submitted
+    const [submittedRows] = await db.execute(
+      'SELECT assignment_id FROM assignment_submissions WHERE prn = ?',
+      [prn]
+    );
+
+    const submittedIds = submittedRows.map(row => row.assignment_id);
+
+    // 4. Separate assignments
+    const submittedAssignments = assignments.filter(a => submittedIds.includes(a.id));
+    const unsubmittedAssignments = assignments.filter(a => !submittedIds.includes(a.id));
+
+    // 5. Send response
+    res.json({
+      submitted: submittedAssignments,
+      unsubmitted: unsubmittedAssignments,
+    });
+
   } catch (error) {
     console.error('Fetch error:', error);
     res.status(500).json({ error: 'Failed to fetch assignments' });
   }
-}
+};
+
+const GetAllAssignments1 = async (req, res) => {
+  
+  try {
+    const query = `SELECT * FROM assignments `;
+    const [rows] = await db.execute(query, []);  // ⚠️ If year is undefined, you'll get the error
+    return res.status(200).json(rows);
+  } catch (error) {
+    console.error('Fetch error:', error.message);
+    return res.status(500).json({ error: `Failed to fetch assignments ${error.message}` });
+  }
+};
+
+
+
 
 // 🔍 Search assignment by title (case-insensitive partial match)
 const SearchAssiByTitle=async (req, res) => {
@@ -276,7 +323,61 @@ const getWorkloadCnt = async (req, res) => {
   }
 };
 
+const submitAssignment = async (req, res) => {
+  const { prn, assignment_id, submission_file } = req.body;
+
+  if (!prn || !assignment_id || !submission_file) {
+    return res.status(400).json({ error: 'Missing required fields: prn, assignment_id, or submission_file' });
+  }
+
+  try {
+    const [existing] = await db.execute(
+      'SELECT * FROM assignment_submissions WHERE assignment_id = ? AND prn = ?',
+      [assignment_id, prn]
+    );
+
+    if (existing.length > 0) {
+      return res.status(409).json({ error: 'Assignment already submitted' });
+    }
+
+    const sql = `
+      INSERT INTO assignment_submissions (assignment_id, prn, submission_file, is_submitted)
+      VALUES (?, ?, ?, ?)
+    `;
+
+    await db.execute(sql, [assignment_id, prn, submission_file, true]);
+
+    return res.status(201).json({ message: '✅ Assignment submitted successfully' });
+  } catch (err) {
+    console.error('❌ Submission Error:', err.message);
+    return res.status(500).json({ error: 'Internal server error during assignment submission' });
+  }
+};
+
+// Get All Notifications for each user
+const getAllNotifications = async (req, res) => {
+  console.log("Request body: ", req.body);
+
+  const { user_id } = req.body;
+  console.log("User ID:", user_id);
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id in request body" });
+  }
+
+  try {
+    const [rows] = await db.execute(
+      `SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC`,
+      [user_id]
+    );
+
+    console.log("Notifications fetched:", rows);
+    res.status(200).json(rows);
+  } catch (err) {
+    console.log("DB Error:", err.message);
+    res.status(500).json({ error: `Failed to fetch notifications --> ${err.message}` });
+  }
+};
 
 
-
-module.exports={CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline,getWorkloadCnt};
+module.exports={CreateNewAssignment,GetAllAssignments,GetAllAssignments1,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline,getWorkloadCnt,submitAssignment,getAllNotifications};

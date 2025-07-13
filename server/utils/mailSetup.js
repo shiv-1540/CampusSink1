@@ -51,6 +51,8 @@ const sendEmail = async ({ email, subject, message }) => {
   }
 };
 
+
+
 /**
  * Send test email (for testing SMTP configuration)
  */
@@ -67,7 +69,17 @@ const sendTestEmail = async () => {
   }
 };
 
+const sendEmail1 = async (to, subject, text) => {
+  return await transporter.sendMail({
+    from: `"Campus Sink" <${process.env.EMAIL}>`,
+    to,
+    subject,
+    text,
+  });
+};
+
 module.exports = {
   sendEmail,
   sendTestEmail,
+  sendEmail1
 };

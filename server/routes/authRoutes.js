@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { addUser ,login, forgotPassword, verifyOtp, resetPassword} = require('../controllers/authControllers');
+const { addUser ,login, forgotPassword, verifyOtp, resetPassword, getStudentInfo} = require('../controllers/authControllers');
 const {jwtAuthMiddleware}=require('../middlewares/auth');
 const { getWorkloadCnt } = require('../controllers/assiController');
 
@@ -24,5 +24,6 @@ router.post('/verify-otp',verifyOtp);
 router.post('/reset-password',resetPassword);
 
 router.get('/load',getWorkloadCnt);
+router.post('/getstudinfo',jwtAuthMiddleware,getStudentInfo);
 
 module.exports = router;

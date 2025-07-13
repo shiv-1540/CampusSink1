@@ -260,7 +260,40 @@ const resetPassword = (req, res) => {
   });
 };
 
-module.exports = { addUser ,login,forgotPassword,verifyOtp,resetPassword};
+
+const getStudentInfo = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const [result] = await db.execute(`
+      SELECT 
+        student.prn, 
+        student.year, 
+        student.division, 
+        student.dept_id, 
+        users.id as user_id, 
+        users.name, 
+        users.email,
+        department.name AS department
+      FROM student
+      INNER JOIN users ON student.user_id = users.id
+      LEFT JOIN department ON student.dept_id = department.id
+      WHERE users.email = ?
+    `, [email]);
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    res.status(200).json(result[0]);
+  } catch (err) {
+    console.error("Error while fetching student info:", err);
+    res.status(500).json({ error: `Server error: ${err.message}` });
+  }
+};
+
+
+module.exports = { addUser ,login,forgotPassword,verifyOtp,resetPassword,getStudentInfo};
 
 
 

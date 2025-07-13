@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const {CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline, getWorkloadCnt} =require('../controllers/assiController');
+const {CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline, getWorkloadCnt, submitAssignment, GetAllAssignments1, getAllNotifications} =require('../controllers/assiController');
 const { jwtAuthMiddleware } = require('../middlewares/auth');
 
 // ✅ Create new assignment
@@ -9,6 +9,9 @@ router.post('/',jwtAuthMiddleware ,CreateNewAssignment );
 
 // ✅ Get all assignments with optional filters
 router.get('/',jwtAuthMiddleware,GetAllAssignments );
+
+// ✅ Get all assignments  without dept_id
+router.get('/get1',jwtAuthMiddleware,GetAllAssignments1 );
 
 // 🔍 Search assignment by title (case-insensitive partial match)
 router.get('/search',jwtAuthMiddleware,SearchAssiByTitle );
@@ -25,5 +28,10 @@ router.delete('/:id',jwtAuthMiddleware, deleteAssiById);
 router.put('/:id/deadline', jwtAuthMiddleware, UpdateAssignmentDeadline);
 
 router.post('/load',jwtAuthMiddleware,getWorkloadCnt);
+
+router.post('/submitassi',jwtAuthMiddleware,submitAssignment);
+
+router.post('/nots',jwtAuthMiddleware,getAllNotifications);
+
 
 module.exports = router;
