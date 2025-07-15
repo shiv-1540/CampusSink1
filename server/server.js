@@ -17,6 +17,7 @@ const academicCalendarRoutes = require("./routes/academicCalendar");
 const cron = require('node-cron');
 const db = require('./db'); // DB connection
 const { sendEmail1 } = require('./utils/mailSetup');
+const connectDB = require("./db/mongodb");
 
 const app = express();
 const PORT = 5000;
@@ -36,6 +37,8 @@ const corsOptions={
   credentials:true,
 }
 app.use(cors(corsOptions));
+
+// connectDB();
 
 // Middleware [CORS ORIGIN] [2nd Way]
 // Allow requests from frontend (localhost:5173)
