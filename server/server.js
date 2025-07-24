@@ -19,11 +19,16 @@ const db = require('./db'); // DB connection
 const { sendEmail1 } = require('./utils/mailSetup');
 const connectDB = require("./db/mongodb");
 
+const twilio = require('twilio');
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = new twilio(accountSid, authToken);
+
 const app = express();
 const PORT = 5000;
 
 //CORS ORIGIN 
-const allowedOrigins=['http://localhost:5173','https://campus-sink.vercel.app']
+const allowedOrigins=['http://localhost:5173','https://campus-sink.vercel.app','https://zjlgkdzc-5173.inc1.devtunnels.ms/']
 
 const corsOptions={
   origin:function (origin,callback){
@@ -37,6 +42,7 @@ const corsOptions={
   credentials:true,
 }
 app.use(cors(corsOptions));
+app.use(express.json());
 
 // connectDB();
 
@@ -74,7 +80,7 @@ cron.schedule('*/100 * * * *', async () => {
    console.log('⏰ Cron started - checking for upcoming assignments');
 
    const now = new Date();
-   const next24hrs = new Date(Date.now() + 24 * 60 * 60 * 1000); // Fix: 24hrs ahead
+   const next24hrs = new Date(Date.now() +  24 * 60 * 60 * 1000); // Fix: 24hrs ahead
 
    console.log("🔍 Time window:");
    console.log("    ➤ Now:        ", now.toLocaleString());
@@ -82,12 +88,14 @@ cron.schedule('*/100 * * * *', async () => {
 
    try {
      const [assignments] = await db.execute(
-      `SELECT a.*, u.email, u.name, u.id as user_id FROM assignments a 
+      `SELECT a.*, u.email, u.name,u.phoneno ,u.id as user_id FROM assignments a 
        JOIN student s ON a.year = s.year AND a.branch = (SELECT name FROM department WHERE id = s.dept_id)
        JOIN users u ON s.user_id = u.id
        WHERE a.deadline BETWEEN ? AND ?`,
       [now, next24hrs]
     );
+
+    console.log("Mai hu assignment wala >>",assignments);
 
     console.log(`📦 Found ${assignments.length} assignment(s) due within next 24 hours`);
 
@@ -107,6 +115,18 @@ cron.schedule('*/100 * * * *', async () => {
               } 
               catch (emailErr) {
                 console.error(`❌ Failed to send email to ${ass.email}:`, emailErr.message);
+              }
+
+              try {
+                const whatsappMessage = await client.messages.create({
+                  to: `whatsapp:+91${ass.phoneno}`, // ← You need to have `ass.phone` or store phone numbers in DB
+                  from: 'whatsapp:+14155238886',
+                  body: message,
+                });
+
+                console.log(`📱 WhatsApp sent to ${ass.name} (${ass.phoneno}): ${whatsappMessage.sid}`);
+              } catch (waErr) {
+                console.error(`❌ WhatsApp failed for ${ass.name}:`, waErr.message);
               }
 
               try {
@@ -130,6 +150,24 @@ cron.schedule('*/100 * * * *', async () => {
 
 console.log("🟢 Cron job initialized successfully");
 
+
+
+// // Send WhatsApp message route
+// app.post('/send-message', async (req, res) => {
+//   try {
+//     const toNumber = req.body.to;
+
+//     const message = await client.messages.create({
+//       to: `whatsapp:${toNumber}`, // user's number
+//       from: 'whatsapp:+14155238886', // Twilio sandbox or verified sender
+//       body: 'Hello from Node.js and Twilio WhatsApp!',
+//     });
+
+//     res.status(200).json({ sid: message.sid });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 // 🔹Starting the server
 app.listen(PORT, () => {

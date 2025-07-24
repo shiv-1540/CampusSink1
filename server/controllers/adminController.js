@@ -21,7 +21,8 @@ const addDepartment = async (req, res) => {
 
 const addStudent = async (req, res) => {
   try {
-    const { name, email, password, prn, dept_id, division, year } = req.body;
+    const { name, email, password, prn,phoneno, dept_id, division, year } = req.body;
+    
     const role = 'student';
 
     if (!name || !email || !password || !prn || !dept_id || !division || !year) {
@@ -31,7 +32,7 @@ const addStudent = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const [userResult] = await db.query('INSERT INTO users (name, email, role, password) VALUES (?, ?, ?, ?)', [name, email, role, hashedPassword]);
+    const [userResult] = await db.query('INSERT INTO users (name, email, role,phoneno,password) VALUES (?, ?, ?,?, ?)', [name, email, role,phoneno, hashedPassword]);
 
     const userId = userResult.insertId;
     await db.query('INSERT INTO student (prn, user_id, division, dept_id, year) VALUES (?, ?, ?, ?, ?)', [prn, userId, division, dept_id, year]);
@@ -47,21 +48,21 @@ const addStudent = async (req, res) => {
 
 const addTeacher = async (req, res) => {
   try {
-    const { name, prn, email, password, dept_id, course_id } = req.body;
+    const { name, prn, email, password, dept_id,phoneno, course_id } = req.body;
     const role = 'teacher';
 
     // course_id is optional now
-    if (!name || !prn || !email || !password || !dept_id) {
+    if (!name || !prn || !email || !password || !dept_id ||!phoneno) {
       return res.status(400).json({
-        error: 'name, prn, email, password, dept_id are required',
+        error: 'name, prn, email, password,phoneno, dept_id are required',
       });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [userResult] = await db.query(
-      'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-      [name, email, hashedPassword, role]
+      'INSERT INTO users (name, email, password,phoneno, role) VALUES (?, ?, ?, ?,?)',
+      [name, email, hashedPassword,phoneno, role]
     );
 
     const userId = userResult.insertId;
@@ -80,6 +81,62 @@ const addTeacher = async (req, res) => {
   }
 };
 
+const updateStudent = async (req, res) => {
+  const { id, name, email, prn, dept_id, year, password,phoneno, division } = req.body;
+  const role="student";
+  console.log(id,name, email, password, prn,phoneno, dept_id, division, year);
+  try {
+    if (!id || !name || !email || !prn || !dept_id || !year || !phoneno || !division) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Update users table
+    await db.query(
+      'UPDATE users SET name = ?, email = ?, phoneno = ? WHERE id = ?',
+      [name, email, phoneno, id]
+    );
+
+    // Update student table
+    await db.query(
+      'UPDATE student SET prn = ?, dept_id = ?, year = ?, division = ? WHERE user_id = ?',
+      [prn, dept_id, year, division, id]
+    );
+
+    res.status(200).json({ message: 'Student updated successfully!' });
+  } catch (err) {
+    console.error('Update student error:', err);
+    res.status(500).json({ error: 'Server error: ' + err.message });
+  }
+};
+
+const updateTeacher = async (req, res) => {
+  const { id, name, email, prn, dept_id, course_id,password,phoneno } = req.body;
+  const role="teacher";
+  console.log(id,name, email, password, prn,phoneno,course_id, dept_id);
+  try {
+    if (!id || !name || !email || !prn || !dept_id  || !phoneno || !course_id) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Update users table
+    await db.query(
+      'UPDATE users SET name = ?, email = ?, phoneno = ? WHERE id = ?',
+      [name, email, phoneno, id]
+    );
+
+    // Update student table
+    await db.query(
+      'UPDATE teacher SET prn = ?, dept_id = ?,course_id=? WHERE user_id = ?',
+      [prn, dept_id, course_id,id]
+    );
+
+    res.status(200).json({ message: 'Teacher updated successfully!' });
+  } catch (err) {
+    console.error('Update teacher error:', err);
+    res.status(500).json({ error: 'Server error: ' + err.message });
+  }
+};
+
 
 // === FETCH CONTROLLERS ===
 const getDepartments = async (req, res) => {
@@ -94,7 +151,7 @@ const getDepartments = async (req, res) => {
 const getStudents = async (req, res) => {
   try {
     const [results] = await db.query(`
-      SELECT u.name, u.email, s.prn, s.division, s.year, d.name AS department
+      SELECT u.id, u.name, u.email,u.phoneno, s.prn, s.division, s.year, d.name AS department
       FROM users u
       JOIN student s ON u.id = s.user_id
       LEFT JOIN department d ON s.dept_id = d.id
@@ -108,14 +165,14 @@ const getStudents = async (req, res) => {
 const getTeachers = async (req, res) => {
   try {
     const [results] = await db.query(`
-      SELECT u.name, u.email, t.prn, d.name AS department
+      SELECT u.id,u.name, u.email,u.phoneno ,t.prn,t.course_id, d.name AS department 
       FROM users u
       JOIN teacher t ON u.id = t.user_id
       LEFT JOIN department d ON t.dept_id = d.id
     `);
     res.json(results);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch teachers' });
+    res.status(500).json({ error: `Failed to fetch teachers ${err}`});
   }
 };
 
@@ -123,6 +180,8 @@ module.exports = {
   addDepartment,
   addStudent,
   addTeacher,
+  updateStudent,
+  updateTeacher,
   getDepartments,
   getStudents,
   getTeachers

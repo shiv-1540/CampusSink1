@@ -2,12 +2,13 @@ const db=require('../db')
 
 //Create a review 
 const CreateReview= async (req, res) => {
-  const { title, year, branch, date } = req.body;
-  console.log(title,year, branch,date);
+  const { title, year, branch, date,description } = req.body;
+  console.log(title,year, branch,date,description);
+  
   try {
     const [result] = await db.execute(
-      'INSERT INTO project_reviews (title, year, branch, date, completed) VALUES (?, ?, ?, ?, ?)',
-      [title, year, branch, date, false]
+      'INSERT INTO project_reviews (title, year, branch, date, completed,description) VALUES (?, ?, ?, ?, ?,?)',
+      [title, year, branch, date, false,description]
     );
     res.status(201).json({ message: 'Review created successfully', id: result.insertId });
   } 
@@ -31,11 +32,11 @@ const GetAllReviews=async (req, res) => {
 //Update a Review By Id 
 const UpdateReviewById=async (req, res) => {
   const { id } = req.params;
-  const { title, year, branch, date } = req.body;
+  const { title, year, branch, date,description } = req.body;
   try {
     const [result] = await db.execute(
-      'UPDATE project_reviews SET title = ?, year = ?, branch = ?, date = ? WHERE id = ?',
-      [title, year, branch, date, id]
+      'UPDATE project_reviews SET title = ?, year = ?, branch = ?, date = ?,description=? WHERE id = ?',
+      [title, year, branch, date, description,id]
     );
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Review not found' });

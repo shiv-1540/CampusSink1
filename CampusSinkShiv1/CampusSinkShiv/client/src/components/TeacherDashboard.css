@@ -1,0 +1,31 @@
+/* Make React Calendar compatible with Bootstrap light theme */
+
+.calendar-container .react-calendar {
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.react-calendar__tile {
+  color: #000 !important;
+}
+
+.react-calendar__tile--active {
+  background: #0d6efd !important;
+  color: white !important;
+}
+
+.react-calendar__navigation button {
+  color: black !important;
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  font-weight: 600;
+  color: #000;
+}
+
+.react-calendar__tile:disabled {
+  color: #ccc;
+}

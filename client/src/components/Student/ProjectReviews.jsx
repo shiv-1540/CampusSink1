@@ -74,40 +74,33 @@ const ProjectReviews = () => {
       <p className="text-gray-500">No scheduled reviews</p>
     ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {scheduledReviews.map((review, index) => (
-          <div key={index} className="bg-white p-5 rounded-lg shadow border-t-4 border-blue-400">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="bg-blue-200 text-blue-800 p-2 rounded-full">
-                <FaUser size={20} />
+       {scheduledReviews.map((review) => (
+            <div key={review.id} className="bg-white p-5 rounded-lg shadow border-t-4 border-blue-400">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="bg-blue-200 text-blue-800 p-2 rounded-full">
+                  <FaUser size={20} />
+                </div>
+                <h5 className="font-semibold text-lg">{review.title}</h5>
               </div>
-              <h5 className="font-semibold text-lg">{review.title}</h5>
+
+              <p className="text-gray-600 text-sm mb-2 flex items-center gap-2">
+                <FaCalendarAlt className="text-blue-400" /> {review.date}
+              </p>
+
+              <p className="text-gray-700 mb-2 text-sm">
+                {review.description || 'No description provided.'}
+              </p>
+
+              <p className="text-sm text-gray-700">
+                <strong>Year:</strong> {review.year || '-'} <br />
+                <strong>Branch:</strong> {review.branch || '-'}
+              </p>
+
+              <span className="inline-block mt-3 px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                Scheduled
+              </span>
             </div>
-
-            <p className="text-gray-600 text-sm mb-2 flex items-center gap-2">
-              <FaCalendarAlt className="text-blue-400" /> {review.date}
-            </p>
-
-            <p className="text-gray-700 mb-2 text-sm">
-              Prepare your project presentation and be ready to discuss your implementation approach.
-            </p>
-
-            <ul className="list-disc list-inside text-sm text-gray-600 space-y-1 mb-3">
-              <li>Prepare project demonstration</li>
-              <li>Review code & documentation</li>
-              <li>Explain design decisions</li>
-              <li>Prepare for technical questions</li>
-            </ul>
-
-            <p className="text-sm text-gray-700">
-              <strong>Year:</strong> {review.year || '-'} <br />
-              <strong>Branch:</strong> {review.branch || '-'}
-            </p>
-
-            <span className="inline-block mt-3 px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-              Scheduled
-            </span>
-          </div>
-        ))}
+          ))}
       </div>
     )}
 
@@ -117,33 +110,36 @@ const ProjectReviews = () => {
       <p className="text-gray-500">No completed reviews</p>
     ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {completedReviews.map((review, index) => (
-          <div key={index} className="bg-white p-5 rounded-lg shadow border-t-4 border-green-400">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="bg-green-200 text-green-800 p-2 rounded-full">
-                <FaCheckCircle size={20} />
+        {completedReviews.map((review) => (
+            <div key={review.id} className="bg-white p-5 rounded-lg shadow border-t-4 border-green-400">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="bg-green-200 text-green-800 p-2 rounded-full">
+                  <FaCheckCircle size={20} />
+                </div>
+                <h5 className="font-semibold text-lg">{review.title}</h5>
               </div>
-              <h5 className="font-semibold text-lg">{review.title}</h5>
-            </div>
 
-            <p className="text-gray-600 text-sm mb-2">Reviewed on {review.date}</p>
+              <p className="text-gray-600 text-sm mb-2">Reviewed on {review.date}</p>
 
-            <div className="bg-green-50 border border-green-200 p-3 rounded mb-2">
-              <p className="text-sm text-gray-800"><strong>Feedback:</strong></p>
-              <p className="text-sm text-gray-600">
-                Excellent implementation with clean code structure. Good understanding of the requirements and effective
-                problem-solving approach. Consider optimizing the algorithm for better performance.
+              <p className="text-gray-700 mb-2 text-sm">
+                {review.description || 'No review notes provided.'}
               </p>
-            </div>
 
-            <div className="flex justify-between items-center text-sm mt-3">
-              <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-xs">
-                Grade: {review.grade || 'N/A'}
-              </span>
-              <span className="text-yellow-500">★★★★☆</span>
+              <p className="text-sm text-gray-700">
+                <strong>Year:</strong> {review.year || '-'} <br />
+                <strong>Branch:</strong> {review.branch || '-'}
+              </p>
+
+              <div className="flex justify-between items-center text-sm mt-3">
+                <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-xs">
+                  Grade: {review.grade || 'N/A'}
+                </span>
+                <span className="text-yellow-500">★★★★☆</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+
+     
       </div>
     )}
   </div>

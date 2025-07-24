@@ -15,6 +15,8 @@ const AddUsersPage = () => {
   const [showDeptModal, setShowDeptModal] = useState(false);
   const [view, setView] = useState('students'); // 'students' or 'teachers'
 
+  const [selectedStud,setSelectedStud]=useState(null);
+  const [selectedTeach,setSelectedTeacher]=useState(null);
 
   const [departments, setDepartments] = useState([]);
   const [students, setStudents] = useState([]);
@@ -35,6 +37,7 @@ const AddUsersPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDepartments(res.data);
+      
     } catch (err) {
       console.error('Error fetching departments:', err);
     }
@@ -46,6 +49,7 @@ const AddUsersPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setStudents(res.data);
+      // console.log(res.data);
     } catch (err) {
       console.error('Error fetching students:', err);
     }
@@ -57,6 +61,7 @@ const AddUsersPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTeachers(res.data);
+      console.log(res.data);
     }
      catch (err) {
       console.error('Error fetching teachers:', err);
@@ -146,7 +151,13 @@ const AddUsersPage = () => {
                     <th className="py-2 px-4 border-b">Division</th>
                   </>
                 )}
-                {/* <th className="py-2 px-4 border-b">Actions</th> */}
+                {view === 'teachers' && (
+                  <>
+                    <th className="py-2 px-4 border-b">course_id</th>
+                   
+                  </>
+                )}
+                 <th className="py-2 px-4 border-b">Actions</th>
               </>
             )}
           </tr>
@@ -186,20 +197,36 @@ const AddUsersPage = () => {
                       <td className="py-2 px-4 border-b">{u.division || '-'}</td>
                     </>
                   )}
-                  {/* <td className="py-2 px-4 border-b space-x-2">
+                  {view === 'teachers' && (
+                    <>
+                      <td className="py-2 px-4 border-b">{u.course_id || '-'}</td>
+                      
+                    </>
+                  )}
+                   <td className="py-2 px-4 border-b space-x-2">
                     <button
-                      onClick={() => view === 'students' ? handleEditStudent(u) : handleEditTeacher(u)}
+                      onClick={() =>{
+                        if(view === 'students'){
+                             setSelectedStud(u);
+                             setShowStudentModal(true);
+                        }
+                        else{
+                           setSelectedTeacher(u);
+                           setShowTeacherModal(true);
+                        }
+
+                      } }
                       className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
                     >
                       Edit
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => view === 'students' ? handleDeleteStudent(u) : handleDeleteTeacher(u)}
                       className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                     >
                       Delete
-                    </button>
-                  </td> */}
+                    </button> */}
+                  </td>
                 </>
               )}
             </tr>
@@ -211,15 +238,44 @@ const AddUsersPage = () => {
 
       {/* Modals */}
       {showStudentModal && (
-        <Modal title="Add Student" onClose={() => setShowStudentModal(false)}>
-          <StudentForm departments={departments} onSuccess={fetchStudents}/>
+        <Modal title={selectedStud ? "Edit Student" : "Add Student"} onClose={() => {
+          setShowStudentModal(false);
+          setSelectedStud(null); // clear after close
+        }}>
+          <StudentForm 
+            departments={departments} 
+            studentData={selectedStud}  // ✅ Pass here
+            onSuccess={() => {
+              setShowStudentModal(false);
+              setSelectedStud(null);  // ✅ Clear selected student
+              fetchStudents(); // Refresh list
+            }}
+          />
         </Modal>
       )}
-      {showTeacherModal && (
+
+       {showTeacherModal && (
+        <Modal title={selectedTeach ? "Edit Teacher" : "Add Teacher"} onClose={() => {
+          setShowTeacherModal(false);
+          setSelectedTeacher(null); // clear after close
+        }}>
+          <TeacherForm 
+            departments={departments} 
+            TeacherData={selectedTeach}  // ✅ Pass here
+            onSuccess={() => {
+              setShowTeacherModal(false);
+              setSelectedTeacher(null);  // ✅ Clear selected student
+              fetchTeachers(); // Refresh list
+            }}
+          />
+        </Modal>
+      )}
+
+      {/* {showTeacherModal && (
         <Modal title="Add Teacher" onClose={() => setShowTeacherModal(false)}>
           <TeacherForm departments={departments} onSuccess={fetchTeachers} />
         </Modal>
-      )}
+      )} */}
       {showDeptModal && (
         <Modal title="Add Department" onClose={() => setShowDeptModal(false)}>
           <DepartmentForm onSuccess={fetchDepartments} />
@@ -281,40 +337,73 @@ const Input = ({ label, type = 'text', placeholder = '', value, onChange, name }
 );
 
 // 🔵 Student Form Component
-const StudentForm = ({departments, onSuccess }) => {
+const StudentForm = ({ departments, onSuccess, studentData }) => {
+  const isEdit = !!studentData;
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
     prn: "",
+    phoneno: "",
     year: "FE",
     division: "A",
-    dept_id: ""
+    dept_id: "",
+    id: null,
   });
 
+  useEffect(() => {
+    if (studentData) {
+      console.log(studentData);
+      setForm({
+        name: studentData.name || "",
+        email: studentData.email || "",
+        password: "", // optional: allow user to update later
+        prn: studentData.prn || "",
+        phoneno: studentData.phoneno || "",
+        year: studentData.year || "FE",
+        division: studentData.division || "A",
+        dept_id: studentData.dept_id || "",
+        id: studentData.id ||null ,
+      });
+    }
+  }, [studentData]);
+
+  
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.password || !form.prn || !form.dept_id) {
+    if (!form.name || !form.email || !form.password || !form.prn || !form.dept_id || !form.phoneno) {
       toast.error("❌ Please fill in all required fields");
       return;
     }
 
     try {
-      await axios.post(`${server}/api/admin/add-student`, form, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json"
-        }
-      });
-      toast.success("✅ Student added successfully");
+      if (isEdit) {
+        await axios.put(`${server}/api/admin/update-student`, form, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json"
+          }
+        });
+        toast.success("✅ Student updated successfully");
+      } else {
+        await axios.post(`${server}/api/admin/add-student`, form, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json"
+          }
+        });
+        toast.success("✅ Student added successfully");
+      }
+      setForm({ name: "", email: "", password: "", prn: "",phoneno:"",role:"student",year: "FE",division: "A",dept_id: "" });
       onSuccess(); // Refresh list
     } catch (err) {
-      console.error("Add student error:", err);
-      toast.error(err.response?.data?.error || "Error adding student");
+      console.error("Add student error:", err.message);
+      toast.error(err.response?.data?.error || "Error adding student"|| err.messsage);
     }
   };
 
@@ -358,44 +447,91 @@ const StudentForm = ({departments, onSuccess }) => {
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Department</label>
-        <select name="dept_id" value={form.dept_id} onChange={handleChange}
-          className="w-full px-3 py-2 rounded bg-white border focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Select Department</option>
-          {departments.map((d) => (
-            <option key={d.id} value={d.id}>{d.name}</option>
-          ))}
-        </select>
+      <div className='grid grid-cols-2 gap-4 '>
+        <div className='flex flex-col '>
+          <label className=" text-md font-medium mb-1">Department</label>
+            <select name="dept_id" value={form.dept_id} onChange={handleChange}
+              className="w-full py-2 rounded bg-white border focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="">Select Department</option>
+              {departments.map((d) => (
+                <option key={d.id} value={d.id}>{d.name}</option>
+              ))}
+          </select>
+        </div>
+        
+         <Input label="Phone No" name="phoneno" value={form.phoneno} onChange={handleChange}/>
       </div>
-
+      
       <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-        Add Student
+        {isEdit ? "Update Student" : "Add Student"}
       </button>
     </form>
   );
 };
 
 // 🔵 Teacher Form Component
-const TeacherForm = ({ departments, onSuccess }) => {
-  const [form, setForm] = useState({ name: '', email: '', password: '', prn: '', dept_id: '', course_id: '' });
+const TeacherForm = ({ departments, onSuccess,TeacherData }) => {
+   const isEdit=!!TeacherData;
+   
+   const [form, setForm] = useState({
+    id: null,
+    name: '',
+    email: '',
+    phoneno: '',
+    password: '',
+    prn: '',
+    dept_id: '',
+    course_id: '',
+  });
+
+  useEffect(() => {
+    if (TeacherData) {
+      setForm({
+        id: TeacherData.id || null,
+        name: TeacherData.name || '',
+        email: TeacherData.email || '',
+        phoneno: TeacherData.phoneno || '',
+        password: '', // Leave blank on edit
+        prn: TeacherData.prn || '',
+        dept_id: TeacherData.dept_id || '',
+        course_id: TeacherData.course_id || '',
+      });
+    }
+  }, [TeacherData]);
+
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.password || !form.prn || !form.dept_id) {
+    if (!form.name || !form.email || !form.password || !form.prn || !form.phoneno ||!form.dept_id) {
       toast.error('Please fill all required fields');
       return;
     }
     try {
-      await axios.post(`${server}/api/admin/add-teacher`, form, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
-      toast.success('Teacher added successfully!');
+       if (isEdit) {
+        await axios.put(`${server}/api/admin/update-teacher`, form, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        toast.success('Teacher updated successfully!');
+      } 
+      else {
+        await axios.post(`${server}/api/admin/add-teacher`, form, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        toast.success('Teacher added successfully!');
+      }
+
+      setForm({ id: null, name: '', email: '', phoneno: '', password: '', prn: '', dept_id: '', course_id: '' });
       onSuccess();
-    } catch (err) {
+
+    } 
+    catch (err) {
       toast.error(err.response?.data?.error || 'Error adding teacher');
     }
   };
@@ -415,9 +551,11 @@ const TeacherForm = ({ departments, onSuccess }) => {
           ))}
         </select>
       </div>
+      <Input label="Phone No" name="phoneno" value={form.phoneno} onChange={handleChange}/>
       <Input label="Course ID (Optional)" name="course_id" value={form.course_id} onChange={handleChange} />
+
       <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-        Submit
+        {isEdit ? 'Update Teacher' : 'Add Teacher'}
       </button>
     </form>
   );
@@ -450,7 +588,6 @@ const DepartmentForm = ({ onSuccess }) => {
     </form>
   );
 };
-
 
 
 export default AddUsersPage;

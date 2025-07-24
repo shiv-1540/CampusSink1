@@ -11,7 +11,7 @@ const ProjectReviewPage = () => {
   const [activeTab, setActiveTab] = useState('scheduled');
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ title: '', year: '', branch: '', date: '' });
+  const [form, setForm] = useState({ title: '', year: '', branch: '', date: '',description:'' });
   const [scheduledReviews, setScheduledReviews] = useState([]);
   const [completedReviews, setCompletedReviews] = useState([]);
 
@@ -37,7 +37,7 @@ const ProjectReviewPage = () => {
     }
   };
 
- const handleSubmit = async () => {
+const handleSubmit = async () => {
   const token = localStorage.getItem('token');
   const config = {
     headers: {
@@ -46,19 +46,24 @@ const ProjectReviewPage = () => {
     }
   };
 
+  if (!form.title || !form.year || !form.branch || !form.date) {
+    toast.error('Please fill in all required fields');
+    return;
+  }
+
   try {
     if (editingId) {
       await axios.put(
-        `{${server}/api/reviews/${editingId}`,
-        form,   // ✅ data first
-        config  // ✅ config second
+        `${server}/api/reviews/${editingId}`,
+        form,
+        config
       );
       toast.success('✅ Review updated!');
     } else {
       await axios.post(
         `${server}/api/reviews`,
-        form,   // ✅ data first
-        config  // ✅ config second
+        form,
+        config
       );
       toast.success('✅ Review created!');
     }
@@ -67,10 +72,11 @@ const ProjectReviewPage = () => {
     setShowModal(false);
     resetForm();
   } catch (err) {
-    console.group("From Reviews :", err?.response);
+    console.error("Review Error:", err?.response);
     toast.error('❌ ' + (err?.response?.data?.error || 'Submission failed'));
   }
 };
+
 
 
   const handleComplete = async (id) => {
@@ -97,14 +103,14 @@ const ProjectReviewPage = () => {
 
 
   const resetForm = () => {
-    setForm({ title: '', year: '', branch: '', date: '' });
+    setForm({ title: '', year: '', branch: '', date: '' ,description:''});
     setEditingId(null);
   };
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   const handleEdit = (review) => {
     setEditingId(review.id);
-    setForm({ title: review.title, year: review.year, branch: review.branch, date: review.date });
+    setForm({ title: review.title, year: review.year, branch: review.branch, date: review.date,description:review.description });
     setShowModal(true);
   };
 
@@ -113,6 +119,7 @@ const ProjectReviewPage = () => {
       <div>
         <h4 className="font-bold text-sm ">{review.title}</h4>
         <p className="text-sm text-gray-600">{review.year} - {review.branch}</p>
+        <p className="text-sm text-gray-600">{review.description}</p>
         <p className="text-sm text-gray-500 flex items-center">
           <CalendarDays className="w-4 h-4 mr-1" /> {review.date}
         </p>
@@ -219,8 +226,21 @@ const ProjectReviewPage = () => {
                     value={form.date}
                     onChange={handleChange}
                     className="w-full mt-1 border text-gray-400 rounded px-3 py-2"
+                    
                   />
                 </div>
+              <div>
+                <label className="block text-sm font-medium" >Description</label>
+                <textarea 
+                    type="text" 
+                    name="description"
+                    value={form.description}
+                    onChange={handleChange}
+                    className="w-full mt-1 border text-gray-400 rounded px-3 py-2"
+                    placeholder='Enter Description'
+
+                />
+              </div>
               </form>
               <div className="mt-4 flex justify-end gap-2">
                 <button

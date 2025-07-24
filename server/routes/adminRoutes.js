@@ -11,15 +11,22 @@ const {
   addDepartment,
   getDepartments,
   getStudents,
-  getTeachers
+  getTeachers,
+  updateStudent,
+  updateTeacher
 } = require('../controllers/adminController');
 
 const { getReportStats } = require('../controllers/adminReportController');
+const { addUser } = require('../controllers/authControllers');
 
 // === POST routes ===
 router.post('/add-dept', jwtAuthMiddleware, addDepartment);
 router.post('/add-student', jwtAuthMiddleware, addStudent);
 router.post('/add-teacher', jwtAuthMiddleware, addTeacher);
+
+// === PUT ROUTES ===
+router.put('/update-student',jwtAuthMiddleware,updateStudent);
+router.put('/update-teacher',jwtAuthMiddleware,updateTeacher);
 
 // === GET routes ===
 router.get('/departments', jwtAuthMiddleware, getDepartments);
