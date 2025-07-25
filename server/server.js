@@ -11,13 +11,14 @@ const adminRoutes=require('./routes/adminRoutes');
 const assiRoutes=require('./routes/assiRoutes');
 const semiRoutes=require('./routes/semiRoutes');
 const reviewRoutes=require('./routes/reviewsRoutes');
+const aiRoutes=require('./routes/aiRoutes');
 const academicCalendarRoutes = require("./routes/academicCalendar");
 
 // For Cron Job
 const cron = require('node-cron');
 const db = require('./db'); // DB connection
 const { sendEmail1 } = require('./utils/mailSetup');
-const connectDB = require("./db/mongodb");
+// const connectDB = require("./db/mongodb");
 
 const twilio = require('twilio');
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -70,6 +71,7 @@ app.use("/api/assignments",assiRoutes);
 app.use("/api/seminars",semiRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/reviews",reviewRoutes);
+app.use('/api', aiRoutes);
 
 
 // CRON JOB SETUP WILL AUTOMATICALY RUN AFTER EACH 12 Hrs

@@ -29,20 +29,30 @@ const LandingPage = () => {
       </header>
 
       {/* Hero Section with Background */}
-      <section
-        className="bg-cover bg-center bg-no-repeat py-32 text-white text-center"
-        style={{ backgroundImage: `url(${heroBg})` }}
-      >
-        <div className="bg-black-50 py-10 px-6 rounded-lg inline-block backdrop-blur-sm">
-          <h1 className="text-4xl md:text-5xl font-extrabold leading-snug text-gray-900">
-            <span className='text-red-700'>T</span>ran<span className='text-red-700'>s</span>form Your <span className='text-red-700'>C</span>ampus <br />
-            <span className="text-blue-400"> <span className='text-blue-400'>M</span>anagement Experience</span>
-          </h1>
-          <p className="max-w-2xl mx-auto mt-4 text-lg font-light text-gray-900">
-            One platform to manage students, teachers, assignments, and performance — all in one place.
-          </p>
-        </div>
-      </section>
+     <section
+  className="relative bg-cover bg-center bg-no-repeat py-32 text-white"
+  style={{ backgroundImage: `url(${heroBg})` }}
+>
+  {/* Overlay for improved readability */}
+  <div className="absolute inset-0 bg-black opacity-50"></div>
+  <div className="relative max-w-4xl mx-auto text-center px-4">
+    <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+      <span className="text-red-600">T</span>ran<span className="text-red-600">s</span>form Your{" "}
+      <span className="text-red-600">C</span>ampus <br />
+      <span className="text-blue-300">Management Experience</span>
+    </h1>
+    <p className="text-lg md:text-xl font-light text-gray-200 mb-8">
+      One platform to manage students, teachers, assignments, and performance — all in one place.
+    </p>
+    <button
+      className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow transition-colors duration-200"
+      onClick={() => navigate('/login')}
+    >
+      Get Started
+    </button>
+  </div>
+</section>
+
 
       {/* Features Section */}
       <section id="features" className="py-16 px-6 bg-gray-50 text-center">

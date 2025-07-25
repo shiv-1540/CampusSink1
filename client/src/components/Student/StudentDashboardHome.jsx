@@ -10,6 +10,8 @@ import { FaCalendarAlt,FaBell } from "react-icons/fa";
 import WorkloadSummary from "./WorkloadSummary";
 import { useNavigate } from "react-router-dom";
 import { LocateIcon } from "lucide-react";
+import AISuggestionCard from "../../AISuggestion";
+import 'react-calendar/dist/Calendar.css';
 
 const server= import.meta.env.VITE_BACKEND_URL;
 
@@ -122,132 +124,120 @@ const StudentDashboardHome = () => {
   // });
 
   return (
-   <>
-  {/* Custom Calendar Styles */}
+ <>
+  {/* Calendar Custom Styles */}
   <style>{`
     .react-calendar {
       width: 100%;
       background: white;
-      border: 1px solid #a0a096;
+      border-radius: 0.5rem;
       font-family: 'Arial', 'Helvetica', sans-serif;
-      line-height: 1.125em;
-      color: black;
-    }
-    .react-calendar *,
-    .react-calendar__tile {
-      color: black;
+      color:rgb(7, 7, 7);
     }
     .react-calendar__tile--active {
-      background: #006edc;
-      color: white;
+      background: #2563eb !important;
+      color: white !important;
+      color:rgb(7, 7, 7);
     }
     .react-calendar__tile--now {
-      background: #ffff76;
-    }
-    .react-calendar__tile:enabled:hover,
-    .react-calendar__tile:enabled:focus {
-      background-color: #e6e6e6;
-    }
-    .react-calendar__tile--now:enabled:hover,
-    .react-calendar__tile--now:enabled:focus {
-      background: #ffffa9;
+      background: #ffe58f !important;
+      color:rgb(7, 7, 7);
+      @apply text-black;
     }
   `}</style>
 
-  {/* Page Layout */}
-  <div className="d-flex">
+  {/* Layout: Sidebar + Main */}
+  <div className="flex min-h-screen gap-10 bg-gray-100">
+   
     <StudSidebar />
 
-    <div className="flex-grow-1 p-4 bg-light" style={{ marginLeft: "240px", minHeight: "100vh" }}>
-
-        <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white p-6 rounded-xl shadow-md mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
-      <div>
-        <h3 className="text-2xl sm:text-3xl font-bold mb-1">Welcome back, {user.name} 👋</h3>
-        <p className="text-sm sm:text-base text-blue-100">Here’s a quick overview of your academic space</p>
+    {/* Main Content */}
+    <div className="flex-grow p-6 ml-64">
+      
+      {/* Welcome Banner */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white p-6 rounded-xl shadow-md mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+        <div>
+          <h3 className="text-2xl md:text-3xl font-bold">Welcome back, {user.name} 👋</h3>
+          <p className="text-sm md:text-base text-blue-100 mt-1">
+            Here's a quick overview of your academic space.
+          </p>
+        </div>
+        <div className="mt-4 sm:mt-0 bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg text-sm font-semibold">
+          {studinfo.year} • {studinfo.department}
+        </div>
       </div>
 
-      <div className="mt-4 sm:mt-0 bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg text-sm font-semibold tracking-wide shadow-sm">
-        {studinfo.year} • {studinfo.department}
-      </div>
-    </div>
+      {/* Grid: Main + Right */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* LEFT: Assignments, Seminars, Calendar */}
+        <div className="col-span-2 space-y-6">
 
-
-     {/* {error && <p>{error}</p>} */}
-
-      {/* Main Content Layout */}
-      <div className="row g-4">
-
-        {/* Left Column */}
-        <div className="col-md-8">
-
-         {/* Current Assignment Card */}
-          <div className="bg-white p-4 rounded shadow-sm mb-4">
-            <h5 className="font-bold py-2">📚 Current Assignments</h5>
-
-            {[...assignments]
+          {/* 📚 Assignments */}
+          <div className="bg-white p-5 rounded-xl shadow-md">
+            <h5 className="text-lg font-semibold mb-4">📚 Current Assignments</h5>
+            {assignments.length ? (
+              [...assignments]
                 .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
                 .map((assignment) => (
-                  <div className="flex justify-between border border-2 p-3 px-4 mb-3 rounded" key={assignment._id}>
+                  <div className="border p-4 mb-3 rounded-md flex justify-between items-start" key={assignment._id}>
                     <div>
-                       <h6 className="fw-bold">{assignment.title}</h6>
-                        <p className="mb-1">{assignment.description}</p>
-                        <p className="small text-muted">
-                          Due: {new Date(assignment.deadline).toLocaleDateString()}
-                        </p>
+                      <h6 className="font-bold">{assignment.title}</h6>
+                      <p className="text-sm">{assignment.description}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Due: {new Date(assignment.deadline).toLocaleDateString()}
+                      </p>
                     </div>
-
-                    <button className=" my-4 btn btn-sm btn-primary" onClick={handleNavigate}>Continue</button>
+                    <button className="btn btn-sm btn-primary mt-2" onClick={handleNavigate}>Continue</button>
                   </div>
-              ))}
-
+              ))
+            ) : <p className="text-gray-500">No assignments available.</p>}
           </div>
 
-
-          {/* Upcoming Seminars Card */}
-          <div className="bg-white p-2  border rounded shadow-sm mb-4">
-            <h5 className="font-bold py-2">🧑‍🏫 Upcoming Seminars</h5>
+          {/* 🧑‍🏫 Seminars */}
+          <div className="bg-white p-5 rounded-xl shadow-md">
+            <h5 className="text-lg font-semibold mb-4">🧑‍🏫 Upcoming Seminars</h5>
             {seminars.length > 0 ? (
               seminars.map((seminar) => (
-                <div key={seminar._id} className="mb-3 p-2 ml-6 border border-2">
-                  <strong>{seminar.title}</strong><br />
-                  <small className="text-muted">
+                <div className="border p-4 mb-3 rounded-md" key={seminar._id}>
+                  <strong>{seminar.title}</strong>
+                  <p className="text-xs text-gray-600">
                     {new Date(seminar.datetime).toLocaleString()} • {seminar.venue} • {seminar.speaker}
-                  </small>
-                  <p className="mb-1">{seminar.description}</p>
+                  </p>
+                  <p className="text-sm">{seminar.description}</p>
                 </div>
               ))
-            ) : (
-              <p className="text-muted">No seminars scheduled.</p>
-            )}
+            ) : <p className="text-gray-500">No seminars scheduled.</p>}
           </div>
 
-          {/* Assignment Calendar Section */}
-          <div className="bg-white p-4 rounded shadow-sm">
-            <h5 className="mb-3">📆 Assignment Calendar</h5>
+          {/* 📆 Calendar + Events */}
+          <div className="bg-white p-5 rounded-xl shadow-md">
+            <h5 className="text-lg font-semibold mb-3">📆 Assignment Calendar</h5>
             <Calendar
               value={date}
               onChange={onDateClick}
               tileClassName={tileClassName}
             />
 
-            <h6 className="mt-3">Upcoming Events</h6>
-            <ul className="list-unstyled small">
+            <h6 className="mt-4 text-md font-semibold">Upcoming Deadlines</h6>
+            <ul className="text-sm mt-2 list-disc ml-5 text-gray-700">
               {assignments.slice(0, 5).map((a) => (
                 <li key={a._id}>
-                  🔵 {new Date(a.deadline).toLocaleDateString()} — {a.title}
+                  {new Date(a.deadline).toLocaleDateString()} — {a.title}
                 </li>
               ))}
             </ul>
           </div>
+
         </div>
 
-        {/* Right Column */}
-        <div className="col-md-4">
+        {/* RIGHT: Mini Calendar + Updates + AI */}
+        <div className="space-y-6">
 
-          {/* Mini Calendar */}
-          <div className="bg-white p-4 rounded shadow-sm mb-4">
-            <h5>
-              <FaCalendarAlt className="me-2" />
+          {/* 📅 Mini Calendar */}
+          <div className="bg-white p-5 rounded-xl shadow-md">
+            <h5 className="text-lg font-semibold mb-2 flex items-center">
+              <FaCalendarAlt className="mr-2" />
               {date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}
             </h5>
             <Calendar
@@ -257,35 +247,34 @@ const StudentDashboardHome = () => {
             />
           </div>
 
-          {/* Recent Updates */}
-          <div className="bg-white p-4 rounded shadow-sm">
-            <h5><FaBell className="me-2" />Recent Updates</h5>
+          {/* 🔔 Recent Updates */}
+          <div className="bg-white p-5 rounded-xl shadow-md">
+            <h5 className="text-lg font-semibold mb-3 flex items-center">
+              <FaBell className="mr-2" />Recent Updates
+            </h5>
             {assignments.slice(0, 3).map((a) => (
-              <div className="p-2 rounded mb-2 bg-light" key={a._id}>
-                <strong>New Assignment</strong><br />
-                <small className="text-muted">{a.title}</small>
+              <div className="bg-gray-100 p-2 rounded mb-2" key={a._id}>
+                <strong>New Assignment:</strong> <br />
+                <small>{a.title}</small>
               </div>
             ))}
           </div>
-        </div>
 
+          {/* 🤖 AI Suggestion */}
+          <AISuggestionCard />
+        </div>
       </div>
-       {/* Workload Summary (Counts) */}
-      <div  className="w-full bg-gray-300">
+
+      {/* 📋 Workload Summary Section */}
+      <div className="mt-8">
+        <h4 className="text-lg font-bold mb-3">📊 Overall Summary of Workload</h4>
+        <div className="bg-white p-5 rounded-xl shadow-md">
           <WorkloadSummary />
-      </div>
-      
-
-      {/* Optional: Overall Summary Section */}
-      <div className="mt-4">
-        <h4 className="mb-3">📊 Overall Summary of Workload</h4>
-        <div className="p-4 bg-white rounded shadow-sm">
-          {/* Add chart, progress, or analytics here */}
-          <p className="text-muted">Charts or advanced stats coming soon...</p>
+          <p className="text-sm text-gray-400 mt-2">Charts or advanced stats coming soon...</p>
         </div>
       </div>
 
-      {/* Assignments Modal for Date Click */}
+      {/* 📆 Modal on Calendar Date Click */}
       <Modal show={modalShow} onHide={() => setModalShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Assignments Due on {date.toDateString()}</Modal.Title>
@@ -295,9 +284,7 @@ const StudentDashboardHome = () => {
             <div key={a._id} className="mb-3">
               <h6>{a.title}</h6>
               <p>{a.description}</p>
-              <small className="text-muted">
-                Due: {new Date(a.deadline).toLocaleString()}
-              </small>
+              <small className="text-muted">Due: {new Date(a.deadline).toLocaleString()}</small>
             </div>
           ))}
         </Modal.Body>
@@ -305,10 +292,10 @@ const StudentDashboardHome = () => {
           <Button variant="secondary" onClick={() => setModalShow(false)}>Close</Button>
         </Modal.Footer>
       </Modal>
-
     </div>
   </div>
-   </>
+</>
+
 
   );
 };

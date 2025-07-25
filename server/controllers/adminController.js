@@ -89,11 +89,12 @@ const updateStudent = async (req, res) => {
     if (!id || !name || !email || !prn || !dept_id || !year || !phoneno || !division) {
       return res.status(400).json({ error: 'All fields are required' });
     }
-
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
     // Update users table
     await db.query(
-      'UPDATE users SET name = ?, email = ?, phoneno = ? WHERE id = ?',
-      [name, email, phoneno, id]
+      'UPDATE users SET name = ?, email = ?, phoneno = ?,password=? WHERE id = ?',
+      [name, email, phoneno,hashedPassword, id]
     );
 
     // Update student table
@@ -117,11 +118,12 @@ const updateTeacher = async (req, res) => {
     if (!id || !name || !email || !prn || !dept_id  || !phoneno || !course_id) {
       return res.status(400).json({ error: 'All fields are required' });
     }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Update users table
     await db.query(
-      'UPDATE users SET name = ?, email = ?, phoneno = ? WHERE id = ?',
-      [name, email, phoneno, id]
+      'UPDATE users SET name = ?, email = ?, phoneno = ?,password=? WHERE id = ?',
+      [name, email, phoneno,hashedPassword, id]
     );
 
     // Update student table
