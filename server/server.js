@@ -78,7 +78,7 @@ app.use('/api', aiRoutes);
  console.log("🟢 Cron script loaded");
 
 
-cron.schedule('*/100 * * * *', async () => {
+cron.schedule('*/30 * * * *', async () => {
    console.log('⏰ Cron started - checking for upcoming assignments');
 
    const now = new Date();

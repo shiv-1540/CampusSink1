@@ -14,16 +14,17 @@
   background: none;
   border: 1px solid transparent;
   border-radius: 6px;
-  transition: background 0.3s, color 0.3s;
+  color: #0e0e0f;
+  /* transition: background 0.3s, color 0.3s; */
 }
 
 .react-calendar__tile--active {
   background: #0d6efd;
-  color: white;
+  color: rgb(25, 23, 23);
 }
 
 .react-calendar__tile--now {
-  background: #eaf4ff;
+  background: #0e0e0f;
   color: #0d6efd;
   font-weight: bold;
 }
