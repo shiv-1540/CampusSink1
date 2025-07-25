@@ -21,7 +21,7 @@ const LandingPage = () => {
             <a href="#reviews" className="hover:text-blue-600 transition">Reviews</a>
           </nav>
           
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-sm" onClick={navigate('/login')}>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-sm" onClick={()=>navigate('/login')}>
               Login to Portal
             </button>
         
