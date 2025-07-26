@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AdSidebar from "../components/Admin/AdSidebar";
 import { FiUsers, FiBook, FiFileText, FiCalendar, FiAward, FiBarChart2, FiAlertCircle, FiClock } from "react-icons/fi";
+const server= import.meta.env.VITE_BACKEND_URL;
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -39,7 +40,7 @@ const AdminDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/report/stats", {
+      const res = await axios.get(`${server}/api/admin/report/stats`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setStats(res.data);
