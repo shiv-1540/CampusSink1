@@ -78,7 +78,7 @@ app.use('/api', aiRoutes);
  console.log("🟢 Cron script loaded");
 
 
-cron.schedule('*/30 * * * *', async () => {
+cron.schedule('*/100 * * * *', async () => {
    console.log('⏰ Cron started - checking for upcoming assignments');
 
    const now = new Date();
@@ -154,22 +154,22 @@ console.log("🟢 Cron job initialized successfully");
 
 
 
-// // Send WhatsApp message route
-// app.post('/send-message', async (req, res) => {
-//   try {
-//     const toNumber = req.body.to;
+// Send WhatsApp message route
+app.post('/send-message', async (req, res) => {
+  try {
+    const toNumber = req.body.to;
 
-//     const message = await client.messages.create({
-//       to: `whatsapp:${toNumber}`, // user's number
-//       from: 'whatsapp:+14155238886', // Twilio sandbox or verified sender
-//       body: 'Hello from Node.js and Twilio WhatsApp!',
-//     });
+    const message = await client.messages.create({
+      to: `whatsapp:${toNumber}`, // user's number
+      from: 'whatsapp:+14155238886', // Twilio sandbox or verified sender
+      body: 'Hello from Node.js and Twilio WhatsApp!',
+    });
 
-//     res.status(200).json({ sid: message.sid });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
+    res.status(200).json({ sid: message.sid });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // 🔹Starting the server
 app.listen(PORT, () => {

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
-import { CalendarDays, Eye, Pencil } from 'lucide-react';
+import { CalendarDays, Eye, Pencil,SquarePen } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TeachSidebar from './TeacherSidebar';
 const server= import.meta.env.VITE_BACKEND_URL;
+
 
 const ProjectReviewPage = () => {
   const [activeTab, setActiveTab] = useState('scheduled');
@@ -115,7 +116,7 @@ const handleSubmit = async () => {
   };
 
   const ReviewCard = ({ review, completed }) => (
-    <div className="bg-white shadow h-15 rounded-lg p-3  flex justify-between items-center">
+    <div className=" shadow h-15 rounded-lg p-3 px-4 mb-1  flex justify-between items-center border border-1 border-black">
       <div>
         <h4 className="font-bold text-sm ">{review.title}</h4>
         <p className="text-sm text-gray-600">{review.year} - {review.branch}</p>
@@ -140,8 +141,8 @@ const handleSubmit = async () => {
             </button>
           </>
         )}
-        <Eye className="w-5 h-5 cursor-pointer" />
-        {!completed && <Pencil className="w-5 h-5 cursor-pointer" onClick={() => handleEdit(review)} />}
+      
+        {!completed && <SquarePen className="w-5 h-5 cursor-pointer" onClick={() => handleEdit(review)} />}
       </div>
     </div>
   );
@@ -200,11 +201,11 @@ const handleSubmit = async () => {
         {/* Modal */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h3 className="text-xl font-bold mb-4">
+            <div className="bg-gray-300 border border-2 border-black rounded-lg p-6 w-full max-w-md">
+              <h3 className="text-xl font-extrabold mb-4">
                 {editingId ? 'Edit Project Review' : 'Create Project Review'}
               </h3>
-              <form className="space-y-4">
+              <form className="space-y-4 ">
                 {['title', 'year', 'branch'].map(field => (
                   <div key={field}>
                     <label className="block text-sm font-medium capitalize">{field}</label>
@@ -212,7 +213,7 @@ const handleSubmit = async () => {
                       name={field}
                       value={form[field]}
                       onChange={handleChange}
-                      className="w-full mt-1 border rounded  text-gray-400 px-3 py-2"
+                      className="w-full mt-1 border rounded  text-gray-400 px-3 py-2 bg-gray-100"
                       placeholder={`Enter ${field}`}
                       type="text"
                     />
@@ -225,7 +226,7 @@ const handleSubmit = async () => {
                     name="date"
                     value={form.date}
                     onChange={handleChange}
-                    className="w-full mt-1 border text-gray-400 rounded px-3 py-2"
+                    className="w-full mt-1 border text-gray-400 rounded px-3 py-2 bg-gray-100"
                     
                   />
                 </div>
@@ -236,7 +237,7 @@ const handleSubmit = async () => {
                     name="description"
                     value={form.description}
                     onChange={handleChange}
-                    className="w-full mt-1 border text-gray-400 rounded px-3 py-2"
+                    className="w-full mt-1 border text-gray-400 rounded px-3 py-2 bg-gray-100"
                     placeholder='Enter Description'
 
                 />

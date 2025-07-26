@@ -1,4 +1,12 @@
-.card {
+/* .card {
   border-radius: 16px;
   border: none;
+} */
+/* index.css (optional custom styling if React-Bootstrap Tabs need help) */
+.nav-tabs .nav-link {
+  @apply text-sm text-gray-600 hover:text-blue-500 font-semibold;
+}
+
+.nav-tabs .nav-link.active {
+  @apply text-blue-600 border-blue-600 border-b-2 bg-transparent;
 }

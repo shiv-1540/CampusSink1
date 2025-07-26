@@ -13,14 +13,6 @@ const StudentAssignmentsPage = () => {
    const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // // Mock student details (replace with actual login state if needed)
-  // const student = {
-  //   year: "TE",
-  //   branch: "CSE",
-  //   name: "John Doe",
-  // };
-
-
    const studinfo=JSON.parse(localStorage.getItem('studinfo'));
    const token=localStorage.getItem('token');
    console.log(studinfo.year," >>" ,studinfo.dept_id);
@@ -121,84 +113,73 @@ const StudentAssignmentsPage = () => {
     new Date(assignment.deadline).toDateString() === new Date().toDateString();
 
   return (
-    <div key={assignment.id} className="card shadow rounded-4 mb-4 border-0">
-      <div className="card-body">
-        <div className="d-flex gap-3">
+   <div
+        key={assignment.id}
+        className="bg-white shadow-md rounded-xl p-4 mb-1 border border-gray-400 hover:shadow-1xl transition duration-300"
+      >
+        <div className="flex flex-col md:flex-row gap-2">
           {/* Icon Box */}
-          <div
-            className="d-flex align-items-center justify-content-center"
-            style={{
-              width: 60,
-              height: 60,
-              background: "linear-gradient(to right, #6a11cb, #2575fc)",
-              borderRadius: 16,
-            }}
-          >
-            <FaClock className="text-white fs-3" />
+          <div className="flex-shrink-0 w-14 h-10 rounded-xl bg-gradient-to-r from-purple-600 to-blue-500 flex items-center justify-center">
+            <FaClock className="text-white text-1xl" />
           </div>
 
           {/* Assignment Info */}
-          <div className="flex-grow-1">
-            <div className="d-flex justify-content-between align-items-start">
+          <div className="flex-1">
+            <div className="flex flex-col sm:flex-row justify-between">
               <div>
-                <h5 className="fw-bold mb-1 text-primary">
+                <h3 className="text-sm md:text-md font-semibold text-gray-800">
                   {assignment.title}
-                </h5>
+                </h3>
                 {isDueToday && (
-                  <span className="badge bg-danger mb-2">Due Today</span>
+                  <span className="inline-block bg-red-500 text-white text-xs px-2 py-1 rounded mt-1/2">
+                    Due Today
+                  </span>
                 )}
               </div>
-              <small className="text-muted">
+              <div className="mt-2 sm:mt-0 text-sm text-gray-500">
                 {new Date(assignment.deadline).toLocaleDateString()}
-              </small>
+              </div>
             </div>
 
-            <p className="text-muted small mb-1">
-              Posted by <strong>Teacher</strong>
-            </p>
-            <p className="text-dark">{assignment.description}</p>
+            {/* <p className="text-sm text-gray-500 mt-2">
+              Posted by <span className="font-semibold text-gray-700">{assignment.createdby}</span>
+            </p> */}
+
+            <p className="text-gray-700 text-sm mt-1 md:pr-6">{assignment.description}</p>
+
+            {/* Actions */}
+            <div className="flex flex-wrap justify-end items-center mt-1 gap-3">
+              {/* Download (if file present) */}
+              {/* {assignment.file_url && (
+                <button
+                  onClick={() =>
+                    handleDownload(assignment.file_url, assignment.title + ".pdf")
+                  }
+                  className="flex items-center text-blue-600 hover:text-blue-800 text-sm"
+                >
+                  <FaDownload className="mr-2" />
+                  Download
+                </button>
+              )} */}
+
+              {/* Submit/Submitted */}
+              {showSubmit ? (
+                <button
+                  onClick={() => handleSubmit(assignment)}
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded text-sm"
+                >
+                  Submit
+                </button>
+              ) : (
+                <span className="bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full">
+                  Submitted
+                </span>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Actions */}
-        <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
-          {/* Download */}
-          {assignment.file_url && (
-            <Button
-              variant="outline-primary"
-              size="sm"
-              onClick={() =>
-                handleDownload(assignment.file_url, assignment.title + ".pdf")
-              }
-            >
-              <FaDownload className="me-2" />
-              Download
-            </Button>
-          )}
-
-          {/* Submit */}
-          {showSubmit ? (
-            <Button
-              variant="success"
-              size="sm"
-              onClick={() => handleSubmit(assignment)}
-            >
-              Submit
-            </Button>
-          ) : (
-            <span className="badge bg-success px-3 py-2 fs-6">Submitted</span>
-          )}
-        </div>
-
-        {/* Progress */}
-        {showSubmit && (
-          <div className="mt-4">
-            <strong className="d-block mb-2">Progress</strong>
-            <ProgressBar now={50} label="50% complete" />
-          </div>
-        )}
       </div>
-    </div>
+
   );
 };
 

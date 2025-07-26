@@ -118,8 +118,8 @@ const StudentSeminarsPage = () => {
     </section>
 
     {/* Past Seminars */}
-    <section className="mt-10">
-      <h2 className="text-xl font-bold text-green-700 mb-4">🗓️ Past Seminars</h2>
+    <section className="mt-5">
+      <h2 className="text-xl font-bold text-green-700 mb-2">🗓️ Past Seminars</h2>
       {loading ? (
         <div className="text-gray-500">Loading...</div>
       ) : pastSeminars.length === 0 ? (
@@ -131,7 +131,7 @@ const StudentSeminarsPage = () => {
         pastSeminars.map((seminar) => (
           <div
             key={seminar.id}
-            className="bg-white p-5 rounded-xl shadow mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center"
+            className="bg-white p-3 rounded-xl shadow mb-2  border border-1 border-dark border-dashed flex flex-col sm:flex-row justify-between items-start sm:items-center"
           >
             <div>
               <h3 className="text-lg font-bold text-gray-800">{seminar.title}</h3>

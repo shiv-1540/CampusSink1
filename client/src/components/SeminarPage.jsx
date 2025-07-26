@@ -148,7 +148,8 @@ const handleDelete = async (id) => {
             <h2 className="fw-bold">Seminars</h2>
             <p className="text-muted">Add, edit, or delete seminar records</p>
           </div>
-          <Button onClick={() => { resetForm(); setShow(true); }}>+ Add Seminar</Button>
+
+          <Button onClick={() => { resetForm(); setShow(true); }}  className='m-4 '>+ Add Seminar</Button>
         </div>
 
         {msg && <Alert variant="info" onClose={() => setMsg('')} dismissible>{msg}</Alert>}
@@ -180,7 +181,7 @@ const handleDelete = async (id) => {
                   <td>{s.branch}</td>
                   <td>{s.year}</td>
                   <td>{s.mode}</td>
-                  <td>{s.mode === 'online' ? <a href={s.link} target="_blank" rel="noreferrer">Join</a> : '-'}</td>
+                  <td>{s.mode === 'online' ? <a href={`https://${s.link}`} target="_blank" rel="noreferrer">Join</a> : '-'}</td>
                   <td>
                     <Button size="sm" variant="outline-primary" className="me-2" onClick={() => handleEdit(s)}>Edit</Button>
                     <Button size="sm" variant="outline-danger" onClick={() => handleDelete(s.id)}>Delete</Button>
