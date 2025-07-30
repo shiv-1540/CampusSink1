@@ -3,7 +3,7 @@ import logo from '../assets/logo.png';
 import heroBg from '../assets/land.png'; // Make sure this image exists
 import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
-import { CheckCircleIcon, ArrowRightCircleIcon } from '@heroicons/react/24/solid'; // example icons
+import { ArrowRightIcon } from "@heroicons/react/solid";
 
 const FeaturePoint = ({ text }) => (
   <li className="flex items-start gap-2 text-gray-700 text-sm sm:text-base">
