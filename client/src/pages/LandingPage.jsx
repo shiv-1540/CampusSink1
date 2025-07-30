@@ -3,11 +3,10 @@ import logo from '../assets/logo.png';
 import heroBg from '../assets/land.png'; // Make sure this image exists
 import { useNavigate } from 'react-router-dom';
 
-import {ArrowRightCircleIcon, ArrowRightIcon } from "@heroicons/react/solid";
 
 const FeaturePoint = ({ text }) => (
   <li className="flex items-start gap-2 text-gray-700 text-sm sm:text-base">
-    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 mt-1 shrink-0" />
+    <span className="mt-1">👉</span>
     <span>{text}</span>
   </li>
 );
