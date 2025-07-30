@@ -67,7 +67,7 @@ const StudentAssignmentsPage = () => {
         try {
           // Send POST request to backend to mark assignment as submitted
           await axios.post(
-            `http://localhost:5000/api/assignments/submitassi`,
+            `{server}/api/assignments/submitassi`,
             {
               assignment_id: assignment.id,
               prn: student.prn,
