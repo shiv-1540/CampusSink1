@@ -1,0 +1,110 @@
+/* Layout containers */
+.maincontainer {
+  display: flex;
+  gap: 3px;
+}
+
+.container {
+  margin-left: 245px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Assignment Section */
+.currAssiContainer {
+  font-size: medium;
+  padding: 10px 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+}
+
+.currAssiContainer h2 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.currAssiContainer .assignment {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Calendar Section */
+.calendar-section {
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Calendar styles */
+.react-calendar {
+  width: 100%;
+  border: none;
+  background-color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  border-radius: 4px;
+  padding: 4px;
+  color: #111;
+}
+
+.react-calendar__tile {
+  padding: 10px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #0e0e0f;
+  text-align: center;
+}
+
+.react-calendar__tile--active,
+.react-calendar__tile--now {
+  background: #0d6efd;
+  color: white;
+  font-weight: bold;
+}
+
+.react-calendar__tile:hover {
+  background: #f0f0f0;
+  color: #0e0e0f;
+  cursor: pointer;
+}
+
+/* Navigation styling */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.react-calendar__navigation button {
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 8px 12px;
+  min-width: 40px; /* 🔧 Ensure all buttons have same width */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    margin-left: 0;
+  }
+}

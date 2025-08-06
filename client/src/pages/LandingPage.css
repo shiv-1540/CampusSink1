@@ -1,0 +1,13 @@
+/* Add this to your Tailwind config or a separate CSS file if needed */
+@media (min-width: 768px) {
+  .step-line::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 2rem;
+    height: calc(100% - 2rem);
+    width: 2px;
+    background-color: #bfdbfe;
+    z-index: -1;
+  }
+}
