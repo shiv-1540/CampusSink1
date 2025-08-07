@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import TeachSidebar from './Teacher/TeacherSidebar';
-import './seminarpage.css';
+import './seminarPage.css';
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const SeminarPage = () => {
