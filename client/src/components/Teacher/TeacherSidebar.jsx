@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 
 import ProfilePicture from '../ProfilePicture';
-import './teachSidebar.css';
+import './teachSIdebar.css';
 import logo from '../../assets/logo.png';
 
 
