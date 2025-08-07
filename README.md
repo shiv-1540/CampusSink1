@@ -8,3 +8,6 @@ https://www.figma.com/proto/lmGuva1ObUApym8O3fuRlz/Super_30_UI?node-id=1-2&p=f&t
 
 
 ![WhatsApp Image 2025-06-02 at 14 50 44_0e8eba5a](https://github.com/user-attachments/assets/e51088d7-5bdc-4d01-9d15-f0372ef68218)
+
+<img width="1536" height="841" alt="automation_test_report_Summary 1" src="https://github.com/user-attachments/assets/78081bd6-e0e2-4b68-9de0-054aa1baea53" />
+
