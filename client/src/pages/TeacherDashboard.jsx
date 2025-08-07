@@ -131,13 +131,10 @@ useEffect(() => {
   };
 
   return (
-    <div className="flex min-h-screen">
-     
-        <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <TeachSidebar/>
-        </div>
+    <div className="maincontainer flex min-h-screen  bg-gray-100">      
+      <TeachSidebar/>
 
-      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
+      <div className="container flex-grow">
         <h2 className="fw-bold mb-4">Teacher Dashboard</h2>
 
         {/* Summary Cards */}
@@ -316,129 +313,7 @@ useEffect(() => {
       </div>
 
      
-<style>
-{`
-  /* Calendar Container */
-  .react-calendar {
-    width: 100%;
-    max-width: 100%;
-    background: #fff;
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    padding: 0.5rem;
-  }
 
-  /* Navigation */
-  .react-calendar__navigation {
-    display: flex;
-    height: 44px;
-    margin-bottom: 1em;
-  }
-
-  .react-calendar__navigation button {
-    min-width: 44px;
-    background: none;
-    border: none;
-    color: #212529 !important;
-    font-weight: 500;
-  }
-
-  .react-calendar__navigation button:enabled:hover,
-  .react-calendar__navigation button:enabled:focus {
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
-  }
-
-  .react-calendar__navigation button[disabled] {
-    background-color: transparent;
-    color: #adb5bd !important;
-  }
-
-  /* Month View */
-  .react-calendar__month-view__weekdays {
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-size: 0.75em;
-    color: #495057 !important;
-    padding-bottom: 0.5em;
-  }
-
-  .react-calendar__month-view__weekdays__weekday abbr {
-    text-decoration: none;
-    border-bottom: none;
-  }
-
-  .react-calendar__month-view__days__day--weekend {
-    color: #dc3545 !important;
-  }
-
-  /* Tiles */
-  .react-calendar__tile {
-    max-width: 100%;
-    padding: 0.75em 0.5em;
-    background: none;
-    text-align: center;
-    line-height: 1;
-    border-radius: 0.25rem;
-    color: #212529 !important;
-  }
-
-  .react-calendar__tile:enabled:hover,
-  .react-calendar__tile:enabled:focus {
-    background-color: #f8f9fa;
-    color: #000 !important;
-  }
-
-  .react-calendar__tile--now {
-    background: #fff3cd;
-    font-weight: bold;
-  }
-
-  .react-calendar__tile--active {
-    background: #0d6efd !important;
-    color: white !important;
-  }
-
-  .react-calendar__tile--active:enabled:hover,
-  .react-calendar__tile--active:enabled:focus {
-    background: #0b5ed7 !important;
-  }
-
-  .react-calendar__tile:disabled {
-    background-color: #f8f9fa;
-    color: #adb5bd !important;
-  }
-
-  /* Event dots */
-  .calendar-event-dot {
-    position: absolute;
-    bottom: 3px;
-    right: 3px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: #dc3545;
-  }
-
-  /* Highlight tiles with events */
-  .has-event {
-    background-color: #fff3cd;
-    position: relative;
-  }
-
-  .has-event:enabled:hover {
-    background-color: #ffe69c !important;
-  }
-
-  /* Active date with event */
-  .react-calendar__tile--active.has-event {
-    background: #0d6efd !important;
-  }
-`}
-</style>
     </div>
   );
 };

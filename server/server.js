@@ -71,7 +71,7 @@ app.use("/api/assignments",assiRoutes);
 app.use("/api/seminars",semiRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/reviews",reviewRoutes);
-app.use('/api', aiRoutes);
+// app.use('/api', aiRoutes);
 
 
 // CRON JOB SETUP WILL AUTOMATICALY RUN AFTER EACH 12 Hrs

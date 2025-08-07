@@ -1,271 +1,295 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  Card,
-} from "react-bootstrap";
+import { Form, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import TeachSidebar from "./TeacherSidebar";
-const server= import.meta.env.VITE_BACKEND_URL;
+import './AddAssignment.css';
 
+const server = import.meta.env.VITE_BACKEND_URL;
 
 const AddAssignment = () => {
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [year, setYear] = useState("");
-  const [branch, setBranch] = useState("");
-  const [marks, setMarks] = useState(100);
-  const [deadline, setDeadline] = useState("");
-  const [file, setFile] = useState(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    year: "",
+    branch: "",
+    marks: 100,
+    deadline: "",
+    file: null
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    setFormData(prev => ({
+      ...prev,
+      file: e.target.files[0]
+    }));
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
+    const payload = {
+      ...formData,
+      description: formData.description || "No additional instructions",
+      file_url: formData.file ? formData.file.name : "",
+      created_by: "teacher123",
+      status: "active",
+    };
 
-  const formData = {
-    title,
-    description: description || "No additional instructions",
-    deadline,
-    year,
-    branch,
-    file_url: file ? file.name : "", // Replace with actual uploaded file URL if needed
-    created_by: "teacher123", // Replace with actual teacher ID
-    status: "active"
-  };
-
-  try {
-    const response = await axios.post(
-      `${server}/api/assignments`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+    try {
+      const response = await axios.post(
+        `${server}/api/assignments`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      }
-    );
+      );
 
-    // ✅ Axios automatically parses response body as JSON
-    const data = response.data;
-
-    // ✅ Check for success
-    alert(data.message); // "✅ Assignment created successfully!"
-    console.log("Created Assignment:", data.assignment); // See full assignment info
-    navigate("/teacher/dashboard");
-
-  } catch (error) {
-    console.error("Submission Error:", error);
-
-    if (error.response) {
-      // Backend responded with error status
-      alert("❌ Failed to create assignment: " + error.response.data.error);
-    } else {
-      // Network or unknown error
-      alert("❌ Network or server error!");
+      alert(response.data.message);
+      navigate("/teacher/dashboard");
+    } catch (error) {
+      console.error("Submission Error:", error);
+      alert(error.response?.data?.error || "Network or server error!");
     }
-  }
-};
-
+  };
 
   return (
-    <div className="d-flex" style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
-         <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <TeachSidebar/>
-        </div>
+    <div className="maincontainer flex min-h-screen  bg-gray-100">
+      <TeachSidebar />
+      
+      <main className="container flex-grow">
+        <div className="">
+          <header className="mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+              Create New Assignment
+            </h1>
+            <p className="text-gray-600">
+              Fill in the details below to create a new assignment for your students
+            </p>
+          </header>
 
-      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
-      <Container className="py-4" style={{ marginTop: "20px" }}>
-        <h3 className="mb-4" style={{ color: "#2c3e50", fontWeight: "600" }}>Create New Assignment</h3>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Basic Information Card */}
+              <Card className="border-0 shadow-sm rounded-xl overflow-hidden">
+                <Card.Body className="p-6">
+                  <Card.Title className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <span className="bg-blue-100 text-blue-600 p-2 rounded-full mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                      </svg>
+                    </span>
+                    Basic Information
+                  </Card.Title>
+                  
+                  <Form.Group className="mb-4">
+                    <Form.Label className="block text-sm font-medium text-gray-700 mb-1">
+                      Assignment Title *
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                      placeholder="Enter assignment title"
+                    />
+                  </Form.Group>
 
-        <Card className="mb-4 p-4" style={{ border: "none", borderRadius: "10px", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
-          <h5 className="mb-3" style={{ color: "#3498db" }}>📘 Assignment Details</h5>
-          <Form.Group className="mb-3" controlId="title">
-            <Form.Label style={{ fontWeight: "500" }}>Title *</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter assignment title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              style={{ borderRadius: "8px", padding: "10px" }}
-            />
-          </Form.Group>
-          <Row>
-            <Col md={4}>
-              <Form.Group controlId="academicYear">
-                <Form.Label style={{ fontWeight: "500" }}>Academic Year *</Form.Label>
-                <Form.Select
-                  value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                  style={{ borderRadius: "8px", padding: "10px" }}
-                >
-                  <option value="">Select Year</option>
-                  <option value="FE">FE</option>
-                  <option value="SE">SE</option>
-                  <option value="TE">TE</option>
-                  <option value="BE">BE</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col md={4}>
-              <Form.Group controlId="branch">
-                <Form.Label style={{ fontWeight: "500" }}>Branch *</Form.Label>
-                <Form.Select
-                  value={branch}
-                  onChange={(e) => setBranch(e.target.value)}
-                  style={{ borderRadius: "8px", padding: "10px" }}
-                >
-                  <option value="">Select Branch</option>
-                  <option value="CSE">CSE</option>
-                  <option value="IT">IT</option>
-                  <option value="ENTC">ENTC</option>
-                  <option value="Mechanical">Mechanical</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col md={4}>
-              <Form.Group controlId="marks">
-                <Form.Label style={{ fontWeight: "500" }}>Total Marks</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={marks}
-                  onChange={(e) => setMarks(e.target.value)}
-                  placeholder="100"
-                  style={{ borderRadius: "8px", padding: "10px" }}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-        </Card>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Form.Group className="mb-4">
+                      <Form.Label className="block text-sm font-medium text-gray-700 mb-1">
+                        Academic Year *
+                      </Form.Label>
+                      <Form.Select
+                        name="year"
+                        value={formData.year}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                      >
+                        <option value="">Select Year</option>
+                        <option value="FE">FE</option>
+                        <option value="SE">SE</option>
+                        <option value="TE">TE</option>
+                        <option value="BE">BE</option>
+                      </Form.Select>
+                    </Form.Group>
 
-        <Card className="mb-4 p-4" style={{ border: "none", borderRadius: "10px", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
-          <h5 className="mb-3" style={{ color: "#3498db" }}>🗓️ Deadline & Files</h5>
-          <Row>
-            <Col md={6}>
-              <Form.Group controlId="deadline">
-                <Form.Label style={{ fontWeight: "500" }}>Deadline *</Form.Label>
-                <Form.Control
-                  type="datetime-local"
-                  value={deadline}
-                  onChange={(e) => setDeadline(e.target.value)}
-                  style={{ borderRadius: "8px", padding: "10px" }}
-                />
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group controlId="fileUpload">
-                <Form.Label style={{ fontWeight: "500" }}>Assignment File</Form.Label>
-                <div 
-                  className="border p-4 text-center" 
-                  style={{ 
-                    cursor: "pointer", 
-                    borderRadius: "8px",
-                    border: "2px dashed #dee2e6",
-                    transition: "all 0.3s",
-                    backgroundColor: file ? "#e8f4fd" : "#f8f9fa"
-                  }}
-                >
+                    <Form.Group className="mb-4">
+                      <Form.Label className="block text-sm font-medium text-gray-700 mb-1">
+                        Branch *
+                      </Form.Label>
+                      <Form.Select
+                        name="branch"
+                        value={formData.branch}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                      >
+                        <option value="">Select Branch</option>
+                        <option value="CSE">CSE</option>
+                        <option value="IT">IT</option>
+                        <option value="ENTC">ENTC</option>
+                        <option value="Mechanical">Mechanical</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </div>
+
+                  <Form.Group className="mb-4">
+                    <Form.Label className="block text-sm font-medium text-gray-700 mb-1">
+                      Total Marks
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="marks"
+                      value={formData.marks}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                      placeholder="100"
+                    />
+                  </Form.Group>
+                </Card.Body>
+              </Card>
+
+              {/* Deadline & Files Card */}
+              <Card className="border-0 shadow-sm rounded-xl overflow-hidden">
+                <Card.Body className="p-6">
+                  <Card.Title className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <span className="bg-purple-100 text-purple-600 p-2 rounded-full mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                      </svg>
+                    </span>
+                    Deadline & Files
+                  </Card.Title>
+
+                  <Form.Group className="mb-4">
+                    <Form.Label className="block text-sm font-medium text-gray-700 mb-1">
+                      Deadline *
+                    </Form.Label>
+                    <Form.Control
+                      type="datetime-local"
+                      name="deadline"
+                      value={formData.deadline}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    />
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label className="block text-sm font-medium text-gray-700 mb-1">
+                      Assignment File
+                    </Form.Label>
+                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl">
+                      <div className="space-y-1 text-center">
+                        <svg
+                          className="mx-auto h-12 w-12 text-gray-400"
+                          stroke="currentColor"
+                          fill="none"
+                          viewBox="0 0 48 48"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                            strokeWidth={2}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <div className="flex text-sm text-gray-600">
+                          <label
+                            htmlFor="file-upload"
+                            className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"
+                          >
+                            <span>Upload a file</span>
+                            <input
+                              id="file-upload"
+                              name="file-upload"
+                              type="file"
+                              className="sr-only"
+                              onChange={handleFileChange}
+                              accept=".pdf,.doc,.docx"
+                            />
+                          </label>
+                          <p className="pl-1">or drag and drop</p>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          PDF, DOC, DOCX up to 10MB
+                        </p>
+                        {formData.file && (
+                          <p className="text-sm text-green-600 mt-2">
+                            Selected: {formData.file.name}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </Form.Group>
+                </Card.Body>
+              </Card>
+            </div>
+
+            {/* Instructions Card */}
+            <Card className="border-0 shadow-sm rounded-xl overflow-hidden">
+              <Card.Body className="p-6">
+                <Card.Title className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                  <span className="bg-green-100 text-green-600 p-2 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </span>
+                  Additional Instructions
+                </Card.Title>
+                <Form.Group>
                   <Form.Control
-                    type="file"
-                    onChange={handleFileChange}
-                    accept=".pdf,.doc,.docx"
-                    style={{ display: "none" }}
-                    id="fileInput"
+                    as="textarea"
+                    rows={5}
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    placeholder="Add any additional instructions, submission guidelines, or grading criteria..."
                   />
-                  <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
-                    {file ? (
-                      <div>
-                        <p style={{ marginBottom: "5px", fontWeight: "500" }}>{file.name}</p>
-                        <small className="text-success">Click to change file</small>
-                      </div>
-                    ) : (
-                      <div>
-                        <p style={{ marginBottom: "5px" }}>Click to upload or drag and drop</p>
-                        <small className="text-muted">PDF, DOC, DOCX (MAX. 10MB)</small>
-                      </div>
-                    )}
-                  </label>
-                </div>
-              </Form.Group>
-            </Col>
-          </Row>
-        </Card>
+                </Form.Group>
+              </Card.Body>
+            </Card>
 
-        <Card className="mb-4 p-4" style={{ border: "none", borderRadius: "10px", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
-          <h5 className="mb-3" style={{ color: "#3498db" }}>📝 Additional Instructions</h5>
-          <Form.Group controlId="description">
-            <Form.Control
-              as="textarea"
-              rows={4}
-              placeholder="Add any additional instructions, submission guidelines, or grading criteria..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              style={{ borderRadius: "8px", padding: "10px" }}
-            />
-          </Form.Group>
-        </Card>
-
-        <div className="d-flex justify-content-end gap-3">
-          <Button 
-            variant="outline-secondary" 
-            onClick={() => navigate(-1)}
-            style={{ 
-              borderRadius: "8px", 
-              padding: "8px 20px",
-              fontWeight: "500"
-            }}
-          >
-            Cancel
-          </Button>
-          <Button 
-            variant="primary" 
-            onClick={handleSubmit}
-            style={{ 
-              borderRadius: "8px", 
-              padding: "8px 20px",
-              fontWeight: "500",
-              boxShadow: "0 2px 5px rgba(0,0,0,0.1)"
-            }}
-          >
-            📄 Create Assignment
-          </Button>
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-4 mt-6">
+              <Button
+                variant="outline-secondary"
+                onClick={() => navigate(-1)}
+                className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                className="px-6 py-2 bg-blue-600 rounded-lg text-white hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Create Assignment
+              </Button>
+            </div>
+          </form>
         </div>
-      </Container>
-
-      <style>
-        {`
-          body {
-            background-color: #f8f9fa !important;
-          }
-          .form-control:focus, .form-select:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
-          }
-          .btn-primary {
-            background-color: #3498db;
-            border-color: #3498db;
-          }
-          .btn-primary:hover {
-            background-color: #2980b9;
-            border-color: #2980b9;
-          }
-          .btn-outline-secondary:hover {
-            background-color: #f8f9fa;
-          }
-        `}
-      </style>
-      </div>
+      </main>
     </div>
   );
 };

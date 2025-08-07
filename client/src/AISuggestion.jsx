@@ -45,12 +45,13 @@ useEffect(() => {
 }, [studinfo?._id, server]);
 
   return (
+    <div className="max-w-xl">
     <div className="bg-white p-4 rounded-xl shadow-md mt-6 border border-blue-100">
-      <div className="flex items-center mb-3 gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center mb-3 gap-2">
         <FaRobot className="text-blue-500 text-xl" />
-        <h2 className="text-lg font-bold">Smart Suggestions from Gemini AI</h2>
+        <h2 className="text-base md:text-lg font-bold">Smart Suggestions from Gemini AI</h2>
       </div>
-      
+
       {isLoading ? (
         <div className="space-y-2 animate-pulse">
           <div className="h-4 bg-gray-200 rounded"></div>
@@ -60,15 +61,17 @@ useEffect(() => {
       ) : error ? (
         <p className="text-red-500 bg-red-50 p-2 rounded">{error}</p>
       ) : (
-        <div className="text-gray-700 whitespace-pre-line">
+        <div className="text-sm md:text-base text-gray-700 whitespace-pre-line leading-relaxed">
           {aiMessage}
         </div>
       )}
-      
+
       <div className="mt-3 text-xs text-gray-500">
         Suggestions based on your assignments, seminars, and academic calendar.
       </div>
     </div>
+  </div>
+
   );
 };
 

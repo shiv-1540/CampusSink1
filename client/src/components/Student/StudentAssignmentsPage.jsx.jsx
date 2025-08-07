@@ -67,7 +67,7 @@ const StudentAssignmentsPage = () => {
         try {
           // Send POST request to backend to mark assignment as submitted
           await axios.post(
-            `http://localhost:5000/api/assignments/submitassi`,
+            `${server}/api/assignments/submitassi`,
             {
               assignment_id: assignment.id,
               prn: student.prn,
@@ -185,12 +185,11 @@ const StudentAssignmentsPage = () => {
 
 
   return (
-    <div className="d-flex">
-       <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <StudSidebar/>
-        </div>
+    <div className="maincontainer flex min-h-screen  bg-gray-100">
+      
+      <StudSidebar/>
 
-      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
+      <div className="container flex-grow">
         <h3 className="fw-bold mb-1">My Assignments</h3>
         <p className="text-muted mb-4">Track your assignments and submissions</p>
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AdSidebar from "../components/Admin/AdSidebar";
 import { FiUsers, FiBook, FiFileText, FiCalendar, FiAward, FiBarChart2, FiAlertCircle, FiClock } from "react-icons/fi";
+import './AdDash.css';
+
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const AdminDashboard = () => {
@@ -51,7 +53,7 @@ const AdminDashboard = () => {
 
   const fetchRecentActivities = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/activities", {
+      const res = await axios.get(`${server}/api/admin/activities`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setRecentActivities(res.data.slice(0, 5));
@@ -62,7 +64,7 @@ const AdminDashboard = () => {
 
   const fetchPendingApprovals = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/pending-approvals", {
+      const res = await axios.get(`${server}/api/admin/pending-approvals`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPendingApprovals(res.data.slice(0, 3));
@@ -96,21 +98,25 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="maincontainer flex min-h-screen  bg-gray-100">
       <AdSidebar />
 
-      <div className="ml-64 p-4">
+      <div className="container flex-grow">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">Welcome to Admin Dashboard</h2>
-
         {/* Statistics Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-4">
-          <StatCard title="👨‍🎓 Students" count={stats.students} color="blue" />
-          <StatCard title="👩‍🏫 Teachers" count={stats.teachers} color="green" />
-          <StatCard title="🏢 Departments" count={stats.departments} color="purple" />
-          <StatCard title="🎤 Seminars" count={stats.seminars} color="orange" />
-          <StatCard title="📚 Assignments" count={stats.assignments} color="indigo" />
-          <StatCard title="📁 Project Reviews" count={stats.reviews} color="pink" />
-        </div>
+        <section className="my-2">
+          {/* <h2 className="text-2xl font-bold text-gray-800 mb-6">Dashboard Overview</h2> */}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mx-3 px-3">
+            <StatCard title="👨‍🎓 Students" count={stats.students} color="blue" />
+            <StatCard title="👩‍🏫 Teachers" count={stats.teachers} color="green" />
+            <StatCard title="🏢 Departments" count={stats.departments} color="purple" />
+            <StatCard title="🎤 Seminars" count={stats.seminars} color="orange" />
+            <StatCard title="📚 Assignments" count={stats.assignments} color="indigo" />
+            <StatCard title="📁 Project Reviews" count={stats.reviews} color="pink" />
+          </div>
+        </section>
+
 
         {/* Quick Links Section */}
         <div className="mb-10">
@@ -239,7 +245,7 @@ const StatCard = ({ title, count, color = 'blue' }) => {
 
   return (
     <div
-      className={`p-3 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1 ${bg} ring-1 ${ring}`}
+      className={`p-4  rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1 ${bg} ring-1 ${ring}`}
     >
       <div className="flex items-center justify-between">
         <h4 className={`text-lg font-semibold ${text}`}>{title}</h4>

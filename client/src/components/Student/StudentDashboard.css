@@ -1,16 +1,63 @@
-/* StudentDashboard.css */
+
+.maincontainer{
+    display: flex;
+    gap: 3px;
+}
+.container{
+  margin-left: 245px;
+  display: flex;
+  /* flex-wrap: wrap; */
+  flex-direction: column;
+  gap:5px;
+  padding: 2px;
+  margin-top: 1px;
+}
+
+.currAssiContainer{ 
+  font-size: medium;
+  padding: 4px;
+  padding-left: 20px;
+  overflow-y: auto;
+}
+
+.currAssiContainer h2{
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   font-size: large;
+   font-weight: bolder;
+   padding-bottom: 10px;
+}
+.currAssiContainer .assignment{
+   padding: 7px;
+}
+ 
+@media (max-width:600px) {
+  .container{
+    /* transform: translateX(-264px); */
+    margin-top: 70px;
+    margin-left: 1px;
+  }
+}
+
+@media (max-width:375px) {
+  .container{
+     /* transform: translateX(-64px); */
+  }
+}
+
 .react-calendar {
   width: 100%;
   border: none;
   background-color: #fff;
   font-family: 'Segoe UI', sans-serif;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
-  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+  padding: 4px;
+  color: #111;
 }
 
+/* Calendar tiles */
 .react-calendar__tile {
-  padding: 10px 6.6667px;
+  padding: 5px 4.3367px;
   background: none;
   border: 1px solid transparent;
   border-radius: 6px;
@@ -24,12 +71,37 @@
 }
 
 .react-calendar__tile--now {
-  background: #0e0e0f;
-  color: #0d6efd;
+  background: #0d6efd;
+  color: #141516;
   font-weight: bold;
 }
 
 .react-calendar__tile:hover {
   background: #f0f0f0;
+  color: #0e0e0f;
   cursor: pointer;
+}
+
+/* Navigation styling */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.react-calendar__navigation button {
+  background: none;
+  border: none;
+  color: #000; /* Black text */
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #f0f0f0;
 }

@@ -35,14 +35,12 @@ const ProjectReviews = () => {
   };
 
   return (
-    <div className="flex">
-  {/* Sidebar */}
-  <div className="w-64 fixed top-0 left-0 h-full z-10 bg-white shadow-md border-r">
+    <div className="maincontainer flex min-h-screen  bg-gray-100">
+
     <StudSidebar />
-  </div>
 
   {/* Main Content */}
-  <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
+  <div className="container flex-grow">
     <h2 className="text-2xl font-bold text-gray-800 mb-1">📋 Project Reviews</h2>
     <p className="text-sm text-gray-600 mb-6">Track your project evaluations and feedback</p>
 

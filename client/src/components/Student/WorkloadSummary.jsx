@@ -10,14 +10,14 @@ const WorkloadSummary = () => {
 
 const fetchCounts = async (filterType) => {
   setLoading(true);
-  const token = localStorage.getItem('token');
-
+   const token = localStorage.getItem('token');
+   const studinfo=JSON.parse(localStorage.getItem('studinfo'));
   try {
     const res = await axios.post(
       `${server}/api/assignments/load`,
       {
-        branch: 'CSE',
-        year: 'TE',
+        branch: studinfo.department,
+        year: studinfo.year,
         filterType: filterType,
       },
       {

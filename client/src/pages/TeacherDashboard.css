@@ -1,4 +1,31 @@
-/* Make React Calendar compatible with Bootstrap light theme */
+
+.maincontainer{
+    display: flex;
+    gap: 3px;
+}
+.container{
+  margin-left: 245px;
+  display: flex;
+  /* flex-wrap: wrap; */
+  flex-direction: column;
+  gap:5px;
+  padding: 2px;
+  margin-top: 1px;
+}
+
+@media (max-width:600px) {
+  .container{
+    /* transform: translateX(-264px); */
+    margin-top: 70px;
+    margin-left: 1px;
+  }
+}
+
+@media (max-width:375px) {
+  .container{
+     /* transform: translateX(-64px); */
+  }
+}
 
 
   /* Calendar Container */

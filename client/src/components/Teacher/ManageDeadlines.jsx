@@ -3,7 +3,7 @@ import { Form, Button, Row, Col, Table, Alert } from 'react-bootstrap';
 import { FaSearch, FaSave } from 'react-icons/fa';
 import axios from 'axios';
 import TeachSidebar from './TeacherSidebar';
-const server= import.meta.env.VITE_BACKEND_URL;
+const server = import.meta.env.VITE_BACKEND_URL;
 
 const ManageDeadlines = () => {
   const [assignments, setAssignments] = useState([]);
@@ -12,20 +12,16 @@ const ManageDeadlines = () => {
   const [newDeadline, setNewDeadline] = useState('');
   const [message, setMessage] = useState('');
 
-  // Fetch all assignments once
   useEffect(() => {
-    const token=localStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const fetchAssignments = async () => {
       try {
-        const res = await axios.get(`${server}/api/assignments/get1`,
-        {
-          headers:{
-            'Content-Type':'application/json',
-            'Authorization':`Bearer ${token}`
+        const res = await axios.get(`${server}/api/assignments/get1`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           }
-        }
-        );
-
+        });
         setAssignments(res.data);
       } catch (err) {
         console.error('Error fetching assignments', err);
@@ -34,96 +30,100 @@ const ManageDeadlines = () => {
     fetchAssignments();
   }, []);
 
-  // Handle search
   const handleSearch = () => {
     const match = assignments.find(
       (a) => a.title.toLowerCase() === searchTitle.toLowerCase()
     );
     if (match) {
       setSelectedAssignment(match);
-      setNewDeadline(match.deadline?.slice(0, 16)); // 'yyyy-MM-ddTHH:mm'
+      setNewDeadline(match.deadline?.slice(0, 16));
       setMessage('');
-    }
-     else {
+    } else {
       setSelectedAssignment(null);
       setNewDeadline('');
-      setMessage('Assignment not found');
+      setMessage('Assignment not found ❌');
     }
   };
 
-  // Handle update deadline
-const handleUpdateDeadline = async () => {
-  if (!newDeadline || !selectedAssignment) return;
-  console.log("Selected assignment:",selectedAssignment);
-  const token = localStorage.getItem('token');
+  const handleUpdateDeadline = async () => {
+    if (!newDeadline || !selectedAssignment) return;
+    const token = localStorage.getItem('token');
 
-  try {
-    const res = await axios.put(
-      `${server}/api/assignments/${selectedAssignment.id}/deadline`,
-      {
-        ...selectedAssignment,
-        deadline: newDeadline,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+    try {
+      const res = await axios.put(
+        `${server}/api/assignments/${selectedAssignment.id}/deadline`,
+        {
+          ...selectedAssignment,
+          deadline: newDeadline,
         },
-      }
-    );
-    console.log(res.data);
-    setMessage('Deadline updated successfully ✅');
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setMessage('✅ Deadline updated successfully');
 
-    setAssignments((prev) =>
-      prev.map((a) =>
-        a.id === selectedAssignment.id ? res.data.data : a
-      )
-    );
+      setAssignments((prev) =>
+        prev.map((a) =>
+          a.id === selectedAssignment.id ? res.data.data : a
+        )
+      );
 
-    setSelectedAssignment(null);
-    setSearchTitle('');
-    setNewDeadline('');
-  } catch (err) {
-    console.error('Update failed', err);
-    setMessage('Failed to update deadline');
-  }
-};
-
+      setSelectedAssignment(null);
+      setSearchTitle('');
+      setNewDeadline('');
+    } catch (err) {
+      console.error('Update failed', err);
+      setMessage('❌ Failed to update deadline');
+    }
+  };
 
   return (
-    <div className="d-flex">
-         <div className="w-64 fixed top-0 left-0 h-full z-10">
-           <TeachSidebar/>
+    <div className="maincontainer flex min-h-screen  bg-gray-100">
+        <TeachSidebar />
+
+      {/* Main Content */}
+      <div className="container flex-grow" >
+        <h3 className="text-3xl font-extrabold text-gray-800 mb-8 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">📋 Manage Assignment Deadlines</h3>
+
+        {/* Message Alert */}
+        {message && (
+          <Alert variant={message.includes('✅') ? 'success' : 'danger'} className="text-center fw-semibold shadow-sm">
+            {message}
+          </Alert>
+        )}
+
+        {/* Search Form */}
+      <div className="bg-white p-6 rounded-xl shadow-md mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+          <input
+            type="text"
+            placeholder="Search by Assignment Title"
+            value={searchTitle}
+            onChange={(e) => setSearchTitle(e.target.value)}
+            className="col-span-2 w-50 px-2 py-1 border border-gray-300 rounded-lg bg-white"
+          />
+
+          <button
+            onClick={handleSearch}
+            className="flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition"
+          >
+            <FaSearch className="text-white" />
+            Search
+          </button>
         </div>
+      </div>
 
-      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
-        <h5 className="font-extrabold text-md m-3">
-          <span className="" style={{ color: '#399EFF' }}>■</span>
-          Manage Assignment Deadlines
-        </h5>
 
-        {message && <Alert variant="info" className='text-center font-bold'>{message}</Alert>}
-
-        <Row className="align-items-center mb-3">
-          <Col md={5}>
-            <Form.Control
-              type="text"
-              placeholder="Search by Assignment Title"
-              value={searchTitle}
-              onChange={(e) => setSearchTitle(e.target.value)}
-            />
-          </Col>
-          <Col md={2}>
-            <Button variant="primary" onClick={handleSearch}>
-              <FaSearch className="me-1" /> Search
-            </Button>
-          </Col>
-        </Row>
-     
+        {/* Edit Deadline */}
         {selectedAssignment && (
-          <>
-            <h6>Edit Deadline for: <strong>{selectedAssignment.title}</strong></h6>
-            <Row className="align-items-center mb-3">
+          <div className="bg-light border rounded p-4 mb-4 shadow-sm">
+            <h5 className="fw-semibold mb-3">
+              🕒 Edit Deadline for: <span className="text-info">{selectedAssignment.title}</span>
+            </h5>
+            <Row className="align-items-center">
               <Col md={4}>
                 <Form.Control
                   type="datetime-local"
@@ -132,35 +132,49 @@ const handleUpdateDeadline = async () => {
                 />
               </Col>
               <Col md={2}>
-                <Button variant="success" onClick={handleUpdateDeadline}>
-                  <FaSave className="me-1" /> Save
+                <Button variant="success" className="w-100" onClick={handleUpdateDeadline}>
+                  <FaSave className="me-2" /> Save
                 </Button>
               </Col>
             </Row>
-          </>
+          </div>
         )}
 
+        {/* Assignments Table */}
         {assignments.length > 0 && (
-          <Table bordered hover>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Assignment Title</th>
-                <th>Deadline</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {assignments.map((a, i) => (
-                <tr key={a.id}>
-                  <td>{i + 1}</td>
-                  <td>{a.title}</td> 
-                  <td>{new Date(a.deadline).toLocaleString()}</td>
-                  <td>{a.description}</td>
+          <div className="bg-white rounded shadow-sm p-3">
+            <h6 className="fw-bold text-secondary mb-3">📚 All Assignments</h6>
+           <div className="overflow-x-auto mt-8">
+            <table className="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-xl">
+              <thead className="bg-gray-100 text-gray-700 text-sm font-semibold">
+                <tr>
+                  <th className="px-4 py-2 text-left border border-gray-200">#</th>
+                  <th className="px-4 py-2 text-left border border-gray-200">Title</th>
+                  <th className="px-4 py-2 text-left border border-gray-200">Deadline</th>
+                  <th className="px-4 py-2 text-left border border-gray-200">Description</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody className="divide-y divide-gray-100 text-sm">
+                {assignments.map((a, i) => (
+                  <tr
+                    key={a.id}
+                    className="hover:bg-gray-50 transition duration-200"
+                  >
+                    <td className="px-4 py-2 border border-gray-200 text-gray-800">{i + 1}</td>
+                    <td className="px-4 py-2 border border-gray-200 text-gray-800 font-medium">{a.title}</td>
+                    <td className="px-4 py-2 border border-gray-200 text-gray-700">
+                      {new Date(a.deadline).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2 border border-gray-200 text-gray-600">
+                      {a.description}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+           </div>
+
+          </div>
         )}
       </div>
     </div>

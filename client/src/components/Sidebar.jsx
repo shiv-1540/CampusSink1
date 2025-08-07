@@ -17,7 +17,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="bg-light border-end" style={{ width: '250px', minHeight: '100vh' }}>
+    <div className="sidebar" >
       <div className="p-3">
         <h4 className="fw-bold mb-4">📘 CampusSink</h4>
         <div className="text-center mb-4">

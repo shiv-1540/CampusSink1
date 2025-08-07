@@ -8,7 +8,6 @@ import axios from 'axios';
 const server= import.meta.env.VITE_BACKEND_URL;
 import { X } from "lucide-react"; // optional modern close icon
 
-// 🔵 Main Page Component
 const AddUsersPage = () => {
   const [showStudentModal, setShowStudentModal] = useState(false);
   const [showTeacherModal, setShowTeacherModal] = useState(false);

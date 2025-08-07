@@ -6,10 +6,19 @@ import {
   FaClock,
   FaBookOpen,
   FaSignOutAlt,
+  FaBars,
+  FaTimes,
 } from 'react-icons/fa';
+import { useState } from 'react';
+
 import ProfilePicture from '../ProfilePicture';
+import './teachSidebar.css';
+import logo from '../../assets/logo.png';
+
 
 const TeachSidebar = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const location = useLocation();
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user')) || {};
@@ -30,21 +39,24 @@ const TeachSidebar = () => {
   ];
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-64 bg-white shadow-md flex flex-col justify-between border-r z-50">
-      {/* Top Section */}
+    <>
+      <div className="mobile-header hide-after-600 flex justify-between items-center px-4 py-2 bg-white shadow fixed top-0 left-0 right-0 z-10 ">
+        <img src={logo} alt="Campusink" className="h-10" />
+        <button onClick={() => setSidebarOpen(!sidebarOpen)}>
+            {sidebarOpen ? <FaTimes size={20} /> : <FaBars size={18} />}
+         </button>
+       </div>
+      
+    <aside className="sidebar" style={{
+       transform: sidebarOpen  ? 'translateX(0)' : 'translateX(-100%)',
+      }}>
+   
       <div>
-        {/* Branding */}
-        <div className="px-6 py-4 border-b">
-          <h2 className="text-xl font-bold text-blue-700 text-center">📘 CampusSink</h2>
+        <div className="px-6 py-2 border-b">
+           <img src={logo} alt="Campusink" className='my-1 mt-1'/>
         </div>
-
         {/* Profile */}
         <div className="flex flex-col items-center text-center p-2 border-b">
-          {/* <img
-            src="https://randomuser.me/api/portraits/women/44.jpg"
-            alt="Teacher"
-            className="rounded-full w-20 h-20 border-2 border-blue-500"
-          /> */}
           <ProfilePicture name={user.name} backgroundColor="#4CAF50" size={60}/>
        
           <p className="mt-2 font-semibold text-gray-800">{user.name}</p>
@@ -81,6 +93,7 @@ const TeachSidebar = () => {
         </button>
       </div>
     </aside>
+     </>
   );
 };
 

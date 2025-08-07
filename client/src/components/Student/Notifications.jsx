@@ -41,14 +41,10 @@ const Notifications=()=>{
     },[]);
 
     return (
-      <div className="flex bg-gray-100 min-h-screen">
-  {/* Sidebar */}
-  <div className="w-64 fixed top-0 left-0 h-full bg-white shadow-md z-10">
-    <StudSidebar />
-  </div>
-
+      <div className="maincontainer flex min-h-screen  bg-gray-100">
+        <StudSidebar />
   {/* Main Content */}
-  <div className="ml-64 flex-grow p-6">
+  <div className="container flex-grow">
     <div className="bg-white shadow-md rounded-lg p-6">
       <div className="flex items-center mb-6">
         <FaBell className="text-blue-500 text-2xl mr-3" />
@@ -81,7 +77,7 @@ const Notifications=()=>{
       <div className="mt-4 text-red-600 font-medium text-center">{error}</div>
     )}
   </div>
-</div>
+      </div>
 
     );
 

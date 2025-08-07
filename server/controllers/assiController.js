@@ -284,9 +284,9 @@ const getWorkloadCnt = async (req, res) => {
   if (filterType === 'today') {
     dateCondition = `DATE(datetime) = CURDATE()`;
   } else if (filterType === 'week') {
-    dateCondition = `YEARWEEK(datetime, 1) = YEARWEEK(CURDATE(), 1)`;
+    dateCondition = `YEARWEEK(datetime, 1) = YEARWEEK(CURDATE(), 1) AND datetime > NOW()`;
   } else if (filterType === 'month') {
-    dateCondition = `MONTH(datetime) = MONTH(CURDATE()) AND YEAR(datetime) = YEAR(CURDATE())`;
+    dateCondition = `MONTH(datetime) = MONTH(CURDATE()) AND YEAR(datetime) = YEAR(CURDATE()) AND datetime > NOW()`;
   } else {
     dateCondition = `datetime > NOW()`; // default: upcoming
   }
@@ -297,11 +297,11 @@ const getWorkloadCnt = async (req, res) => {
       `SELECT COUNT(*) AS count FROM assignments WHERE deadline > NOW()`
     );
     const assignmentCount = assignmentRows[0]?.count || 0;
-    if (assignmentCount === 0) {
-      return res.status(404).json({ message: "Assignments not found >> 00" });
-    }
+    // if (assignmentCount === 0) {
+    //   return res.status(404).json({ message: "Assignments not found >> 00" });
+    // }
 
-    console.log("Hii assi cnt :",assignmentCount);
+    // console.log("Hii assi cnt :",assignmentCount);
     // Seminars (with date filter + optional branch/year logic)
     const [seminarRows] = await db.execute(
       `SELECT COUNT(*) AS count FROM seminars 
@@ -311,7 +311,7 @@ const getWorkloadCnt = async (req, res) => {
       [branch, year].filter(Boolean)
     );
     const seminarCount = seminarRows[0]?.count || 0;
-  console.log("Hii semi cnt :",seminarCount);
+  //  console.log("Hii semi cnt :",seminarCount," | assi cnt>> ",assignmentCount);
     return res.status(200).json({
       assignmentCount,
       seminarCount,
@@ -356,10 +356,10 @@ const submitAssignment = async (req, res) => {
 
 // Get All Notifications for each user
 const getAllNotifications = async (req, res) => {
-  console.log("Request body: ", req.body);
+  // console.log("Request body: ", req.body);
 
   const { user_id } = req.body;
-  console.log("User ID:", user_id);
+  // console.log("User ID:", user_id);
 
   if (!user_id) {
     return res.status(400).json({ error: "Missing user_id in request body" });
@@ -371,7 +371,7 @@ const getAllNotifications = async (req, res) => {
       [user_id]
     );
 
-    console.log("Notifications fetched:", rows);
+    // console.log("Notifications fetched:", rows);
     res.status(200).json(rows);
   } catch (err) {
     console.log("DB Error:", err.message);

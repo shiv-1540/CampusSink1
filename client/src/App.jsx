@@ -30,13 +30,12 @@ import AdminReportPage from "./components/Admin/AdminReportPage.jsx";
 import AcademicCalendar from "./components/Teacher/AcademicCalendar.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 
-import { sidebarProvider } from "./components/SidebarContext.jsx";
-
 const App = () => {
+
   return (
     <>
      <ToastContainer/>
-     {/* <sidebarProvider> */}
+ 
       <Routes>
          <Route path="" element={<LandingPage/>} />
         <Route path="/login" element={<LoginPage />} />
@@ -64,11 +63,8 @@ const App = () => {
         <Route path="/student/seminars" element={<StudentSeminarsPage />} />
         <Route path="/student/reviews" element={<ProjectReviews />} />
         <Route path="/student/notifications" element={<Notifications />} />
-    
       </Routes>
-      {/* </sidebarProvider> */}
       </>
-    
   );
 };
 

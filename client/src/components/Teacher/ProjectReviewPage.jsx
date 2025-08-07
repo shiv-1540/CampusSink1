@@ -148,14 +148,10 @@ const handleSubmit = async () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-         <div className="w-64 fixed top-0 left-0 h-full z-10">
-           <TeachSidebar/>
-        </div>
-
-      
+    <div className="maincontainer flex min-h-screen bg-gray-100">
+      <TeachSidebar/>
       <ToastContainer />
-      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
+      <div className="container flex-grow">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-3xl font-extrabold">Project Reviews</h2>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaBookOpen } from "react-icons/fa";
 import StudSidebar from "./StudSidebar";
+import './studSeminar.css';
+
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const StudentSeminarsPage = () => {
@@ -65,14 +67,11 @@ const StudentSeminarsPage = () => {
   };
 
   return (
-   <div className="flex">
-    {/* Sidebar */}
-    <div className="w-64 fixed top-0 left-0 h-full bg-white shadow-lg z-10">
-      <StudSidebar />
-    </div>
+   <div className="maincontainer flex min-h-screen  bg-gray-100">
 
+      <StudSidebar />
   {/* Main Content */}
-  <div className="flex-grow ml-64 p-2 px-4 bg-gradient-to-br from-gray-100 to-blue-50 min-h-screen">
+  <div className="container flex-grow">
     <h1 className="text-3xl font-bold text-gray-800 mb-2">🎓 My Seminars</h1>
     <p className="text-gray-600 mb-6 ml-11">Upcoming and past seminars curated for your department and academic year.</p>
 

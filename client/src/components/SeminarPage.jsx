@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import TeachSidebar from './Teacher/TeacherSidebar';
+import './seminarpage.css';
 const server= import.meta.env.VITE_BACKEND_URL;
 
 const SeminarPage = () => {
@@ -137,13 +138,11 @@ const handleDelete = async (id) => {
 
 
   return (
-    <div className="d-flex">
-         <div className="w-64 fixed top-0 left-0 h-full z-10">
-          <TeachSidebar/>
-        </div>
+    <div className="maincontainer flex min-h-screen  bg-gray-100">
 
-      <div className="flex-grow ml-64 p-6 bg-gray-100 min-h-screen">
-        <div className="d-flex justify-content-between mb-3">
+      <TeachSidebar/>
+      <div className="container flex-grow">
+        <div className="flex justify-between mb-3">
           <div>
             <h2 className="fw-bold">Seminars</h2>
             <p className="text-muted">Add, edit, or delete seminar records</p>

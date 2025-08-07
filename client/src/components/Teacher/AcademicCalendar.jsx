@@ -5,7 +5,8 @@ import "react-calendar/dist/Calendar.css";
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import TeachSidebar from "./TeacherSidebar";
-const server= import.meta.env.VITE_BACKEND_URL;
+
+const server = import.meta.env.VITE_BACKEND_URL;
 
 const AcademicCalendar = () => {
   const [events, setEvents] = useState([]);
@@ -42,10 +43,7 @@ const AcademicCalendar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      ...formData,
-      date: getLocalDateString(selectedDate),
-    };
+    const payload = { ...formData, date: getLocalDateString(selectedDate) };
 
     try {
       if (editEventId) {
@@ -106,140 +104,35 @@ const AcademicCalendar = () => {
     ) : null;
   };
 
-const getEventColor = (type) => {
-  switch (type) {
-    case "Holiday": return "#f94144";          // Red
-    case "Exam": return "#577590";             // Blue-gray
-    case "MSE": return "#43aa8b";              // Green
-    case "ESE": return "#9b5de5";              // Purple
-    case "Freshers": return "#f72585";         // Pink
-    case "Days": return "#f9c74f";             // Yellow
-    case "Orientation": return "#90be6d";      // Olive Green
-    case "Seminar": return "#577590";          // Blue-gray
-    case "Workshop": return "#277da1";         // Deep Blue
-    case "Placement Drive": return "#f9844a";  // Orange
-    case "Industrial Visit": return "#43aa8b"; // Teal
-    case "Cultural Fest": return "#ff006e";    // Bright Pink
-    case "Technical Fest": return "#8338ec";   // Indigo
-    case "Farewell": return "#ffbe0b";         // Golden Yellow
-    default: return "#adb5bd";                 // Light Gray for unknown
-  }
-};
-
+  const getEventColor = (type) => {
+    const colors = {
+      Holiday: "#e63946",
+      Exam: "#457b9d",
+      MSE: "#43aa8b",
+      ESE: "#9b5de5",
+      Freshers: "#f72585",
+      Days: "#f9c74f",
+      Orientation: "#90be6d",
+      Seminar: "#118ab2",
+      Workshop: "#277da1",
+      "Placement Drive": "#f9844a",
+      "Industrial Visit": "#43aa8b",
+      "Cultural Fest": "#ff006e",
+      "Technical Fest": "#8338ec",
+      Farewell: "#ffbe0b",
+    };
+    return colors[type] || "#adb5bd";
+  };
 
   const tileClassName = ({ date }) => {
-    return events.find((e) => new Date(e.date).toDateString() === date.toDateString())
-      ? "has-event"
-      : "";
+    return events.find((e) => new Date(e.date).toDateString() === date.toDateString()) ? "has-event" : "";
   };
 
   return (
-    <div className="d-flex">
-      {/* ✅ Teacher Sidebar shown on the left */}
-       <TeachSidebar/>
-
-      {/* ✅ Main calendar container */}
-      <div className=" ml-64 academic-calendar-container flex-grow-1">
-        <style>{`
-          .academic-calendar-container {
-            padding: 20px;
-            min-height: 100vh;
-            background-color:rgb(49, 206, 206);
-          }
-
-          .react-calendar {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            border: 1px solid rgb(28, 94, 159);
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(74, 16, 16, 0.1);
-            padding: 10px;
-            background: rgb(5, 56, 65);
-          }
-
-          .react-calendar__navigation button {
-            min-width: 44px;
-            background: none;
-            font-size: 16px;
-            margin-top: 8px;
-          }
-
-          .react-calendar__month-view__weekdays {
-            text-align: center;
-            text-transform: uppercase;
-            font-weight: bold;
-            font-size: 0.8em;
-          }
-
-          .react-calendar__month-view__days__day--weekend {
-            color: #d10000;
-          }
-
-          .react-calendar__tile--now {
-            background: #e6f7ff;
-          }
-
-          .react-calendar__tile--active {
-            background: #006edc;
-            color: white;
-          }
-
-          .calendar-event-indicator {
-            display: flex;
-            justify-content: center;
-            margin-top: 2px;
-          }
-
-          .event-dot {
-            height: 8px;
-            width: 8px;
-            border-radius: 50%;
-            display: inline-block;
-          }
-
-          .has-event {
-            background-color:rgb(133, 174, 210);
-            border-radius: 50%;
-          }
-
-          .event-table {
-            margin-top: 30px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-          }
-
-          .event-table th {
-            background-color: #343a40;
-            color: white;
-          }
-
-          .event-type-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-            color: white;
-          }
-
-          .modal-content {
-            border-radius: 10px;
-          }
-
-          .form-control, .form-select {
-            border-radius: 5px;
-          }
-
-          .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-          }
-        `}</style>
-
-        <h4 className="mb-4 text-center">📅 Academic Calendar</h4>
+    <div className="maincontainer flex min-h-screen  bg-gray-100">
+      <TeachSidebar />
+      <div className="container flex-grow">
+        <h4 className="mb-4 text-center text-3xl font-extrabold text-gray-800">📅 Academic Calendar</h4>
 
         <Calendar
           value={selectedDate}
@@ -273,10 +166,10 @@ const getEventColor = (type) => {
                   </span>
                 </td>
                 <td>
-                  <Button variant="warning" size="sm" onClick={() => handleEdit(event)} className="me-2">
+                  <Button variant="outline-warning" size="sm" onClick={() => handleEdit(event)} className="me-2">
                     Edit
                   </Button>
-                  <Button variant="danger" size="sm" onClick={() => handleDelete(event.id)}>
+                  <Button variant="outline-danger" size="sm" onClick={() => handleDelete(event.id)}>
                     Delete
                   </Button>
                 </td>
@@ -319,31 +212,10 @@ const getEventColor = (type) => {
                   required
                 >
                   <option value="">Select Type</option>
-
-                  {/* Academic Events */}
-                  <option value="Exam">Exam</option>
-                  <option value="MSE">MSE (Mid Sem Exam)</option>
-                  <option value="ESE">ESE (End Sem Exam)</option>
-                  <option value="Workshop">Workshop</option>
-                  <option value="Seminar">Seminar</option>
-                  <option value="Orientation">Orientation</option>
-                  <option value="Project Submission">Project Submission</option>
-
-                  {/* Campus Life */}
-                  <option value="Freshers">Freshers</option>
-                  <option value="Farewell">Farewell</option>
-                  <option value="Days">College Days (Traditional, Tie Day, etc.)</option>
-                  <option value="Cultural Fest">Cultural Fest</option>
-                  <option value="Technical Fest">Technical Fest</option>
-                  <option value="Industrial Visit">Industrial Visit</option>
-
-                  {/* Career */}
-                  <option value="Placement Drive">Placement Drive</option>
-
-                  {/* Holiday */}
-                  <option value="Holiday">Holiday</option>
+                  {Object.keys(getEventColor()).map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
                 </Form.Select>
-
               </Form.Group>
               <div className="d-flex justify-content-end">
                 <Button variant="secondary" onClick={() => setShowModal(false)} className="me-2">
@@ -356,6 +228,62 @@ const getEventColor = (type) => {
             </Form>
           </Modal.Body>
         </Modal>
+
+        <style jsx>{`
+          .academic-calendar-container {
+            padding: 24px;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #f0f4f8, #d6e4f0);
+          }
+          .react-calendar {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background: #ffffff;
+          }
+          .react-calendar__navigation button {
+            font-weight: 600;
+            color: #2a4365;
+          }
+          .react-calendar__tile--active {
+            background: #2b6cb0;
+            color: white;
+            border-radius: 10px;
+          }
+          .calendar-event-indicator {
+            display: flex;
+            justify-content: center;
+            margin-top: 4px;
+          }
+          .event-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+          }
+          .has-event {
+            border: 2px solid #2b6cb0;
+            border-radius: 10px;
+          }
+          .event-table th {
+            background-color: #2b6cb0;
+            color: white;
+          }
+          .event-type-badge {
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+          }
+          .modal-content {
+            border-radius: 16px;
+          }
+        `}</style>
       </div>
     </div>
   );

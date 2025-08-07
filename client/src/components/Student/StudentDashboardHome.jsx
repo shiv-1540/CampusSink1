@@ -12,8 +12,17 @@ import { useNavigate } from "react-router-dom";
 import { LocateIcon } from "lucide-react";
 import AISuggestionCard from "../../AISuggestion";
 import 'react-calendar/dist/Calendar.css';
+import './workload.css'
+import { CheckCircleIcon, ArrowRightCircleIcon } from '@heroicons/react/24/solid';
 
 const server= import.meta.env.VITE_BACKEND_URL;
+
+const FeaturePoint = ({ text }) => (
+  <li className="flex items-start gap-2 text-gray-700 text-sm sm:text-base">
+    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 mt-1 shrink-0" />
+    <span>{text}</span>
+  </li>
+);
 
 const StudentDashboardHome = () => {
   const [error,setError]=useState("");
@@ -27,18 +36,20 @@ const StudentDashboardHome = () => {
   const [seminars, setSeminars] = useState([]);
   const navigate=useNavigate();
 
-  const user = JSON.parse(localStorage.getItem('user')) || {};
+ 
+ const studinfo=JSON.parse(localStorage.getItem('studinfo'));
+ const token=localStorage.getItem('token');
+ console.log("studingo from login>>",studinfo);
 
   const handleNavigate=()=>{
     navigate('/student/assignments')
   }
 
   const student = {
-    branch: "CSE",
-    year: "TE",
+    branch: studinfo.department,
+    year: studinfo.year,
   };
-  const studinfo=JSON.parse(localStorage.getItem('studinfo'));
-  console.log("studinfo from login :",studinfo);
+  
 
 
   useEffect(() => {
@@ -107,7 +118,7 @@ const StudentDashboardHome = () => {
 
   const tileClassName = ({ date: d, view }) => {
     const key = new Date(d).toDateString();
-    return view === "month" && dueMap[key] ? "bg-warning text-dark rounded-circle" : null;
+    return view === "month" && dueMap[key] ? "bg-warning text-dark-700 rounded-circle" : null;
   };
 
   // Filter today's and tomorrow's seminars
@@ -124,49 +135,13 @@ const StudentDashboardHome = () => {
   // });
 
   return (
- <>
-  {/* Calendar Custom Styles */}
-  <style>{`
-    .react-calendar {
-      width: 100%;
-      background: white;
-      border-radius: 0.5rem;
-      font-family: 'Arial', 'Helvetica', sans-serif;
-      color:rgb(7, 7, 7);
-    }
-    .react-calendar__tile--active {
-      background: #2563eb !important;
-      color: white !important;
-      color:rgb(7, 7, 7);
-    }
-    .react-calendar__tile--now {
-      background: #ffe58f !important;
-      color:rgb(7, 7, 7);
-      @apply text-black;
-    }
-  `}</style>
-
-  {/* Layout: Sidebar + Main */}
-  <div className="flex min-h-screen gap-10 bg-gray-100">
+  <div className="maincontainer flex min-h-screen  bg-gray-100">
    
     <StudSidebar />
 
     {/* Main Content */}
-    <div className="flex-grow p-6 ml-64">
+    <div className="container flex-grow">
       
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white p-6 rounded-xl shadow-md mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
-        <div>
-          <h3 className="text-2xl md:text-3xl font-bold">Welcome back, {user.name} 👋</h3>
-          <p className="text-sm md:text-base text-blue-100 mt-1">
-            Here's a quick overview of your academic space.
-          </p>
-        </div>
-        <div className="mt-4 sm:mt-0 bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg text-sm font-semibold">
-          {studinfo.year} • {studinfo.department}
-        </div>
-      </div>
-
       {/* Grid: Main + Right */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
@@ -174,13 +149,14 @@ const StudentDashboardHome = () => {
         <div className="col-span-2 space-y-6">
 
           {/* 📚 Assignments */}
-          <div className="bg-white p-5 rounded-xl shadow-md">
-            <h5 className="text-lg font-semibold mb-4">📚 Current Assignments</h5>
+          <div className="currAssiContainer bg-white  rounded-xl shadow-md">
+            <h2 className=""> Current Assignments</h2>
             {assignments.length ? (
               [...assignments]
                 .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
                 .map((assignment) => (
-                  <div className="border p-4 mb-3 rounded-md flex justify-between items-start" key={assignment._id}>
+                 <div className="assignment border  mb-3 rounded-md flex flex-col md:flex-row justify-between md:items-center gap-3" key={assignment._id}>
+
                     <div>
                       <h6 className="font-bold">{assignment.title}</h6>
                       <p className="text-sm">{assignment.description}</p>
@@ -195,13 +171,13 @@ const StudentDashboardHome = () => {
           </div>
 
           {/* 🧑‍🏫 Seminars */}
-          <div className="bg-white p-5 rounded-xl shadow-md">
-            <h5 className="text-lg font-semibold mb-4">🧑‍🏫 Upcoming Seminars</h5>
+          <div className="bg-white p-2 rounded-xl shadow-md">
+            <h5 className="text-lg font-bold mb-3">🧑‍🏫 Upcoming Seminars</h5>
             {seminars.length > 0 ? (
               seminars.map((seminar) => (
-                <div className="border p-4 mb-3 rounded-md" key={seminar._id}>
+                <div className="border p-2 mb-1 rounded-md" key={seminar._id}>
                   <strong>{seminar.title}</strong>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-gray-700">
                     {new Date(seminar.datetime).toLocaleString()} • {seminar.venue} • {seminar.speaker}
                   </p>
                   <p className="text-sm">{seminar.description}</p>
@@ -211,31 +187,33 @@ const StudentDashboardHome = () => {
           </div>
 
           {/* 📆 Calendar + Events */}
-          <div className="bg-white p-5 rounded-xl shadow-md">
-            <h5 className="text-lg font-semibold mb-3">📆 Assignment Calendar</h5>
+          <div className="bg-white text-gray-900 p-2 rounded-md shadow-md">
+            <h5 className="text-lg font-bold mb-1">📆 Assignment Calendar</h5>
             <Calendar
               value={date}
               onChange={onDateClick}
               tileClassName={tileClassName}
             />
 
-            <h6 className="mt-4 text-md font-semibold">Upcoming Deadlines</h6>
+            <h6 className="mt-4 text-md font-bold">Upcoming Deadlines</h6>
             <ul className="text-sm mt-2 list-disc ml-5 text-gray-700">
               {assignments.slice(0, 5).map((a) => (
-                <li key={a._id}>
-                  {new Date(a.deadline).toLocaleDateString()} — {a.title}
-                </li>
+                <FeaturePoint
+                  key={a._id}
+                  text={`${new Date(a.deadline).toLocaleDateString()} — ${a.title}`}
+                />
               ))}
+
             </ul>
           </div>
 
         </div>
 
         {/* RIGHT: Mini Calendar + Updates + AI */}
-        <div className="space-y-6">
+        <div className="space-y-5">
 
           {/* 📅 Mini Calendar */}
-          <div className="bg-white p-5 rounded-xl shadow-md">
+          <div className="bg-white p-4 rounded-xl shadow-md">
             <h5 className="text-lg font-semibold mb-2 flex items-center">
               <FaCalendarAlt className="mr-2" />
               {date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}
@@ -247,8 +225,12 @@ const StudentDashboardHome = () => {
             />
           </div>
 
+
+          {/* 🤖 AI Suggestion */}
+          <AISuggestionCard />
+          
           {/* 🔔 Recent Updates */}
-          <div className="bg-white p-5 rounded-xl shadow-md">
+          <div className="bg-white p-4 rounded-xl shadow-md">
             <h5 className="text-lg font-semibold mb-3 flex items-center">
               <FaBell className="mr-2" />Recent Updates
             </h5>
@@ -259,16 +241,13 @@ const StudentDashboardHome = () => {
               </div>
             ))}
           </div>
-
-          {/* 🤖 AI Suggestion */}
-          <AISuggestionCard />
         </div>
       </div>
 
       {/* 📋 Workload Summary Section */}
-      <div className="mt-8">
+      <div className="workload">
         <h4 className="text-lg font-bold mb-3">📊 Overall Summary of Workload</h4>
-        <div className="bg-white p-5 rounded-xl shadow-md">
+        <div className="bg-white p-2 rounded-xl shadow-md">
           <WorkloadSummary />
           <p className="text-sm text-gray-400 mt-2">Charts or advanced stats coming soon...</p>
         </div>
@@ -294,9 +273,6 @@ const StudentDashboardHome = () => {
       </Modal>
     </div>
   </div>
-</>
-
-
   );
 };
 

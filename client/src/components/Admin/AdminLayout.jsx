@@ -3,9 +3,9 @@ import AdSidebar from './AdSidebar';
 
 const AdminLayout = ({ children }) => {
   return (
-    <div className="flex">
+    <div className="maincontainer flex min-h-screen  bg-gray-100">
       <AdSidebar />
-      <main className="ml-64 w-full min-h-screen bg-gray-100 p-6 overflow-y-auto">
+      <main className="container flex-grow">
         {children}
       </main>
     </div>
