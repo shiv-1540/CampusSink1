@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -9,6 +9,7 @@ const server = import.meta.env.VITE_BACKEND_URL;
 
 const AddAssignment = () => {
   const navigate = useNavigate();
+  const [departments, setDepartments] = useState([]);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -33,6 +34,24 @@ const AddAssignment = () => {
       ...prev,
       file: e.target.files[0]
     }));
+  };
+useEffect(() => {
+    fetchDepartments();
+  }, []);
+
+
+const fetchDepartments = async () => {
+
+    try {
+       const token=localStorage.getItem('token');
+      const res = await axios.get(`${server}/api/admin/departments`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setDepartments(res.data);
+      
+    } catch (err) {
+      console.error('Error fetching departments:', err);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -131,24 +150,26 @@ const AddAssignment = () => {
                       </Form.Select>
                     </Form.Group>
 
-                    <Form.Group className="mb-4">
-                      <Form.Label className="block text-sm font-medium text-gray-700 mb-1">
-                        Branch *
-                      </Form.Label>
-                      <Form.Select
-                        name="branch"
-                        value={formData.branch}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                      >
-                        <option value="">Select Branch</option>
-                        <option value="CSE">CSE</option>
-                        <option value="IT">IT</option>
-                        <option value="ENTC">ENTC</option>
-                        <option value="Mechanical">Mechanical</option>
-                      </Form.Select>
-                    </Form.Group>
+                       <Form.Group className="mb-4">
+                          <Form.Label className="block text-sm font-medium text-gray-700 mb-1">
+                            Branch *
+                          </Form.Label>
+                          <Form.Select
+                            name="branch"
+                            value={formData.branch}
+                            onChange={handleChange}
+                            required
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                          >
+                            <option value="">Select Branch</option>
+                            {departments.map((dept, idx) => (
+                              <option key={idx} value={dept.name || dept}>
+                                {dept.name || dept}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+
                   </div>
 
                   <Form.Group className="mb-4">
