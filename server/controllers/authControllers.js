@@ -143,26 +143,27 @@ const login = async (req, res) => {
 // Generate random OTP
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
-const forgotPassword = (req, res) => {
-  const { email } = req.body;
 
-  // Validate email input
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: "Please provide a valid email address" });
-  }
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
 
-  // 1. Check if user exists
-  const sql = 'SELECT * FROM users WHERE email = ?';
-  
-  db.query(sql, [email], (err, results) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: "Internal server error" });
+    console.log("📩 [START] forgotPassword API hit");
+    console.log("🆔 Email from request:", email);
+
+    // Validate email
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      console.log("❌ Email validation failed");
+      return res.status(400).json({ error: "Please provide a valid email address" });
     }
+    console.log("✅ Email validation passed");
 
-    // Don't reveal whether email exists (security best practice)
+    // 1. Check if user exists
+    const [results] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    console.log(`🔍 Found ${results.length} matching user(s)`);
+
     if (results.length === 0) {
-      // Still return success to prevent email enumeration
+      console.log("⚠️ No user found, sending safe success response");
       return res.status(200).json({
         message: "If this email exists in our system, you'll receive an OTP"
       });
@@ -170,30 +171,33 @@ const forgotPassword = (req, res) => {
 
     // 2. Generate and store OTP
     const otp = generateOTP();
-    otpCache.set(email, otp); // Set with TTL (time-to-live)
-    
-    console.log(`OTP for ${email}: ${otp}`); // For development/testing
+    otpCache.set(email, otp);
+    console.log(`🔑 Generated OTP: ${otp}`);
 
-    // 3. Send OTP via email
+    // 3. Send OTP via email (callback style)
     const message = `Your OTP for password reset is: ${otp}`;
-    
-    sendEmail({
-      email: email,
-      subject: 'Password Reset OTP',
-      message
-    }, 
-    (emailErr) => {
+    console.log("✉️ Sending email...");
+
+    sendEmail({ email, subject: 'Password Reset OTP', message }, (emailErr) => {
       if (emailErr) {
-        console.error('Email sending error:', emailErr);
+        console.error("❌ Email sending error:", emailErr);
         return res.status(500).json({ error: "Failed to send OTP email" });
       }
+      console.log("✅ Email sent successfully");
+     
+     
     });
-
-    res.status(200).json({
+     res.status(200).json({
         message: "If this email exists in our system, you'll receive an OTP"
-    });
-  });
+      });
+      console.log("🏁 [END] forgotPassword API completed successfully");
+  } catch (error) {
+    console.error("💥 Error in forgotPassword:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
+
+
 
 const verifyOtp = async (req, res) => {
   try {
@@ -213,53 +217,68 @@ const verifyOtp = async (req, res) => {
 };
 
 
-const resetPassword = (req, res) => {
-  const { email, otp, newPassword } = req.body;
+const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
 
+    console.log("📩 [START] resetPassword API hit");
+    console.log("🆔 Email:", email, "| OTP:", otp, "| New password length:", newPassword?.length);
 
-  console.log("email: ",email,"  otp: ",otp," newpass: ",newPassword);
-  // Input validation
-  if (!email || !otp || !newPassword) {
-    return res.status(400).json({ error: "Email, OTP, and new password are required" });
-  }
-
-  if (newPassword.length < 8) {
-    return res.status(400).json({ error: "Password must be at least 8 characters" });
-  }
-  // Verify OTP
-  const storedOtp = otpCache.get(email);
-  if (!storedOtp || storedOtp !== otp) {
-    return res.status(400).json({ error: "Invalid or expired OTP" });
-  }
-
-  // Hash new password
-  bcrypt.hash(newPassword, 10, (hashErr, hashedPassword) => {
-    if (hashErr) {
-      console.error('Password hashing error:', hashErr);
-      return res.status(500).json({ error: "Internal server error" });
+    // 1️⃣ Validate input
+    if (!email || !otp || !newPassword) {
+      console.warn("❌ Missing required fields");
+      return res.status(400).json({ error: "Email, OTP, and new password are required" });
     }
 
-    // Update password in database
-    const sql = 'UPDATE users SET password = ? WHERE email = ?';
-    db.query(sql, [hashedPassword, email], (dbErr, result) => {
-      if (dbErr) {
-        console.error('Database error:', dbErr);
-        return res.status(500).json({ error: "Internal server error" });
-      }
+    if (newPassword.length < 8) {
+      console.warn("❌ Password too short");
+      return res.status(400).json({ error: "Password must be at least 8 characters" });
+    }
 
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "User not found" });
-      }
+    // 2️⃣ Verify OTP
+    const storedOtp = otpCache.get(email);
+    if (!storedOtp || storedOtp !== otp) {
+      console.warn("❌ Invalid or expired OTP for", email);
+      return res.status(400).json({ error: "Invalid or expired OTP" });
+    }
+    console.log("✅ OTP verification passed");
 
-      // Clear OTP from cache
-      otpCache.del(email);
-       
-      res.status(200).json({
-        message: "Password reset successfully"
+    // 3️⃣ Hash new password
+    const hashedPassword = await new Promise((resolve, reject) => {
+      bcrypt.hash(newPassword, 10, (err, hash) => {
+        if (err) return reject(err);
+        resolve(hash);
       });
     });
-  });
+    console.log("🔐 Password hashed successfully");
+
+    // 4️⃣ Update password in database
+    const [result] = await db.query(
+      'UPDATE users SET password = ? WHERE email = ?',
+      [hashedPassword, email]
+    );
+
+    if (result.affectedRows === 0) {
+      console.warn("⚠️ No user found with email:", email);
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // 5️⃣ Clear OTP from cache
+    otpCache.del(email);
+    console.log("🗑️ OTP cleared from cache for", email);
+
+    // 6️⃣ Success response
+    console.log("✅ Password reset successful for", email);
+    return res.status(200).json({
+      message: "Password reset successfully"
+    });
+
+  } catch (error) {
+    console.error("💥 Error in resetPassword:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
+
 
 
 const getStudentInfo = async (req, res) => {
@@ -294,7 +313,24 @@ const getStudentInfo = async (req, res) => {
 };
 
 
-module.exports = { addUser ,login,forgotPassword,verifyOtp,resetPassword,getStudentInfo};
+const getUserWithEmail=async (req,res)=>{
+  const {email}=req.body;
+  try{
+    const sql=`select * from users where email=?`
+    const results=await db.query(sql,[email]);
+
+    res.status(201).json({
+      data:results[0]
+    })
+  }
+  catch(err){
+   res.status(500).json({
+    message:err.message
+   })
+  }
+}
+
+module.exports = { addUser ,login,forgotPassword,verifyOtp,resetPassword,getStudentInfo,getUserWithEmail};
 
 
 

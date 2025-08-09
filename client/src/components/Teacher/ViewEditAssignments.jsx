@@ -4,6 +4,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import TeachSidebar from './TeacherSidebar';
 import './ViewEdit.css';
+import { toast } from 'react-toastify';
 
 const server = import.meta.env.VITE_BACKEND_URL;
 
@@ -70,7 +71,7 @@ const ViewEditAssignments = () => {
       const result = await res.json();
 
       if (res.ok) {
-        alert('✅ Assignment updated successfully!');
+        toast.success('✅ Assignment updated successfully!');
         setEditing(null);
         fetchAssignments();
       } else {
@@ -94,7 +95,7 @@ const ViewEditAssignments = () => {
         });
 
         if (res.status === 200) {
-          alert('🗑️ Assignment deleted successfully!');
+          toast.info('🗑️ Assignment deleted successfully!');
           fetchAssignments();
         } else {
           alert('❌ Failed to delete assignment');

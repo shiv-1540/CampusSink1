@@ -134,9 +134,6 @@ const StudentDashboardHome = () => {
   //   return seminarDate.getTime() === today.getTime() || seminarDate.getTime() === tomorrow.getTime();
   // });
 
-  const getCntofYearDeptAssi=()=>{
-    
-  }
 
   return (
   <div className="maincontainer flex min-h-screen  bg-gray-100">

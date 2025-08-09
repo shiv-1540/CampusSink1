@@ -30,11 +30,32 @@ import AdminReportPage from "./components/Admin/AdminReportPage.jsx";
 import AcademicCalendar from "./components/Teacher/AcademicCalendar.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 
+import "react-toastify/dist/ReactToastify.css";
+
 const App = () => {
 
   return (
     <>
-     <ToastContainer/>
+     <ToastContainer
+        position="top-right"              // top-left, top-center, etc.
+        autoClose={3000}                  // 3 seconds
+        hideProgressBar={false}           // show or hide progress bar
+        newestOnTop={true}                 // stack newest first
+        closeOnClick                      // allow clicking to close
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"                   // "light", "dark", "colored"
+        toastStyle={{
+          borderRadius: "12px",
+          background: "#1e293b", // slate-900
+          color: "#fff",
+          fontSize: "14px",
+          padding: "12px 16px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
+        }}
+      />
  
       <Routes>
          <Route path="" element={<LandingPage/>} />

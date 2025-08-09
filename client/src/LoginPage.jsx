@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Modal, Button ,Form,Alert} from "react-bootstrap";
+// import logo from './assets/workloadlogin.png'
 
 const server= import.meta.env.VITE_BACKEND_URL;
 
@@ -90,11 +91,14 @@ const LoginPage = () => {
   };
 
   const handleForgotPassword = async () => {
+    console.log("FOrgot me aa gya");
+    console.log("Mail >>",forgotEmail);
     try {
         setError("");
       await axios.post(`${server}/api/auth/forgot-password`, {
         email: forgotEmail
       });
+      console.log("AAge bhi aaya..")
       setStep(2);
       setError("");
     } catch (err) {
@@ -159,9 +163,11 @@ const LoginPage = () => {
 
   return (
     <div className="container-fluid min-vh-100 d-flex justify-content-center align-items-center bg-light">
+       
+       
       <div className="card shadow-lg p-4" style={{ width: "100%", maxWidth: "400px" }}>
          <div className="text-center mb-3">
-          <h2 className="fw-bold text-primary">CampusSink</h2>
+          <h2 className="font-extrabold text-primary text-3xl">CampusSink</h2>
           <p className="text-muted">Academic Assignment Management</p>
         </div>
         
@@ -248,76 +254,97 @@ const LoginPage = () => {
 
        
 
-       {/* Forgot Password Modal */}
-      <Modal 
-        show={showForgotPassword} 
+   <Modal
+        show={showForgotPassword}
         onHide={() => {
           setShowForgotPassword(false);
-          setStep(1); // Reset to first step when closing
+          setStep(1);
           setError("");
         }}
         centered
+        size="md"
+        className="forgot-password-modal"
       >
-  <Modal.Header closeButton className="border-0 pb-0">
-    <Modal.Title className="fw-bold">Reset Password</Modal.Title>
-  </Modal.Header>
-  <Modal.Body className="pt-1">
-    {error && (
-      <Alert variant="danger" className="mb-3">
-        {error}
-      </Alert>
-    )}
+     {/* Header */}
+    <Modal.Header closeButton className="border-0 pb-0">
+      <Modal.Title className="fw-bold text-primary fs-4">
+        🔐 Reset Your Password
+      </Modal.Title>
+    </Modal.Header>
 
-    {/* Step indicator */}
-    <div className="d-flex justify-content-center mb-4">
-      {[1, 2, 3].map((stepNumber) => (
-        <div 
-          key={stepNumber}
-          className={`d-flex align-items-center justify-content-center 
-            ${step === stepNumber ? 'text-primary fw-bold' : 'text-muted'}
-            ${stepNumber > 1 ? 'ms-3' : ''}`}
-        >
-          {step > stepNumber ? (
-            <i className="bi bi-check-circle-fill text-success me-2"></i>
-          ) : (
-            <span className="me-2">{stepNumber}.</span>
-          )}
-          {stepNumber === 1 && 'Verify Email'}
-          {stepNumber === 2 && 'Enter OTP'}
-          {stepNumber === 3 && 'New Password'}
-        </div>
-      ))}
-    </div>
+      <Modal.Body className="pt-2">
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="danger" className="rounded-3 shadow-sm py-2 px-3 mb-3">
+          {error}
+        </Alert>
+      )}
 
-    {/* Step 1: Email Verification */}
+          {/* Step Indicator */}
+          <div className="d-flex justify-content-between align-items-center mb-4 px-2">
+            {["Verify Email", "Enter OTP", "New Password"].map((label, index) => {
+              const stepNumber = index + 1;
+              const active = step === stepNumber;
+              const completed = step > stepNumber;
+              return (
+                <div
+                  key={label}
+                  className={`d-flex flex-column align-items-center flex-fill position-relative`}
+                >
+                  <div
+                    className={`rounded-circle border d-flex align-items-center justify-content-center 
+                      ${completed ? "bg-success text-white border-success" : active ? "bg-primary text-white border-primary" : "bg-light text-muted border-secondary"}
+                    `}
+                    style={{ width: 36, height: 36 }}
+                  >
+                    {completed ? <i className="bi bi-check-lg"></i> : stepNumber}
+                  </div>
+                  <small className={`mt-1 ${active ? "text-primary fw-semibold" : "text-muted"}`}>
+                    {label}
+                  </small>
+                  {stepNumber < 3 && (
+                    <div
+                      className="position-absolute"
+                      style={{
+                        top: 18,
+                        left: "calc(100% + 5px)",
+                        width: "100%",
+                        height: 2,
+                        backgroundColor: completed ? "#198754" : "#dee2e6",
+                        zIndex: -1
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Step 1: Email */}
     {step === 1 && (
-      <div>
-        <Form.Group className="mb-3">
-          <Form.Label>Email Address</Form.Label>
+      <>
+        <Form.Group className="mb-4">
+          <Form.Label className="fw-semibold">Email Address</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter your registered email"
             value={forgotEmail}
             onChange={(e) => setForgotEmail(e.target.value)}
             required
+            className="shadow-sm"
           />
         </Form.Group>
-        <Button 
-          variant="primary" 
-          onClick={handleForgotPassword}
-          className="w-100 py-2"
-        >
-          Send OTP
-          <i className="bi bi-send ms-2"></i>
+        <Button variant="primary" onClick={handleForgotPassword} className="w-100 py-2 fw-semibold">
+          Send OTP <i className="bi bi-send ms-1"></i>
         </Button>
-      </div>
+      </>
     )}
 
-    {/* Step 2: OTP Verification */}
+    {/* Step 2: OTP */}
     {step === 2 && (
-      <div>
+      <>
         <Form.Group className="mb-3">
-          <Form.Label>Verification Code</Form.Label>
+          <Form.Label className="fw-semibold">Verification Code</Form.Label>
           <div className="d-flex align-items-center">
             <Form.Control
               type="text"
@@ -326,35 +353,27 @@ const LoginPage = () => {
               onChange={(e) => setOtp(e.target.value)}
               maxLength={6}
               required
+              className="shadow-sm"
             />
-            <Button 
-              variant="link" 
-              className="ms-2 text-decoration-none"
-              onClick={handleForgotPassword}
-            >
+            <Button variant="link" className="ms-2 p-0 text-primary fw-semibold" onClick={handleForgotPassword}>
               Resend OTP
             </Button>
           </div>
           <Form.Text className="text-muted">
-            Check your email for the verification code
+            Check your email for the verification code.
           </Form.Text>
         </Form.Group>
-        <Button 
-          variant="primary" 
-          onClick={verifyOtp}
-          className="w-100 py-2"
-        >
-          Verify Code
-          <i className="bi bi-check-circle ms-2"></i>
+        <Button variant="primary" onClick={verifyOtp} className="w-100 py-2 fw-semibold">
+          Verify Code <i className="bi bi-check-circle ms-1"></i>
         </Button>
-      </div>
+      </>
     )}
 
     {/* Step 3: New Password */}
     {step === 3 && (
-      <div>
-        <Form.Group className="mb-3">
-          <Form.Label>New Password</Form.Label>
+      <>
+        <Form.Group className="mb-4">
+          <Form.Label className="fw-semibold">New Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Enter new password"
@@ -362,23 +381,18 @@ const LoginPage = () => {
             onChange={(e) => setNewPassword(e.target.value)}
             minLength={8}
             required
+            className="shadow-sm"
           />
-          <Form.Text className="text-muted">
-            Minimum 8 characters required
-          </Form.Text>
+          <Form.Text className="text-muted">Minimum 8 characters required</Form.Text>
         </Form.Group>
-        <Button 
-          variant="primary" 
-          onClick={resetPassword}
-          className="w-100 py-2"
-        >
-          Reset Password
-          <i className="bi bi-arrow-repeat ms-2"></i>
+        <Button variant="success" onClick={resetPassword} className="w-100 py-2 fw-semibold">
+          Reset Password <i className="bi bi-arrow-repeat ms-1"></i>
         </Button>
-      </div>
+      </>
     )}
   </Modal.Body>
 </Modal>
+
       </div>
     </div>
   );

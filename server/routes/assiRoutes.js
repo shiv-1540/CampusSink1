@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const {CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline, getWorkloadCnt, submitAssignment, GetAllAssignments1, getAllNotifications} =require('../controllers/assiController');
+const {CreateNewAssignment,GetAllAssignments,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline, getWorkloadCnt, submitAssignment, GetAllAssignments1, getAllNotifications, GetAllAssignmentsByYearBranch} =require('../controllers/assiController');
 const { jwtAuthMiddleware } = require('../middlewares/auth');
 
 // ✅ Create new assignment
@@ -12,6 +12,9 @@ router.get('/',jwtAuthMiddleware,GetAllAssignments );
 
 // ✅ Get all assignments  without dept_id
 router.get('/get1',jwtAuthMiddleware,GetAllAssignments1 );
+
+// Get All Assignment of next week by Year & Branch
+router.get('/getbyby',GetAllAssignmentsByYearBranch);
 
 // 🔍 Search assignment by title (case-insensitive partial match)
 router.get('/search',jwtAuthMiddleware,SearchAssiByTitle );

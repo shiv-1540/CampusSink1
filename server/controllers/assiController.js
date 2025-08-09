@@ -164,6 +164,34 @@ const GetAllAssignments1 = async (req, res) => {
     return res.status(500).json({ error: `Failed to fetch assignments ${error.message}` });
   }
 };
+const GetAllAssignmentsByYearBranch = async (req, res) => {
+  // const { year, branch } = req.query;
+  // console.log("Year>> ", year, "Branch>> ", branch);
+
+  try {
+
+    //  year = ? AND branch = ?
+
+    // AND DATE_ADD(NOW(), INTERVAL 7 DAY)
+    const query = `
+      SELECT * 
+      FROM assignments 
+      WHERE deadline > NOW()
+      ORDER BY deadline ASC
+    `;
+    //   [year, branch]
+    const [assignments] = await db.execute(query);
+
+    res.json({
+      message: 'Assignments fetched successfully!',
+      assignments,
+      count: assignments.length
+    });
+  } catch (error) {
+    console.log("Error while fetching assignments", error);
+    res.status(500).json({ error: `Failed to fetch assignments >> ${error.message}` });
+  }
+};
 
 
 
@@ -382,4 +410,4 @@ const getAllNotifications = async (req, res) => {
 
 
 
-module.exports={CreateNewAssignment,GetAllAssignments,GetAllAssignments1,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline,getWorkloadCnt,submitAssignment,getAllNotifications};
+module.exports={CreateNewAssignment,GetAllAssignments,GetAllAssignments1,SearchAssiByTitle,GetAssiById,UpdateAssiById,deleteAssiById,UpdateAssignmentDeadline,getWorkloadCnt,submitAssignment,getAllNotifications,GetAllAssignmentsByYearBranch};

@@ -4,13 +4,18 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import TeachSidebar from "./TeacherSidebar";
 import './AddAssignment.css';
+import { toast } from 'react-toastify';
 
 const server = import.meta.env.VITE_BACKEND_URL;
 
 const AddAssignment = () => {
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [cnt,SetCnt]=useState(0);
 
+  const user = JSON.parse(localStorage.getItem('user')) || {};
+  const token =localStorage.getItem('token');
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -35,13 +40,27 @@ const AddAssignment = () => {
       file: e.target.files[0]
     }));
   };
-useEffect(() => {
-    fetchDepartments();
-  }, []);
+
+  useEffect(() => {
+     fetchDepartments();
+     fetchAssignments();
+ }, []);
+  
 
 
-const fetchDepartments = async () => {
+ const fetchAssignments=async ()=>{
+   try{
+    // ?year=${formData.year}?&branch=${formData.branch}
+      const res=await axios.get(`${server}/api/assignments/getbyby`);
+      setAssignments(res.data.assignments);
+      SetCnt(res.data.count);
+   }
+   catch(err){
+     console.log("Fetch Assignments err",err.message);
+   }
+ } 
 
+ const fetchDepartments = async () => {
     try {
        const token=localStorage.getItem('token');
       const res = await axios.get(`${server}/api/admin/departments`, {
@@ -53,38 +72,98 @@ const fetchDepartments = async () => {
       console.error('Error fetching departments:', err);
     }
   };
+  
+// //  const fetchAssignments = async () => { 
+      
+// //       try {
+// //         const token=localStorage.getItem('token');
+// //         const res = await axios.get(
+// //              `${server}/api/assignments/get1`,
+// //              {
+// //               headers:{
+// //                 'Content-Type':'application/json',
+// //                 'Authorization':`Bearer ${token}`        
+// //               }
+// //              }
+            
+// //           );
+// //         const data = res.data.unsubmitted;
+// //         setAssignments(data);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+// //         const map = {};
+// //         data.forEach(a => {
+// //           const key = new Date(a.deadline).toDateString();
+// //           if (!map[key]) map[key] = [];
+// //           map[key].push(a);
+// //         });
+// //         setDueMap(map);
+// //       } catch (err) {
+// //         console.error("Failed to fetch assignments", err);
+// //       }
+// //  };
 
-    const token = localStorage.getItem("token");
-    const payload = {
-      ...formData,
-      description: formData.description || "No additional instructions",
-      file_url: formData.file ? formData.file.name : "",
-      created_by: "teacher123",
-      status: "active",
-    };
+// const getCntofYearDeptAssi = (year, dept,deadline) => {
+//   console.log("Assignments>> ",assignments)
+//   return assignments.filter(
+//     e => e.year === year && e.branch === dept 
+//   ).length;
+// };
 
-    try {
-      const response = await axios.post(
-        `${server}/api/assignments`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  const targetDate = new Date(formData.deadline);
+  const sevenDaysBefore = new Date(targetDate);
+  sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 7);
+// console.log("SUbmit ke andar aa gya");
+  const count = assignments.filter(e => {
+    const deadlineDate = new Date(e.deadline);
+    return (
+      e.year === formData.year &&
+      e.branch === formData.branch &&
+      deadlineDate >= sevenDaysBefore &&
+      deadlineDate <= targetDate
+    );
+  }).length;
 
-      alert(response.data.message);
-      navigate("/teacher/dashboard");
-    } catch (error) {
-      console.error("Submission Error:", error);
-      alert(error.response?.data?.error || "Network or server error!");
-    }
+  console.log("Count>>", count);
+
+  if (count >= 3) {
+    toast.warning(`This Division already has too much workload (${count} assignments).`);
+    return;
+  }
+
+  const token = localStorage.getItem("token");
+  const payload = {
+    ...formData,
+    description: formData.description || "No additional instructions",
+    file_url: formData.file ? formData.file.name : "",
+    created_by: user.name,
+    status: "active",
   };
+
+  try {
+    const response = await axios.post(
+      `${server}/api/assignments`,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+
+    toast.success(response.data.message);
+    navigate("/teacher/dashboard");
+  } catch (error) {
+    console.error("Submission Error:", error);
+    alert(error.response?.data?.error || "Network or server error!");
+  }
+};
+
+
 
   return (
     <div className="maincontainer flex min-h-screen  bg-gray-100">
@@ -99,6 +178,7 @@ const fetchDepartments = async () => {
             <p className="text-gray-600">
               Fill in the details below to create a new assignment for your students
             </p>
+          
           </header>
 
           <form onSubmit={handleSubmit} className="space-y-6">
