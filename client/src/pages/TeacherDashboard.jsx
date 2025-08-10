@@ -214,22 +214,41 @@ const TeacherDashboard = () => {
       <TeachSidebar/>
 
       <div className="container flex-grow">
-        <h2 className="fw-bold mb-4">Teacher Dashboard</h2>
+       <div className="flex items-center gap-3 mb-1">
+  <div className="bg-blue-100 p-2 rounded-lg">
+    <i className="bi bi-mortarboard-fill text-blue-600 text-2xl"></i>
+  </div>
+  <div>
+    <h2 className="font-extrabold text-2xl md:text-3xl text-gray-800 tracking-tight">
+      Teacher Dashboard
+    </h2>
+    <p className="text-gray-500 text-sm">
+      Manage assignments, track student progress, and stay organized
+    </p>
+  </div>
+</div>
+<hr className="border-gray-200 mb-0" />
 
-        {/* Summary Cards */}
-        <Row className="mb-3 g-3">
+
+       {/* Summary Cards */}
+        <Row className="mb-3 g-3 summary-cards">
           {[
-            { icon: FaFileAlt, label: 'Active Assignments', count: activeAssignmentsCount, meta: `${activeAssignmentsCount - activeAssignmentsCount} this week` },
-            { icon: FaFileAlt, label: 'Total Submissions', count: totalSubmissionsCount, meta: `+${totalSubmissionsCount} today` },
-            { icon: FaClock, label: 'Pending Reviews', count: pendingReviewsCount, meta: `${pendingReviewsCount} urgent` },
-            { icon: FaExclamationCircle, label: 'Overdue Items', count: overdueCount, meta: 'Needs attention' },
-          ].map(({ icon: Icon, label, count, meta }, idx) => (
-            <Col md={3} key={idx}>
-              <Card className="text-center">
-                <Card.Body>
-                  <Icon size={30} className="text-primary mb-2" />
-                  <h5>{label}</h5>
-                  <p className="mb-0">{count}</p>
+            { icon: FaFileAlt, label: 'Active Assignments', count: activeAssignmentsCount, meta: `${activeAssignmentsCount - activeAssignmentsCount} this week`, color: '#4F46E5' },
+            { icon: FaFileAlt, label: 'Total Submissions', count: totalSubmissionsCount, meta: `+${totalSubmissionsCount} today`, color: '#16A34A' },
+            { icon: FaClock, label: 'Pending Reviews', count: pendingReviewsCount, meta: `${pendingReviewsCount} urgent`, color: '#F59E0B' },
+            { icon: FaExclamationCircle, label: 'Overdue Items', count: overdueCount, meta: 'Needs attention', color: '#DC2626' },
+          ].map(({ icon: Icon, label, count, meta, color }, idx) => (
+            <Col xs={6} md={3} key={idx}>
+              <Card className="summary-card shadow-sm border-0">
+                <Card.Body className="p-3 text-center">
+                  <div 
+                    className="icon-wrapper mx-auto mb-2"
+                    style={{ backgroundColor: `${color}20` }}
+                  >
+                    <Icon size={20} style={{ color }} />
+                  </div>
+                  <h6 className="fw-semibold text-gray-700">{label}</h6>
+                  <p className="fw-bold mb-0" style={{ color }}>{count}</p>
                   <small className="text-muted">{meta}</small>
                 </Card.Body>
               </Card>
@@ -237,13 +256,14 @@ const TeacherDashboard = () => {
           ))}
         </Row>
 
+
         {/* Upcoming Deadlines & Calendar */}
         <Row className="mb-4 g-3">
           {/* Left: Deadlines + Seminars */}
           <Col md={8}>
             <Card className="shadow rounded-4">
               <Card.Body>
-                <h5 className="fw-bold mb-3">📌 Upcoming Deadlines</h5>
+                <h5 className="font-extrabold mb-2 text-xl"> Upcoming Deadlines</h5>
                 <ListGroup variant="flush" className="mb-4">
                   {upcomingDeadlines.map((a) => (
                     <ListGroup.Item key={a.id} className="bg-light border-0 rounded mb-2">
@@ -268,8 +288,8 @@ const TeacherDashboard = () => {
                   )}
                 </ListGroup>
 
-                <h5 className="fw-bold mb-3">🎤 Upcoming Seminars</h5>
-                <div className="space-y-3">
+                <h5 className="font-extrabold mb-2 text-xl"> Upcoming Seminars</h5>
+                <div className="space-y-2">
                   {allSeminars.length === 0 && (
                     <div className="text-muted text-center">No upcoming seminars</div>
                   )}
@@ -361,52 +381,93 @@ const TeacherDashboard = () => {
           </Card.Body>
         </Card>
 
-        {/* Date Events Modal */}
-        <Modal show={showDateEvents} onHide={() => setShowDateEvents(false)} size="lg">
-          <Modal.Header closeButton>
-            <Modal.Title>
-              Events on {selectedDate && selectedDate.toLocaleDateString()}
+       {/* Date Events Modal */}
+        <Modal
+          show={showDateEvents}
+          onHide={() => setShowDateEvents(false)}
+          size="md"
+          centered
+
+          className='border border-2 border-dark '
+        >
+          <Modal.Header
+            closeButton
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+          >
+            <Modal.Title className="flex items-center gap-1">
+              <FaCalendarAlt size={15} />
+              Events on{" "}
+              {selectedDate && (
+                <span className="font-semibold">
+                  {selectedDate.toLocaleDateString()}
+                </span>
+              )}
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+
+          <Modal.Body className="bg-gray-50">
             {dateEvents.length > 0 ? (
               <ListGroup variant="flush">
                 {dateEvents.map((event, index) => (
-                  <ListGroup.Item key={index}>
+                  <ListGroup.Item
+                    key={index}
+                    className="bg-white rounded-lg shadow-sm border mb-2 p-3 hover:shadow-md transition-all"
+                  >
                     <div className="d-flex align-items-start">
-                      <div className="me-3">
-                        {event.type === 'assignment' && (
-                          <FaFileAlt size={24} className="text-danger" />
+                      {/* Icon Section */}
+                      <div className="me-3 flex-shrink-0">
+                        {event.type === "assignment" && (
+                          <FaFileAlt
+                            size={26}
+                            className="text-red-500 bg-red-100 p-1 rounded-full"
+                          />
                         )}
-                        {event.type === 'seminar' && (
-                          <FaBookOpen size={24} className="text-primary" />
+                        {event.type === "seminar" && (
+                          <FaBookOpen
+                            size={26}
+                            className="text-blue-500 bg-blue-100 p-1 rounded-full"
+                          />
                         )}
-                        {event.type === 'academic' && (
-                          <FaCalendarAlt size={24} style={{ color: getEventColor(event.eventType) }} />
+                        {event.type === "academic" && (
+                          <FaCalendarAlt
+                            size={26}
+                            style={{
+                              color: getEventColor(event.eventType),
+                              backgroundColor: `${getEventColor(event.eventType)}20`,
+                              borderRadius: "989px",
+                              padding: "3px",
+                            }}
+                          />
                         )}
                       </div>
+
+                      {/* Event Details */}
                       <div className="flex-grow-1">
-                        <h5 className="mb-1">
+                        <h5 className="mb-1 font-semibold text-gray-800">
                           {event.title}
-                          {event.type === 'academic' && (
-                            <Badge bg="transparent" className="ms-2" style={{ 
-                              color: getEventColor(event.eventType),
-                              border: `1px solid ${getEventColor(event.eventType)}`
-                            }}>
+                          {event.type === "academic" && (
+                            <Badge
+                              bg="transparent"
+                              className="ms-2 text-xs font-medium px-2 py-1 rounded"
+                              style={{
+                                color: getEventColor(event.eventType),
+                                border: `1px solid ${getEventColor(event.eventType)}`,
+                              }}
+                            >
                               {event.eventType}
                             </Badge>
                           )}
                         </h5>
-                        <p className="mb-1">{event.description}</p>
-                        <small className="text-muted">
-                          {event.type === 'assignment' && (
-                            <>Deadline: {event.date.toLocaleString()}</>
+                        <p className="mb-1 text-gray-600">{event.description}</p>
+                        <small className="text-gray-500">
+                          {event.type === "assignment" && (
+                            <>📅 Deadline: {event.date.toLocaleString()}</>
                           )}
-                          {event.type === 'seminar' && (
-                            <>Time: {event.date.toLocaleString()}</>
+                          {event.type === "seminar" && (
+                            <>🕒 Time: {event.date.toLocaleString()}</>
                           )}
-                          {event.type === 'academic' && (
-                            <>Date: {event.date.toLocaleDateString()}</>
+                          {event.type === "academic" && (
+                            <>📅 Date: {event.date.toLocaleDateString()}</>
                           )}
                         </small>
                       </div>
@@ -415,15 +476,23 @@ const TeacherDashboard = () => {
                 ))}
               </ListGroup>
             ) : (
-              <p>No events on this date</p>
+              <p className="text-center text-gray-500 py-2">
+                No events on this date 📭
+              </p>
             )}
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowDateEvents(false)}>
+
+          <Modal.Footer className="bg-gray-50 border-t">
+            <Button
+              variant="light"
+              onClick={() => setShowDateEvents(false)}
+              className="rounded-lg px-4 py-1 border shadow-sm hover:bg-red-100"
+            >
               Close
             </Button>
           </Modal.Footer>
         </Modal>
+
       </div>
 
       <style jsx>{`

@@ -120,9 +120,25 @@ const ViewEditAssignments = () => {
   <TeachSidebar />
 
   <div className="container flex-grow">
-    <h3 className="text-3xl font-extrabold text-gray-800 mb-8 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+   <header className="mb-2">
+  <div className="flex items-center gap-3 flex-wrap">
+    {/* Icon */}
+    <div className="bg-indigo-100 p-2 rounded-xl">
+      <i className="bi bi-pencil-square text-gray-600 text-2xl"></i>
+    </div>
+
+    {/* Title */}
+    <h3 className="text-1xl md:text-2xl font-extrabold bg-gray-700 bg-clip-text text-transparent">
       View & Edit Assignments
     </h3>
+  </div>
+
+  {/* Subtitle */}
+  <p className="text-gray-500 text-sm md:text-base mt-1">
+    Manage, update, or delete assignments with ease
+  </p>
+</header>
+
 
     {error && (
       <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-xl shadow-md animate-pulse">

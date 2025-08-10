@@ -86,7 +86,19 @@ const ManageDeadlines = () => {
 
       {/* Main Content */}
       <div className="container flex-grow" >
-        <h3 className="text-3xl font-extrabold text-gray-800 mb-8 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">📋 Manage Assignment Deadlines</h3>
+        <header className="mb-6">
+          <div className="flex items-center gap-3">
+            <span className="w-3 h-10 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-sm"></span>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800">
+                Manage Assignment Deadlines
+              </h1>
+              <p className="text-sm md:text-base text-gray-500">
+                Track, update, and organize all assignment due dates in one place
+              </p>
+            </div>
+          </div>
+        </header>
 
         {/* Message Alert */}
         {message && (

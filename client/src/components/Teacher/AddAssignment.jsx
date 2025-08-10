@@ -171,15 +171,23 @@ const handleSubmit = async (e) => {
       
       <main className="container flex-grow">
         <div className="">
-          <header className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+         <header className="mb-6 flex items-center gap-3">
+          {/* Icon */}
+          <div className="bg-blue-100 p-3 rounded-lg">
+            <i className="bi bi-file-earmark-plus text-blue-600 text-2xl"></i>
+          </div>
+
+          {/* Title + Subtitle */}
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 tracking-tight">
               Create New Assignment
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-500 text-sm md:text-base">
               Fill in the details below to create a new assignment for your students
             </p>
-          
-          </header>
+          </div>
+        </header>
+
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

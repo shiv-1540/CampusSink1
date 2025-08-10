@@ -143,10 +143,24 @@ const handleDelete = async (id) => {
       <TeachSidebar/>
       <div className="container flex-grow">
         <div className="flex justify-between mb-3">
-          <div>
-            <h2 className="fw-bold">Seminars</h2>
-            <p className="text-muted">Add, edit, or delete seminar records</p>
+         <div className="flex items-center gap-3 mb-4">
+          {/* Icon */}
+          <div className="bg-purple-100 p-3 rounded-lg">
+            <i className="bi bi-mic-fill text-purple-600 text-xl"></i>
           </div>
+
+          {/* Title + Subtitle */}
+          <div>
+            <h2 className="font-extrabold text-2xl text-gray-800 tracking-tight">
+              Seminars
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Add, edit, or delete seminar records
+            </p>
+          </div>
+        </div>
+        <hr className="border-gray-200 mb-0" />
+
 
           <Button onClick={() => { resetForm(); setShow(true); }}  className='m-4 '>+ Add Seminar</Button>
         </div>

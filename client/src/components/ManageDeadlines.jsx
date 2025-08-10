@@ -19,12 +19,13 @@ const ManageDeadlines = () => {
   return (
     <div className="d-flex">
         <TeachSidebar/>
-
+  <h2>shiva</h2>
       <div className="ml-64 ">
-        <h5 className="fw-semibold mb-4">
-          <span className="me-2" style={{ color: '#399EFF' }}>■</span>
+       <h5 className="flex items-center gap-2 text-lg md:text-xl font-semibold text-gray-800 mb-4">
+          <span className="w-3 h-3 rounded-sm bg-blue-500"></span>
           Manage Assignment Deadlines
         </h5>
+
 
         <Row className="align-items-center mb-3">
           <Col md={4}>
