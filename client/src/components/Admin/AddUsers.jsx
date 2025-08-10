@@ -67,6 +67,50 @@ const AddUsersPage = () => {
     }
   };
 
+ const updateDepartment = async (id, name) => {
+  try {
+    const res = await axios.put(
+      "/api/admin/update-dept",
+      { id, name },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // JWT token for auth
+        },
+      }
+    );
+
+    toast.success(res.data);
+  } catch (err) {
+    toast.error(`Error updating department: ${err}`)
+    console.error("Error updating department:", err);
+    throw err.response?.data || { error: "Something went wrong" };
+  }
+};
+
+const handleDeleteDept = async (id) => {
+  if (!id) {
+    alert("Please provide a department ID");
+    return;
+  }
+
+  try {
+    const res = await axios.delete(`${server}/api/admin/delete-dept`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      data: { id } // DELETE needs 'data' for request body
+    });
+
+    toast.success(res.data.message || "Department deleted successfully");
+    fetchDepartments();
+  } catch (err) {
+    console.error("Error deleting department:", err);
+    toast.error(err.response?.data?.error || "Failed to delete department");
+  }
+};
+
   return (
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-6">College Management </h2>
@@ -169,20 +213,20 @@ const AddUsersPage = () => {
                 <>
                   <td className="py-2 px-4 border-b">{u.id}</td>
                   <td className="py-2 px-4 border-b">{u.name}</td>
-                  {/* <td className="py-2 px-4 border-b space-x-2">
-                    <button
-                      onClick={() => handleEditDepartment(u)}
+                <td className="py-2 px-4 border-b space-x-2">
+                    {/* <button
+                      onClick={() => updateDepartment(u.id,u.name)}
                       className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
                     >
                       Edit
-                    </button>
+                    </button> */}
                     <button
-                      onClick={() => handleDeleteDepartment(u)}
+                      onClick={() => handleDeleteDept(u.id)}
                       className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                     >
                       Delete
                     </button>
-                  </td> */}
+                  </td> 
                 </>
               ) : (
                 <>
