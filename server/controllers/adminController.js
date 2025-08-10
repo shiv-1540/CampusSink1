@@ -139,6 +139,33 @@ const updateTeacher = async (req, res) => {
   }
 };
 
+const UpdateDept = async (req, res) => {
+  const { id, name } = req.body;
+
+  // Validate inputs
+  if (!id || !name) {
+    return res.status(400).json({ error: "Department ID and name are required" });
+  }
+
+  try {
+    const sql = `UPDATE department SET name = ? WHERE id = ?`;
+    db.query(sql, [name, id], (err, result) => {
+      if (err) {
+        console.error("Database error:", err.message);
+        return res.status(500).json({ error: `Error while updating department: ${err.message}` });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Department not found" });
+      }
+
+      res.status(200).json({ message: "Department updated successfully" });
+    });
+  } catch (err) {
+    console.error("Unexpected error:", err.message);
+    res.status(500).json({ error: `Unexpected error: ${err.message}` });
+  }
+};
 
 // === FETCH CONTROLLERS ===
 const getDepartments = async (req, res) => {
@@ -178,12 +205,37 @@ const getTeachers = async (req, res) => {
   }
 };
 
+const DeleteDept = async (req, res) => {
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: "Department ID is required" });
+  }
+
+  try {
+    const sql = `DELETE FROM department WHERE id = ?`;
+    const [result] = await db.query(sql, [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Department not found" });
+    }
+
+    res.status(200).json({ message: "Department deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting department:", err.message);
+    res.status(500).json({ error: `Error while deleting department: ${err.message}` });
+  }
+};
+
+
 module.exports = {
   addDepartment,
   addStudent,
   addTeacher,
   updateStudent,
   updateTeacher,
+  UpdateDept,
+  DeleteDept,
   getDepartments,
   getStudents,
   getTeachers

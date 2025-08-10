@@ -4,6 +4,7 @@ import heroBg from '../assets/land.png'; // Make sure this image exists
 import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
 import { CheckCircleIcon, ArrowRightCircleIcon } from '@heroicons/react/24/solid'; // example icons
+// import logo from '../assets/logo.png'
 
 const FeaturePoint = ({ text }) => (
   <li className="flex items-start gap-2 text-gray-700 text-sm sm:text-base">
@@ -21,23 +22,35 @@ const LandingPage = () => {
     <div className="font-sans text-gray-800">
       {/* Navbar */}
       <header className="w-full px-6 py-3 border-b bg-white shadow-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {/* <img src={logo} alt="CampusSink Logo" className="h-9 w-auto" /> */}
-            <span className="text-xl font-bold text-blue-700">CampusSink</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-8 text-gray-700 text-sm font-medium">
-            <a href="#features" className="hover:text-blue-600 transition">Features</a>
-            <a href="#dashboard" className="hover:text-blue-600 transition">Dashboard</a>
-            <a href="#reviews" className="hover:text-blue-600 transition">Reviews</a>
-          </nav>
-          
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-sm" onClick={()=>navigate('/login')}>
-              Login to Portal
-            </button>
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         
+        {/* Logo Section */}
+        <div className="flex items-center gap-2">
+          <img 
+            src={logo} 
+            alt="CampusSink Logo" 
+            className="h-11 w-auto object-contain cursor-pointer" 
+            onClick={() => navigate('/')} 
+          />
         </div>
-      </header>
+
+        {/* Navigation */}
+        <nav className="hidden md:flex items-center gap-8 text-gray-700 text-sm font-medium">
+          <a href="#features" className="hover:text-blue-600 transition">Features</a>
+          <a href="#dashboard" className="hover:text-blue-600 transition">Dashboard</a>
+          <a href="#reviews" className="hover:text-blue-600 transition">Reviews</a>
+        </nav>
+
+        {/* Login Button */}
+        <button 
+          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-sm transition"
+          onClick={() => navigate('/login')}
+        >
+          Login to Portal
+        </button>
+      </div>
+    </header>
+
 
       {/* Hero Section with Background */}
      <section

@@ -13,7 +13,9 @@ const {
   getStudents,
   getTeachers,
   updateStudent,
-  updateTeacher
+  updateTeacher,
+  UpdateDept,
+  DeleteDept
 } = require('../controllers/adminController');
 
 const { getReportStats } = require('../controllers/adminReportController');
@@ -27,6 +29,11 @@ router.post('/add-teacher', jwtAuthMiddleware, addTeacher);
 // === PUT ROUTES ===
 router.put('/update-student',jwtAuthMiddleware,updateStudent);
 router.put('/update-teacher',jwtAuthMiddleware,updateTeacher);
+router.put('/update-dept',jwtAuthMiddleware,UpdateDept);
+
+//=== DELETE ROUTES ===
+router.delete('/delete-dept',jwtAuthMiddleware,DeleteDept);
+
 
 // === GET routes ===
 router.get('/departments', jwtAuthMiddleware, getDepartments);
