@@ -26,6 +26,29 @@ const AddAssignment = () => {
     file: null
   });
 
+  useEffect(() => {
+  if (cnt >= 3) {
+    toast.warning(`${formData.branch} & ${formData.year} already has too much workload (${cnt} assignments).`);
+  }
+}, [formData.deadline]);
+
+useEffect(()=>{
+  if(formData.deadline && formData.branch && formData.year){
+    const targetDate = new Date(formData.deadline);
+    const sevenDaysBefore = new Date(targetDate);
+    sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 7); 
+    SetCnt(assignments.filter(e => {
+    const deadlineDate = new Date(e.deadline);
+     return (
+      e.year === formData.year &&
+      e.branch === formData.branch &&
+      deadlineDate >= sevenDaysBefore &&
+      deadlineDate <= targetDate
+    );
+  }).length);
+  }
+})
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -112,28 +135,18 @@ const AddAssignment = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   
-  const targetDate = new Date(formData.deadline);
-  const sevenDaysBefore = new Date(targetDate);
-  sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 7);
 // console.log("SUbmit ke andar aa gya");
-  const count = assignments.filter(e => {
-    const deadlineDate = new Date(e.deadline);
-    return (
-      e.year === formData.year &&
-      e.branch === formData.branch &&
-      deadlineDate >= sevenDaysBefore &&
-      deadlineDate <= targetDate
-    );
-  }).length;
 
-  console.log("Count>>", count);
 
-  if (count >= 3) {
+  const token = localStorage.getItem("token");
+  // console.log("Count>>", count);
+
+  if (cnt >= 3) {
     toast.warning(`This Division already has too much workload (${count} assignments).`);
     return;
   }
 
-  const token = localStorage.getItem("token");
+  
   const payload = {
     ...formData,
     description: formData.description || "No additional instructions",
