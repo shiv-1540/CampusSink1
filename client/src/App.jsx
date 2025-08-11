@@ -2,6 +2,7 @@
 import React from "react";
 import { BrowserRouter,Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer,toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //COMMON PAGES
 import LoginPage from "./LoginPage";
@@ -30,7 +31,6 @@ import AdminReportPage from "./components/Admin/AdminReportPage.jsx";
 import AcademicCalendar from "./components/Teacher/AcademicCalendar.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 
-import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
 
