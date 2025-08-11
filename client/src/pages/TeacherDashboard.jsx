@@ -210,25 +210,24 @@ const TeacherDashboard = () => {
   };
 
   return (
-    <div className="maincontainer flex min-h-screen bg-gray-100">      
+    <div className="maincontainer flex max-h-screen bg-gray-100">      
       <TeachSidebar/>
 
-      <div className="container flex-grow">
+      <div className="container flex-grow overflow-x-hidden">
        <div className="flex items-center gap-3 mb-1">
-  <div className="bg-blue-100 p-2 rounded-lg">
-    <i className="bi bi-mortarboard-fill text-blue-600 text-2xl"></i>
-  </div>
-  <div>
-    <h2 className="font-extrabold text-2xl md:text-3xl text-gray-800 tracking-tight">
-      Teacher Dashboard
-    </h2>
-    <p className="text-gray-500 text-sm">
-      Manage assignments, track student progress, and stay organized
-    </p>
-  </div>
-</div>
-<hr className="border-gray-200 mb-0" />
-
+        <div className="bg-blue-100 p-3 rounded-lg">
+          <i className="bi bi-mortarboard-fill text-blue-600 text-2xl"></i>
+        </div>
+        <div>
+          <h2 className="font-extrabold text-2xl md:text-3xl text-gray-800 ">
+            Teacher Dashboard
+          </h2>
+          <p className="text-gray-500 text-sm">
+            Manage assignments, track student progress, and stay organized
+          </p>
+        </div>
+      </div>
+      <hr className="border-gray-200 mb-0" />
 
        {/* Summary Cards */}
         <Row className="mb-3 g-3 summary-cards">
@@ -242,7 +241,7 @@ const TeacherDashboard = () => {
               <Card className="summary-card shadow-sm border-0">
                 <Card.Body className="p-3 text-center">
                   <div 
-                    className="icon-wrapper mx-auto mb-2"
+                    className="icon-wrapper mx-auto mb-2 flex justify-center"
                     style={{ backgroundColor: `${color}20` }}
                   >
                     <Icon size={20} style={{ color }} />
@@ -256,20 +255,19 @@ const TeacherDashboard = () => {
           ))}
         </Row>
 
-
         {/* Upcoming Deadlines & Calendar */}
         <Row className="mb-4 g-3">
           {/* Left: Deadlines + Seminars */}
-          <Col md={8}>
-            <Card className="shadow rounded-4">
-              <Card.Body>
+          <Col md={9}>
+            <Card className="rounded-4">
+              <Card.Body className=''>
                 <h5 className="font-extrabold mb-2 text-xl"> Upcoming Deadlines</h5>
-                <ListGroup variant="flush" className="mb-4">
+                <ListGroup variant="flush" className="mb-4 ">
                   {upcomingDeadlines.map((a) => (
-                    <ListGroup.Item key={a.id} className="bg-light border-0 rounded mb-2">
+                    <ListGroup.Item key={a.id} className="bg-white-300 border-1 rounded mb-2">
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
-                          <h6 className="mb-1 text-dark">{a.title}</h6>
+                          <h6 className="mb-1 text-gray-800  font-bold ">{a.title}</h6>
                           <small className="text-muted">
                             {a.branch} • Year {a.year}
                           </small>
@@ -333,12 +331,12 @@ const TeacherDashboard = () => {
           </Col>
 
           {/* Right: Calendar */}
-          <Col md={4}>
+          <Col md={3}>
             <Card className="shadow rounded-4">
               <Card.Body>
-                <h5 className="d-flex align-items-center fw-bold mb-3">
+                <h5 className="flex justify-center font-extrabold">
                   <FaCalendarAlt className="me-2" />
-                  {date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}
+                  Academic Calendar
                 </h5>
 
                 <Calendar
@@ -392,10 +390,10 @@ const TeacherDashboard = () => {
         >
           <Modal.Header
             closeButton
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+            className="bg-gradient-to-r from-blue-500 to-blue-800 text-gray-800 h-30px"
           >
-            <Modal.Title className="flex items-center gap-1">
-              <FaCalendarAlt size={15} />
+            <Modal.Title className="flex items-center gap-1 text-xl">
+              <FaCalendarAlt size={12} />
               Events on{" "}
               {selectedDate && (
                 <span className="font-semibold">
@@ -405,13 +403,13 @@ const TeacherDashboard = () => {
             </Modal.Title>
           </Modal.Header>
 
-          <Modal.Body className="bg-gray-50">
+          <Modal.Body className="bg-gray-150">
             {dateEvents.length > 0 ? (
               <ListGroup variant="flush">
                 {dateEvents.map((event, index) => (
                   <ListGroup.Item
                     key={index}
-                    className="bg-white rounded-lg shadow-sm border mb-2 p-3 hover:shadow-md transition-all"
+                    className="bg-white rounded-lg shadow-sm border border-2 mb-1 p-2 hover:shadow-md transition-all"
                   >
                     <div className="d-flex align-items-start">
                       {/* Icon Section */}
@@ -486,7 +484,7 @@ const TeacherDashboard = () => {
             <Button
               variant="light"
               onClick={() => setShowDateEvents(false)}
-              className="rounded-lg px-4 py-1 border shadow-sm hover:bg-red-100"
+              className="rounded-lg px-4 py-1 border shadow-sm hover:bg-red-500"
             >
               Close
             </Button>

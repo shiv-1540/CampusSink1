@@ -155,7 +155,7 @@ const ManageDeadlines = () => {
         {/* Assignments Table */}
         {assignments.length > 0 && (
           <div className="bg-white rounded shadow-sm p-3">
-            <h6 className="fw-bold text-secondary mb-3">📚 All Assignments</h6>
+            <h6 className="font-extrabold text-gray-800 text-xl mb-3"> All Assignments</h6>
            <div className="overflow-x-auto mt-8">
             <table className="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-xl">
               <thead className="bg-gray-100 text-gray-700 text-sm font-semibold">

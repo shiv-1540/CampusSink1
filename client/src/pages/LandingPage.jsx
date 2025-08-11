@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
 import { CheckCircleIcon, ArrowRightCircleIcon } from '@heroicons/react/24/solid'; // example icons
 // import logo from '../assets/logo.png'
+import shiva from '../assets/shiva.jpg'
+import anu from '../assets/anu.png'
+import mahesh from '../assets/mahesh.png'
 
 const FeaturePoint = ({ text }) => (
   <li className="flex items-start gap-2 text-gray-700 text-sm sm:text-base">
@@ -21,7 +24,7 @@ const LandingPage = () => {
   return (
     <div className="font-sans text-gray-800">
       {/* Navbar */}
-      <header className="w-full px-6 py-3 border-b bg-white shadow-md sticky top-0 z-50">
+      <header className="w-full px-6 py-2 border-b bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         
         {/* Logo Section */}
@@ -35,7 +38,7 @@ const LandingPage = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-gray-700 text-sm font-medium">
+        <nav className="hidden md:flex items-center gap-8 text-gray-700 text-md font-medium">
           <a href="#features" className="hover:text-blue-600 transition">Features</a>
           <a href="#dashboard" className="hover:text-blue-600 transition">Dashboard</a>
           <a href="#reviews" className="hover:text-blue-600 transition">Reviews</a>
@@ -75,54 +78,55 @@ const LandingPage = () => {
           Get Started
         </button>
       </div>
-</section>
+       </section>
 
-<section id="features" className="flex flex-col justify-center py-20 px-4 sm:px-6 md:px-12 lg:px-20 bg-gray-50 text-center">
-  <h2 className="text-[clamp(1.8rem,5vw,2.5rem)] font-extrabold mb-6 text-gray-800 leading-tight">
-    Empowering Every Role, Seamlessly
-  </h2>
-  <p className="max-w-2xl mx-auto text-gray-600 mb-12 text-base sm:text-lg">
-    CampusSink adapts to your unique academic journey—whether you’re a student, teacher, or admin.
-  </p>
+   <section id="features" className="flex flex-col justify-center py-20 px-4 sm:px-6 md:px-12 lg:px-20 bg-gray-50 text-center">
+      <h2 className="text-[clamp(1.8rem,5vw,2.5rem)] font-extrabold mb-6 text-gray-800 leading-tight">
+        Empowering Every Role, Seamlessly
+      </h2>
+      <p className="max-w-2xl mx-auto text-gray-600 mb-12 text-base sm:text-lg">
+        CampusSink adapts to your unique academic journey—whether you’re a student, teacher, or admin.
+      </p>
 
-  <div className="flex flex-col gap-8 md:grid md:grid-cols-3 max-w-7xl mx-auto text-left">
-    {/* Student Card */}
-    <div className="flex flex-col justify-center bg-white border-t-4 border-blue-500 rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300">
-      <h3 className="text-xl sm:text-2xl font-semibold text-blue-700 mb-1">For Students</h3>
-      <p className="text-sm sm:text-base text-gray-600 mb-4">Stay on top of every deadline, effortlessly.</p>
-      <ul className="space-y-2">
-        <FeaturePoint text="Centralized deadline tracking" />
-        <FeaturePoint text="Email & WhatsApp reminders" />
-        <FeaturePoint text="Daily AI workload suggestions" />
-        <FeaturePoint text="Track submitted & pending work" />
-      </ul>
-    </div>
+      <div className="flex flex-col gap-8 md:grid md:grid-cols-3 max-w-7xl mx-auto text-left">
+        {/* Student Card */}
+        <div className="flex flex-col justify-center bg-white border-t-4 border-blue-500 rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300">
+          <h3 className="text-xl sm:text-2xl font-bold text-blue-700 mb-1">For Students</h3>
+          <p className="text-sm sm:text-base text-gray-600 mb-4">Stay on top of every deadline, effortlessly.</p>
+          <ul className="space-y-2">
+            <FeaturePoint text="Centralized deadline tracking" />
+            <FeaturePoint text="Email & WhatsApp reminders" />
+            <FeaturePoint text="Daily AI workload suggestions" />
+            <FeaturePoint text="Track submitted & pending work" />
+          </ul>
+        </div>
 
-    {/* Teacher Card */}
-    <div className="bg-white border-t-4 border-green-500 rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300">
-      <h3 className="text-xl sm:text-2xl font-semibold text-green-700 mb-1">For Teachers</h3>
-      <p className="text-sm sm:text-base text-gray-600 mb-4">Plan better with insights and clarity.</p>
-      <ul className="space-y-2">
-        <FeaturePoint text="Analyze student workload" />
-        <FeaturePoint text="Plan academic tasks class-wise" />
-        <FeaturePoint text="Sync with academic calendar" />
-        <FeaturePoint text="Track assignment edits & reviews" />
-      </ul>
-    </div>
+        {/* Teacher Card */}
+        <div className="bg-white border-t-4 border-green-500 rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300">
+          <h3 className="text-xl sm:text-2xl font-bold text-green-700 mb-1">For Teachers</h3>
+          <p className="text-sm sm:text-base text-gray-600 mb-4">Plan better with insights and clarity.</p>
+          <ul className="space-y-2">
+            <FeaturePoint text="Analyze student workload" />
+            <FeaturePoint text="Plan academic tasks class-wise" />
+            <FeaturePoint text="Sync with academic calendar" />
+            <FeaturePoint text="Track assignment edits & reviews" />
+          </ul>
+        </div>
 
-    {/* Admin Card */}
-    <div className="bg-white border-t-4 border-purple-500 rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300">
-      <h3 className="text-xl sm:text-2xl font-semibold text-purple-700 mb-1">For Admins</h3>
-      <p className="text-sm sm:text-base text-gray-600 mb-4">Gain full control with actionable insights.</p>
-      <ul className="space-y-2">
-        <FeaturePoint text="Visual analytics of workload" />
-        <FeaturePoint text="User & permissions management" />
-        <FeaturePoint text="System-wide configurations" />
-        <FeaturePoint text="Integrated reporting tools" />
-      </ul>
-    </div>
-  </div>
-</section>
+        {/* Admin Card */}
+        <div className="bg-white border-t-4 border-purple-500 rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300">
+          <h3 className="text-xl sm:text-2xl font-bold text-purple-700 mb-1">For Admins</h3>
+          <p className="text-sm sm:text-base text-gray-600 mb-4">Gain full control with actionable insights.</p>
+          <ul className="space-y-2">
+            <FeaturePoint text="Visual analytics of workload" />
+            <FeaturePoint text="User & permissions management" />
+            <FeaturePoint text="System-wide configurations" />
+            <FeaturePoint text="Integrated reporting tools" />
+          </ul>
+        </div>
+     </div>
+   </section>
+
    {/*  How it works  */}
     <section id="how-it-works" className="py-20 px-6 md:px-12 lg:px-20 bg-white text-gray-800">
       <div className="text-center mb-12">
@@ -289,7 +293,7 @@ const LandingPage = () => {
   </p>
 </section>
 
-  {/* Testimonials Section */}
+{/* Testimonials Section */}
 <section id="reviews" className="py-20 px-6 bg-gradient-to-br from-gray-50 to-white">
   <div className="max-w-6xl mx-auto text-center">
     <h2 className="text-4xl font-extrabold mb-4 text-gray-800">Loved by Educators & Students</h2>
@@ -298,37 +302,58 @@ const LandingPage = () => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
       {[
         {
-          name: "Dr. Sunita Barave",
-          role: "High School Teacher",
+          name: "Dr. Anuradha Pawar",
+          role: "College Faculty",
           quote: "CampusSink transformed our classroom. Saved me hours every week!",
+          img: `${anu}`, // Add actual image paths
         },
         {
           name: "Dr. Mahesh Goudar",
           role: "School Administrator",
           quote: "The dashboard helps us detect and help struggling students faster.",
+          img: `${mahesh}`,
         },
         {
-          name: "Shiva Ghyar",
+          name: "Shivshankar Ghyar",
           role: "College Student",
           quote: "Everything’s in one place. Makes life as a student easier!",
+          img: `${shiva}`,
         },
       ].map((t, i) => (
-        <div key={i} className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition duration-300 ease-in-out">
+        <div
+          key={i}
+          className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition duration-300 ease-in-out flex flex-col items-center"
+        >
+          {/* Avatar */}
+          <img
+            src={t.img}
+            alt={t.name}
+            className="w-20 h-20 rounded-full border-4 border-yellow-400 shadow-lg object-cover mb-4"
+          />
+
+          {/* Star Rating */}
           <p className="text-yellow-500 text-2xl mb-3">★★★★★</p>
-          <p className="text-gray-700 italic mb-4">"{t.quote}"</p>
-          <div className="border-t pt-3">
+
+          {/* Quote */}
+          <p className="text-gray-700 italic mb-4 text-center">"{t.quote}"</p>
+
+          {/* Name & Role */}
+          <div className="border-t pt-3 text-center w-full">
             <p className="font-semibold text-gray-800">{t.name}</p>
             <p className="text-sm text-gray-500">{t.role}</p>
           </div>
-          <h4 className="text-xl font-semibold mb-2">Sign In</h4>
-          <p className="text-gray-600">
-            Use your college-provided <strong>PRN, Email & Password</strong> to access the portal. Option to update password after first login.
+
+          {/* Access Note */}
+          <p className="text-gray-600 mt-3 text-sm text-center">
+            Use your college-provided <strong>PRN, Email & Password</strong> to access the portal.
+            You can update your password after first login.
           </p>
         </div>
       ))}
     </div>
   </div>
 </section>
+
 
 
   <footer className="bg-[#0c1327] text-white py-12 px-6 text-sm">
@@ -379,7 +404,9 @@ const LandingPage = () => {
   <div className="border-t border-gray-700 mt-10 pt-6 text-center">
     <p className="text-gray-500 text-sm">
       © 2024 CampusSink. All rights reserved.
+      
     </p>
+    <p>Made with Love ♥️ By MITians </p>
   </div>
 </footer>
 

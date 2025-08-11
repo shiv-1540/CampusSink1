@@ -225,7 +225,7 @@ const AcademicCalendar = () => {
                   <td>{new Date(event.date).toLocaleDateString()}</td>
                   <td>{event.title}</td>
                   <td>{event.description}</td>
-                  <td>
+                  <td className="w-170px ">
                     <span
                       className="event-type-badge"
                       style={{ backgroundColor: getEventColor(event.type) }}
@@ -233,12 +233,12 @@ const AcademicCalendar = () => {
                       {event.type}
                     </span>
                   </td>
-                  <td>
+                  <td className="flex justify-center">
                     <Button
-                      variant="outline-warning"
+                      
                       size="sm"
                       onClick={() => handleEdit(event)}
-                      className="me-2"
+                      className="me-2 bg-green-600"
                     >
                       Edit
                     </Button>
@@ -256,15 +256,15 @@ const AcademicCalendar = () => {
           </tbody>
         </Table>
 
-        <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal show={showModal} onHide={() => setShowModal(false)} centered >
           <Modal.Header closeButton>
-            <Modal.Title>{editEventId ? "Edit Event" : "Add Academic Event"}</Modal.Title>
+            <Modal.Title className="font-extrabold text-md">{editEventId ? "Edit Event" : "Add Academic Event"}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {error && <div className="alert alert-danger">{error}</div>}
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
-                <Form.Label>Event Title *</Form.Label>
+                <Form.Label className="font-bold">Event Title *</Form.Label>
                 <Form.Control
                   type="text"
                   required
@@ -274,7 +274,7 @@ const AcademicCalendar = () => {
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Description</Form.Label>
+                <Form.Label  className="font-bold">Description</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={3}
@@ -284,7 +284,7 @@ const AcademicCalendar = () => {
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Event Type *</Form.Label>
+                <Form.Label  className="font-bold">Event Type *</Form.Label>
                 <Form.Select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
@@ -318,12 +318,12 @@ const AcademicCalendar = () => {
           }
           .react-calendar {
             width: 100%;
-            max-width: 850px;
+            max-width: 800px;
             margin: 0 auto;
             border: none;
             border-radius: 16px;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            padding: 10px;
             background: #ffffff;
           }
           .react-calendar__navigation button {

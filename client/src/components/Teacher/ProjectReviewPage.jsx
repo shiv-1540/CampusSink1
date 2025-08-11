@@ -116,7 +116,7 @@ const handleSubmit = async () => {
   };
 
   const ReviewCard = ({ review, completed }) => (
-    <div className=" shadow h-15 rounded-lg p-3 px-4 mb-1  flex justify-between items-center border border-1 border-black">
+    <div className="h-15 rounded-lg p-2 px-4 mb-1  flex justify-between items-center  border border-2">
       <div>
         <h4 className="font-bold text-sm ">{review.title}</h4>
         <p className="text-sm text-gray-600">{review.year} - {review.branch}</p>
@@ -209,7 +209,7 @@ const handleSubmit = async () => {
                       name={field}
                       value={form[field]}
                       onChange={handleChange}
-                      className="w-full mt-1 border rounded  text-gray-400 px-3 py-2 bg-gray-100"
+                      className="w-full mt-1 border rounded  text-gray-900 px-3 py-2 bg-gray-100"
                       placeholder={`Enter ${field}`}
                       type="text"
                     />
@@ -222,7 +222,7 @@ const handleSubmit = async () => {
                     name="date"
                     value={form.date}
                     onChange={handleChange}
-                    className="w-full mt-1 border text-gray-400 rounded px-3 py-2 bg-gray-100"
+                    className="w-full mt-1 border text-gray-800 rounded px-3 py-2 bg-gray-100"
                     
                   />
                 </div>
@@ -233,7 +233,7 @@ const handleSubmit = async () => {
                     name="description"
                     value={form.description}
                     onChange={handleChange}
-                    className="w-full mt-1 border text-gray-400 rounded px-3 py-2 bg-gray-100"
+                    className="w-full mt-1 border text-gray-800 rounded px-3 py-2 bg-gray-100"
                     placeholder='Enter Description'
 
                 />

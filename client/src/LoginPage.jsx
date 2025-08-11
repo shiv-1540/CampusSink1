@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Modal, Button ,Form,Alert} from "react-bootstrap";
-// import logo from './assets/workloadlogin.png'
+ import logo from './assets/login.png'
 
 const server= import.meta.env.VITE_BACKEND_URL;
 
@@ -162,8 +162,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container-fluid min-vh-100 d-flex justify-content-center align-items-center bg-light">
-       
+    <div className="container-fluid min-vh-100 d-flex justify-content-center align-items-center bg-gray-100" style={{ backgroundImage: `url(${logo})`,height:'100vh',backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}>
        
       <div className="card shadow-lg p-4" style={{ width: "100%", maxWidth: "400px" }}>
          <div className="text-center mb-3">
@@ -263,7 +262,7 @@ const LoginPage = () => {
         }}
         centered
         size="md"
-        className="forgot-password-modal"
+        className="forgot-password-modal "
       >
      {/* Header */}
     <Modal.Header closeButton className="border-0 pb-0">

@@ -27,27 +27,28 @@ const AddAssignment = () => {
   });
 
   useEffect(() => {
-  if (cnt >= 3) {
-    toast.warning(`${formData.branch} & ${formData.year} already has too much workload (${cnt} assignments).`);
-  }
-}, [formData.deadline]);
+    if (cnt >= 3) {
+      toast.warning(`${formData.branch} & ${formData.year} on timing ${formData.deadline} has too much workload of (${cnt} assignments).`);
+    }
+  }, [cnt,formData.deadline,formData.branch,formData.year]);
 
-useEffect(()=>{
-  if(formData.deadline && formData.branch && formData.year){
-    const targetDate = new Date(formData.deadline);
-    const sevenDaysBefore = new Date(targetDate);
-    sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 7); 
-    SetCnt(assignments.filter(e => {
-    const deadlineDate = new Date(e.deadline);
-     return (
-      e.year === formData.year &&
-      e.branch === formData.branch &&
-      deadlineDate >= sevenDaysBefore &&
-      deadlineDate <= targetDate
-    );
-  }).length);
-  }
-})
+  useEffect(()=>{
+    if (formData.deadline && formData.branch && formData.year && assignments.length > 0) {
+      const targetDate = new Date(formData.deadline);
+      const sevenDaysBefore = new Date(targetDate);
+      sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 7); 
+      
+      SetCnt(assignments.filter(e => {
+        const deadlineDate = new Date(e.deadline);
+        return (
+          e.year === formData.year &&
+          e.branch === formData.branch &&
+          deadlineDate >= sevenDaysBefore &&
+          deadlineDate <= targetDate
+        );
+      }).length);
+    }
+  }, [formData.deadline, formData.branch, formData.year, assignments]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +77,7 @@ useEffect(()=>{
     // ?year=${formData.year}?&branch=${formData.branch}
       const res=await axios.get(`${server}/api/assignments/getbyby`);
       setAssignments(res.data.assignments);
-      SetCnt(res.data.count);
+      // SetCnt(res.data.count);
    }
    catch(err){
      console.log("Fetch Assignments err",err.message);
@@ -95,58 +96,14 @@ useEffect(()=>{
       console.error('Error fetching departments:', err);
     }
   };
-  
-// //  const fetchAssignments = async () => { 
-      
-// //       try {
-// //         const token=localStorage.getItem('token');
-// //         const res = await axios.get(
-// //              `${server}/api/assignments/get1`,
-// //              {
-// //               headers:{
-// //                 'Content-Type':'application/json',
-// //                 'Authorization':`Bearer ${token}`        
-// //               }
-// //              }
-            
-// //           );
-// //         const data = res.data.unsubmitted;
-// //         setAssignments(data);
-
-// //         const map = {};
-// //         data.forEach(a => {
-// //           const key = new Date(a.deadline).toDateString();
-// //           if (!map[key]) map[key] = [];
-// //           map[key].push(a);
-// //         });
-// //         setDueMap(map);
-// //       } catch (err) {
-// //         console.error("Failed to fetch assignments", err);
-// //       }
-// //  };
-
-// const getCntofYearDeptAssi = (year, dept,deadline) => {
-//   console.log("Assignments>> ",assignments)
-//   return assignments.filter(
-//     e => e.year === year && e.branch === dept 
-//   ).length;
-// };
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  
-// console.log("SUbmit ke andar aa gya");
-
-
   const token = localStorage.getItem("token");
-  // console.log("Count>>", count);
-
   if (cnt >= 3) {
-    toast.warning(`This Division already has too much workload (${count} assignments).`);
+    toast.warning(`This Division already has too much workload (${cnt} assignments).`);
     return;
   }
-
-  
   const payload = {
     ...formData,
     description: formData.description || "No additional instructions",
