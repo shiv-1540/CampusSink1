@@ -26,11 +26,20 @@ const AddAssignment = () => {
     file: null
   });
 
-  useEffect(() => {
-    if (cnt >= 3) {
-      toast.warning(`${formData.branch} & ${formData.year} on timing ${formData.deadline} has too much workload of (${cnt} assignments).`);
+useEffect(() => {
+  if (cnt >= 3) {
+    try {
+      toast.warning(
+        `${formData.branch} & ${formData.year} on timing ${formData.deadline} has too much workload of (${cnt} assignments).`
+      );
+    } catch (err) {
+      console.error("Toast failed, showing alert instead:", err);
+      alert(
+        `${formData.branch} & ${formData.year} on timing ${formData.deadline} has too much workload of (${cnt} assignments).`
+      );
     }
-  }, [cnt,formData.deadline,formData.branch,formData.year]);
+  }
+}, [cnt, formData.deadline, formData.branch, formData.year]);
 
   useEffect(()=>{
     if (formData.deadline && formData.branch && formData.year && assignments.length > 0) {
@@ -101,9 +110,22 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   const token = localStorage.getItem("token");
   if (cnt >= 3) {
-    toast.warning(`This Division already has too much workload (${cnt} assignments).`);
-    return;
+  try {
+    const toastShown = toast.warning(
+      `This Division already has too much workload (${cnt} assignments).`
+    );
+
+    // If toast returns falsy or undefined, show alert as backup
+    if (!toastShown) {
+      alert(`This Division already has too much workload (${cnt} assignments).`);
+    }
+  } catch (err) {
+    console.error("Toast failed, showing alert instead:", err);
+    alert(`This Division already has too much workload (${cnt} assignments).`);
   }
+  return;
+}
+
   const payload = {
     ...formData,
     description: formData.description || "No additional instructions",
